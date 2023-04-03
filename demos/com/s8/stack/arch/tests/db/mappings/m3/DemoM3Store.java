@@ -3,10 +3,10 @@ package com.s8.stack.arch.tests.db.mappings.m3;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.s8.arch.magnesium.stores.m3.M3ModelPrototype;
+import com.s8.arch.magnesium.stores.m3.M3Store;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.stack.arch.magnesium.stores.m3.M3ModelPrototype;
-import com.s8.stack.arch.magnesium.stores.m3.M3Store;
 
 public class DemoM3Store extends M3Store<String> {
 

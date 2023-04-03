@@ -3,11 +3,11 @@ package com.s8.stack.arch.tests.db.mappings.m4;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.s8.arch.magnesium.stores.m4.LeafM4Node;
+import com.s8.arch.magnesium.stores.m4.M4Store;
 import com.s8.arch.silicon.SiException;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.stack.arch.magnesium.stores.m4.LeafM4Node;
-import com.s8.stack.arch.magnesium.stores.m4.M4Store;
 
 public class DemoM4Store extends M4Store<DemoStock, DemoFlow>{
 	

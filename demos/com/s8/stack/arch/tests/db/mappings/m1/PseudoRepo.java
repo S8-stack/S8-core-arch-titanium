@@ -3,13 +3,13 @@ package com.s8.stack.arch.tests.db.mappings.m1;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.s8.arch.magnesium.stores.m1.M1ModelPrototype;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.linked.LinkedByteInflow;
 import com.s8.io.bytes.linked.LinkedByteOutflow;
 import com.s8.io.bytes.linked.LinkedBytes;
 import com.s8.io.bytes.linked.LinkedBytesIO;
-import com.s8.stack.arch.magnesium.stores.m1.M1ModelPrototype;
 
 public class PseudoRepo {
 

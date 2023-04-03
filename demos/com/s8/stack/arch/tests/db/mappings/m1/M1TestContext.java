@@ -3,10 +3,10 @@ package com.s8.stack.arch.tests.db.mappings.m1;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.s8.arch.magnesium.stores.m1.M1ModelConstructor;
+import com.s8.arch.magnesium.stores.m1.M1Store;
 import com.s8.arch.silicon.SiliconConfiguration;
 import com.s8.arch.silicon.SiliconEngine;
-import com.s8.stack.arch.magnesium.stores.m1.M1ModelConstructor;
-import com.s8.stack.arch.magnesium.stores.m1.M1Store;
 
 public class M1TestContext {
 

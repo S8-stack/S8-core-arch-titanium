@@ -3,10 +3,10 @@ package com.s8.stack.arch.tests.db.h2;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import com.s8.arch.magnesium.handles.h2.H2Operator;
 import com.s8.arch.silicon.SiException;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.blocks.bytes.demos.d0.FatDemoFile02;
-import com.s8.stack.arch.magnesium.handles.h2.H2Operator;
 
 public class H2TestBot {
 

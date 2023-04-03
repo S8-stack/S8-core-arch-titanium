@@ -2,12 +2,12 @@ package com.s8.stack.arch.tests.db.h2;
 
 import java.nio.file.Paths;
 
+import com.s8.arch.magnesium.handles.h2.H2Handle;
+import com.s8.arch.magnesium.handles.h2.H2Operator;
+import com.s8.arch.magnesium.handles.h2.H2Handle.Props;
 import com.s8.arch.silicon.SiliconConfiguration;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.blocks.bytes.demos.d0.FatDemoFile02;
-import com.s8.stack.arch.magnesium.handles.h2.H2Handle;
-import com.s8.stack.arch.magnesium.handles.h2.H2Handle.Props;
-import com.s8.stack.arch.magnesium.handles.h2.H2Operator;
 
 
 /**

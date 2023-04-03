@@ -3,8 +3,8 @@ package com.s8.stack.arch.tests.db.mappings.m4;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.s8.arch.magnesium.stores.m4.M4Store.Inspector;
 import com.s8.arch.silicon.SiException;
-import com.s8.stack.arch.magnesium.stores.m4.M4Store.Inspector;
 
 
 /**

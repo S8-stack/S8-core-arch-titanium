@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
+import com.s8.arch.magnesium.stores.m2.M2Prototype;
+import com.s8.arch.magnesium.stores.m2.StdM2Store;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.stack.arch.magnesium.stores.m2.M2Prototype;
-import com.s8.stack.arch.magnesium.stores.m2.StdM2Store;
 
 public class M2StoreTest01 {
 

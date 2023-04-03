@@ -3,14 +3,14 @@ package com.s8.stack.arch.tests.db.mappings.m3;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.s8.arch.magnesium.stores.m3.HashcodeModule;
+import com.s8.arch.magnesium.stores.m3.M3Config;
+import com.s8.arch.magnesium.stores.m3.M3ModelPrototype;
+import com.s8.arch.magnesium.stores.m3.M3Store;
+import com.s8.arch.magnesium.stores.m3.requests.GetM3Request;
+import com.s8.arch.magnesium.stores.m3.requests.PutM3Request;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.stack.arch.magnesium.stores.m3.HashcodeModule;
-import com.s8.stack.arch.magnesium.stores.m3.M3Config;
-import com.s8.stack.arch.magnesium.stores.m3.M3ModelPrototype;
-import com.s8.stack.arch.magnesium.stores.m3.M3Store;
-import com.s8.stack.arch.magnesium.stores.m3.requests.GetM3Request;
-import com.s8.stack.arch.magnesium.stores.m3.requests.PutM3Request;
 
 /**
  * 

@@ -2,7 +2,7 @@ package com.s8.stack.arch.tests.db.mappings.m1;
 
 import java.nio.file.Path;
 
-import com.s8.stack.arch.magnesium.stores.m1.modules.PathComposer;
+import com.s8.arch.magnesium.stores.m1.modules.PathComposer;
 
 
 public class SeriePathComposerTest02 {
