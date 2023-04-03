@@ -1,0 +1,52 @@
+Algorithms
+
+
+
+OK for Serie, Stock, Array, Graph
+
+- Step 0: (adding 52 items)
+head = (#12, leaf, depath=0, {0, 1, 2,... , 51})
+
+- Step 1: (adding more items)
+head = (#12, leaf, depth=0, {0, 1, 2,... , 255}) -closed
+
+- Step 2: (adding on more item)
+head = (#14, fork, depth=1, {#12, #13})
+(#12, leaf, depth=0, {0, 1, 2,... , 255}) -closed
+(#13, leaf, depth=0, {256})
+
+- Step 3: adding more items so we reach #14 node limit
+head = (#14, fork, depth=1, {#12, #13, ...., #500} )
+
+-Step 4: adding one more...
+head = (#502, fork, depth=2, {#14, #501} )
+(#14, fork, depth=1, {#12, #13, ...., #500} ) -closed
+(#501, leaf, depth=0, {65536} )
+
+-Step 5: adding one more...
+head = (#502, fork, {#14, #504} )
+(#14, fork, depth = 1, {#12, #13, ...., #500} )
+(#501, leaf, depth = 0, {65536, ... , 65536+255} ) -closed
+(#503, leaf, depth = 0, {65536+256})
+(#504, fork, depth = 1, {#501, #503})
+
+
+
+
+
+Hash-map
+(#02, leaf, 0xff buckets according to (hahscode & 0xff))
+
+when nEntries > 256*4 is such then:
+each bucket split according to (hashcode>>8 & 0xff): into 256 buckets.
+(#03, fork, split according to (hashcode>>8 & 0xff), {#0200, #02ff})
+(#0200, leaf, split according to (hashcode & 0xff))
+(#0201, leaf, split according to (hashcode & 0xff))
+(#0200, leaf, split according to (hashcode & 0xff))
+(#0200, leaf, split according to (hashcode & 0xff))
+
+
+(#02ff, leaf, split according to (hashcode & 0xff))
+
+
+

@@ -1,0 +1,7 @@
+Algorithm
+
+
+
+We start with initial map of capacity 0xff+1 (256 buckets).
+We fill the buckets according to (hashcode & 0xff).
+If at some point, one bucket is overcrowded, bucket become a new node.
