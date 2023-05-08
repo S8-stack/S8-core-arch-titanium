@@ -27,12 +27,12 @@ public class M1StoreAutosaver<M> {
 	
 	public void start() {
 		isAutosaving.set(true);
-		facet.getEngine().pushT3Task(new ClockTask() {
+		facet.getEngine().pushClockTask(new ClockTask() {
 
 			@Override
 			public boolean trigger(long t, SiliconEngine engine) {
 				if(t%8 == 0) { // save 4 ticks (upon standard settings : ~2s)
-					engine.pushT1Task(new AsyncTask() {
+					engine.pushAsyncTask(new AsyncTask() {
 						public @Override MthProfile profile() { return MthProfile.IO_DATA_LAKE; }
 						public @Override String describe() { return "[silicon/M1Store] AUTO_SAVING"; }
 

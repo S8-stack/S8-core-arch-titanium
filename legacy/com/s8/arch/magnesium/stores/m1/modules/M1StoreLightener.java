@@ -168,7 +168,7 @@ public class M1StoreLightener<M> {
 			iCall.set(START_CALL_COUNT);
 
 
-			store.getEngine().pushT2Task(new LightenTask(sequenceID.getAndIncrement()));	
+			store.getEngine().pushWatchTask(new LightenTask(sequenceID.getAndIncrement()));	
 
 		}
 

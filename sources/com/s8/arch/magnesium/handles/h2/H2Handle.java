@@ -290,13 +290,13 @@ public abstract class H2Handle<M> {
 					isRunning = true;
 					isShuttingDownRequired = false;
 					lock.unlock();
-					getAppEngine().pushT1Task(new DryShuttingDownTask<>(this));
+					getAppEngine().pushAsyncTask(new DryShuttingDownTask<>(this));
 				}
 				else {
 					isRunning = true;
 					lock.unlock();		
 					// trigger init routine
-					getAppEngine().pushT1Task(new LoadingTask<>(this));
+					getAppEngine().pushAsyncTask(new LoadingTask<>(this));
 				}			
 
 				break;
@@ -306,21 +306,21 @@ public abstract class H2Handle<M> {
 				if((operator = queue.poll()) != null) {
 					isRunning = true;
 					lock.unlock();
-					getAppEngine().pushT1Task(new ReadyOperatingTask<>(this, operator));
+					getAppEngine().pushAsyncTask(new ReadyOperatingTask<>(this, operator));
 				}
 				else if(isSavingRequired){ // in case saving is required and no operation left
 					isRunning = true;
 					isSavingRequired = false;
 					lock.unlock();
 					DEBUG_nSaved++;
-					getAppEngine().pushT1Task(new SavingTask<>(this));	
+					getAppEngine().pushAsyncTask(new SavingTask<>(this));	
 
 				}
 				else if(isShuttingDownRequired){
 					isRunning = true;
 					isShuttingDownRequired = false;
 					lock.unlock();
-					getAppEngine().pushT1Task(new ShuttingDownTask<>(this));	
+					getAppEngine().pushAsyncTask(new ShuttingDownTask<>(this));	
 
 				}
 				else {
@@ -335,7 +335,7 @@ public abstract class H2Handle<M> {
 				if((operator = queue.poll()) != null) {
 					isRunning = true;
 					lock.unlock();
-					getAppEngine().pushT1Task(new FailedOperatingTask<>(this, operator));
+					getAppEngine().pushAsyncTask(new FailedOperatingTask<>(this, operator));
 				}
 				else {
 					isRunning = false;
