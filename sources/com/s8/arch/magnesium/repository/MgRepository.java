@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.s8.arch.magnesium.branch.MgBranchHandler;
-import com.s8.arch.magnesium.shared.MgUnmountable;
+import com.s8.arch.magnesium.handler.MgUnmountable;
 import com.s8.arch.magnesium.store.MgStore;
 import com.s8.io.joos.JOOS_Field;
 import com.s8.io.joos.JOOS_Type;

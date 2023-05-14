@@ -2,10 +2,10 @@ package com.s8.arch.magnesium.branch;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.callbacks.VersionMgCallback;
-import com.s8.arch.magnesium.shared.CatchExceptionMgTask;
-import com.s8.arch.magnesium.shared.ConsumeResourceMgTask;
-import com.s8.arch.magnesium.shared.MgSharedResourceHandler;
-import com.s8.arch.magnesium.shared.UserMgOperation;
+import com.s8.arch.magnesium.handler.CatchExceptionMgTask;
+import com.s8.arch.magnesium.handler.ConsumeResourceMgTask;
+import com.s8.arch.magnesium.handler.MgSharedResourceHandler;
+import com.s8.arch.magnesium.handler.UserMgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 

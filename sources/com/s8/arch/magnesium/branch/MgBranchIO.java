@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.branch;
 
-import com.s8.arch.magnesium.shared.MgIOModule;
+import com.s8.arch.magnesium.handler.MgIOModule;
 import com.s8.arch.magnesium.store.MgStore;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdInbound;

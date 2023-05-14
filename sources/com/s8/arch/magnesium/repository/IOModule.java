@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 
-import com.s8.arch.magnesium.shared.MgIOModule;
+import com.s8.arch.magnesium.handler.MgIOModule;
 import com.s8.io.joos.JOOS_Lexicon;
 import com.s8.io.joos.parsing.JOOS_ParsingException;
 import com.s8.io.joos.types.JOOS_CompilingException;

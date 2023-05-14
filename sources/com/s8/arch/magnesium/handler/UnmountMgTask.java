@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.shared;
+package com.s8.arch.magnesium.handler;
 
 import java.util.ArrayList;
 import java.util.List;

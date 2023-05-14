@@ -3,9 +3,9 @@ package com.s8.arch.magnesium.repository;
 import java.nio.file.Path;
 import java.util.List;
 
-import com.s8.arch.magnesium.shared.MgIOModule;
-import com.s8.arch.magnesium.shared.MgSharedResourceHandler;
-import com.s8.arch.magnesium.shared.MgUnmountable;
+import com.s8.arch.magnesium.handler.MgIOModule;
+import com.s8.arch.magnesium.handler.MgSharedResourceHandler;
+import com.s8.arch.magnesium.handler.MgUnmountable;
 import com.s8.arch.magnesium.store.MgStore;
 
 /**
