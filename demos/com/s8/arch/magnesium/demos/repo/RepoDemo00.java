@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
 
-import com.s8.arch.magnesium.stores.MgRepositoryHandler;
+import com.s8.arch.magnesium.repository.MgRepositoryHandler;
 import com.s8.io.joos.JOOS_Lexicon;
 import com.s8.io.joos.composing.JOOS_ComposingException;
 import com.s8.io.joos.types.JOOS_CompilingException;

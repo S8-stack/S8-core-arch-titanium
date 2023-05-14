@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.s8.arch.magnesium.callbacks.C0Callback;
+import com.s8.arch.magnesium.oldcallbacks.C0Callback;
 import com.s8.arch.silicon.SiException;
 import com.s8.arch.silicon.SiliconEngine;
 

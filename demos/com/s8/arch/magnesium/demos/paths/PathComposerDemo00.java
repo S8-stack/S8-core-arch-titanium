@@ -2,7 +2,7 @@ package com.s8.arch.magnesium.demos.paths;
 
 import java.nio.file.Path;
 
-import com.s8.arch.magnesium.stores.path.PathComposer;
+import com.s8.arch.magnesium.store.MgPathComposer;
 
 public class PathComposerDemo00 {
 
@@ -13,7 +13,7 @@ public class PathComposerDemo00 {
 	 */
 	public static void main(String[] args) {
 
-		PathComposer composer = new PathComposer(Path.of("output"));
+		MgPathComposer composer = new MgPathComposer(Path.of("output"));
 		
 		
 		String repo = "https://toto.com/orc/project-sinchuan~023_Rf234.fld#1";

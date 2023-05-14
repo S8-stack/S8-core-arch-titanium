@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ targetNamespace="http://s8.com"
+ xmlns:tns="http://s8.com"
+ elementFormDefault="qualified">
+	<xs:element name="ConfigWrapper" type="tns:com.s8.arch.magnesium.store.config.ConfigWrapper"/>
+	<xs:element name="MgStoreConfiguration" type="tns:com.s8.arch.magnesium.store.config.MgConfiguration"/>
+	<xs:element name="SiliconAppConfiguration" type="tns:com.s8.arch.silicon.SiliconConfiguration"/>
+
+	<xs:complexType name="com.s8.arch.silicon.async.ProfileMappingBuilder" mixed="true">
+		<xs:attribute name="profile" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="com.s8.arch.silicon.clock.ClockUnitConfig">
+		<xs:attribute name="tick" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="com.s8.arch.silicon.SiliconConfiguration">
+		<xs:sequence>
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element name="T3-unit" type="tns:com.s8.arch.silicon.clock.ClockUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="T3UnitConfig" type="tns:com.s8.arch.silicon.clock.ClockUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="T2-unit_T2UnitConfig" type="tns:com.s8.arch.silicon.watch.WatchUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="T3-unit_T3UnitConfig" type="tns:com.s8.arch.silicon.clock.ClockUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="T2UnitConfig" type="tns:com.s8.arch.silicon.watch.WatchUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="T1-unit_T1UnitConfig" type="tns:com.s8.arch.silicon.async.AsyncUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="T1-unit" type="tns:com.s8.arch.silicon.async.AsyncUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="T2-unit" type="tns:com.s8.arch.silicon.watch.WatchUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="T1UnitConfig" type="tns:com.s8.arch.silicon.async.AsyncUnitConfig" minOccurs="0" maxOccurs="unbounded" />
+		</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="com.s8.arch.silicon.watch.WatchUnitConfig">
+		<xs:attribute name="isVerbose" type="xs:string"/>
+		<xs:attribute name="n-threads" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="com.s8.arch.magnesium.store.config.ConfigWrapper">
+		<xs:sequence>
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element name="silicon" type="tns:com.s8.arch.silicon.SiliconConfiguration" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="magnesium_MgStoreConfiguration" type="tns:com.s8.arch.magnesium.store.config.MgConfiguration" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="MgStoreConfiguration" type="tns:com.s8.arch.magnesium.store.config.MgConfiguration" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="magnesium" type="tns:com.s8.arch.magnesium.store.config.MgConfiguration" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="silicon_SiliconAppConfiguration" type="tns:com.s8.arch.silicon.SiliconConfiguration" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="SiliconAppConfiguration" type="tns:com.s8.arch.silicon.SiliconConfiguration" minOccurs="0" maxOccurs="unbounded" />
+		</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="com.s8.arch.silicon.async.AsyncUnitConfig">
+		<xs:sequence>
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element name="ProfileMappingBuilder" type="tns:com.s8.arch.silicon.async.ProfileMappingBuilder" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="map_ProfileMappingBuilder" type="tns:com.s8.arch.silicon.async.ProfileMappingBuilder" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="map" type="tns:com.s8.arch.silicon.async.ProfileMappingBuilder" minOccurs="0" maxOccurs="unbounded" />
+		</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="n-threads" type="xs:string"/>
+		<xs:attribute name="queue-capacity" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="com.s8.arch.magnesium.store.config.MgConfiguration">
+		<xs:sequence>
+		<xs:choice maxOccurs="unbounded" minOccurs="1">
+			<xs:element name="root-path" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+		</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
