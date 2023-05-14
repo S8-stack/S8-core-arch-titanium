@@ -1,10 +1,11 @@
 package com.s8.arch.magnesium.repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.s8.arch.magnesium.branch.MgBranchHandler;
-import com.s8.arch.magnesium.callbacks.VoidMgCallback;
+import com.s8.arch.magnesium.shared.MgUnmountable;
 import com.s8.arch.magnesium.store.MgStore;
 import com.s8.io.joos.JOOS_Field;
 import com.s8.io.joos.JOOS_Type;
@@ -12,7 +13,7 @@ import com.s8.io.joos.JOOS_Type;
 
 
 @JOOS_Type(name = "repository")
-public class MgRepository implements MgResource {
+public class MgRepository {
 	
 	public static MgRepository create(MgStore store) {
 		
@@ -40,52 +41,9 @@ public class MgRepository implements MgResource {
 		super();
 	}
 
-
-
 	
-	@Override
-	public void detach(VoidMgCallback onProbablyDetachable) {
-		int n = branchHandlers.size();
-		boolean[] isDetached = new boolean[n];
-		Object innerLock = new Object();
-
-		class IndexWrapper { public int value = 0; }
-		IndexWrapper index = new IndexWrapper();
-		
-		
-		branchHandlers.forEach((k, branch) -> {
-			int i = index.value++;
-			branch.detach(new VoidMgCallback() {
-				
-				@Override
-				public void call() {
-					synchronized (innerLock) {
-						isDetached[i] = true;
-						
-						boolean isAllDetached = true;
-						for(int j = 0; j<n; j++) {
-							if(isDetached[j]) { isAllDetached = false; } 
-						}
-						
-						if(isAllDetached) {
-							onProbablyDetachable.call();
-						}
-					}
-				}
-			});
-		});
-	}
-	
-
-
-	@Override
-	public boolean isDetachable() {
-		class Wrapper { public boolean flag = true; }
-		Wrapper wrapper = new Wrapper();
-		branchHandlers.forEach((k, branch) -> {
-			if(!branch.isDetachable()) { wrapper.flag = false; }
-		});
-		return wrapper.flag;
+	public void crawl(List<MgUnmountable> unmountables) {
+		branchHandlers.forEach((k, branch) -> unmountables.add(branch));
 	}
 	
 }

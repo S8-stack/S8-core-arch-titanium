@@ -31,7 +31,7 @@ public abstract class DetachMgTask<R> extends ConsumeResourceMgTask<R> {
 		catch (Exception e) {
 			e.printStackTrace();
 			
-			getHandler().raiseException(e);
+			getHandler().setFailed(e);
 		}
 	}
 

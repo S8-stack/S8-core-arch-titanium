@@ -49,7 +49,7 @@ public class SaveMgTask<R> implements AsyncTask {
 		catch (Exception e) {
 			e.printStackTrace();
 			
-			handler.raiseException(e);
+			handler.setFailed(e);
 		}
 		
 		/**

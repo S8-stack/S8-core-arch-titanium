@@ -1,9 +1,10 @@
 package com.s8.arch.magnesium.shared;
 
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Queue;
 
-import com.s8.arch.magnesium.callbacks.VoidMgCallback;
+import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.silicon.SiliconEngine;
 
 /**
@@ -11,7 +12,7 @@ import com.s8.arch.silicon.SiliconEngine;
  * @author pierreconvert
  *
  */
-public abstract class MgSharedResourceHandler<R> {
+public abstract class MgSharedResourceHandler<R> implements MgUnmountable {
 
 
 	public enum Status {
@@ -29,7 +30,7 @@ public abstract class MgSharedResourceHandler<R> {
 	/**
 	 * Status of the handler
 	 */
-	private Status status = Status.UNMOUNTED;
+	private volatile Status status = Status.UNMOUNTED;
 
 
 	/**
@@ -91,8 +92,6 @@ public abstract class MgSharedResourceHandler<R> {
 	}
 
 
-
-
 	/**
 	 * 
 	 * @param cutOffTimestamp
@@ -125,16 +124,11 @@ public abstract class MgSharedResourceHandler<R> {
 	}
 
 
-	/**
-	 * 
-	 */
-	public void unmount(long cutOffTimestamp, VoidMgCallback callback) {
-		pushOperation(new UnmountOp<>(this, cutOffTimestamp, callback));
+	@Override
+	public void unmount(long cutOffTimestamp, BooleanMgCallback onUnmounted) {
+		pushOperation(new UnmountOp<>(this, cutOffTimestamp, onUnmounted));
 	}
 	
-	
-	
-	public abstract void unmountResource(VoidMgCallback callback);
 	
 
 
@@ -185,7 +179,7 @@ public abstract class MgSharedResourceHandler<R> {
 	 * 
 	 * @param resource
 	 */
-	public void setResource(R resource) {
+	public void setLoaded(R resource) {
 
 		/* low-contention probability synchronized section */
 		synchronized (lock) {
@@ -199,12 +193,24 @@ public abstract class MgSharedResourceHandler<R> {
 	 * 
 	 * @param exception
 	 */
-	public void raiseException(Exception exception) {
+	public void setFailed(Exception exception) {
 
 		/* low-contention probability synchronized section */
 		synchronized (lock) {
 			this.exception = exception;
 			this.status = Status.FAILED;
+		}
+	}
+	
+	
+	
+	
+	public void setUnmounted() {
+		/* low-contention probability synchronized section */
+		synchronized (lock) {
+			this.resource = null;
+			this.exception = null;
+			this.status = Status.UNMOUNTED;
 		}
 	}
 
@@ -214,12 +220,29 @@ public abstract class MgSharedResourceHandler<R> {
 	 * 
 	 * @return
 	 */
+	public R getResource() {
+		synchronized (lock) {
+			return resource;	
+		}
+	}
+	
+	
+
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isRolling() {
 		synchronized (lock) { return isActive; }
 	}
 
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Status getStatus() {
-		synchronized (lock) { return status; }
+		return status;
 	}
 
 
@@ -294,4 +317,8 @@ public abstract class MgSharedResourceHandler<R> {
 		}
 	}
 
+	
+	
+	public abstract void getSubUnmountables(List<MgUnmountable> unmountables);
+	
 }

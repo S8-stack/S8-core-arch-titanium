@@ -1,6 +1,7 @@
 package com.s8.arch.magnesium.branch;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
@@ -8,6 +9,7 @@ import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.repository.MgRepositoryHandler;
 import com.s8.arch.magnesium.shared.MgIOModule;
 import com.s8.arch.magnesium.shared.MgSharedResourceHandler;
+import com.s8.arch.magnesium.shared.MgUnmountable;
 import com.s8.arch.magnesium.store.MgStore;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
@@ -53,7 +55,7 @@ public class MgBranchHandler extends MgSharedResourceHandler<NdBranch> {
 		branchHandler.id = id;
 		branchHandler.name = name;
 
-		branchHandler.setResource(new NdBranch(codebase, id));
+		branchHandler.setLoaded(new NdBranch(codebase, id));
 		branchHandler.save();
 
 		return branchHandler;
@@ -149,6 +151,12 @@ public class MgBranchHandler extends MgSharedResourceHandler<NdBranch> {
 	@Override
 	public MgIOModule<NdBranch> getIOModule() {
 		return ioModule;
+	}
+
+
+	@Override
+	public void getSubUnmountables(List<MgUnmountable> unmountables) {
+		// no sub handlers
 	}
 
 }

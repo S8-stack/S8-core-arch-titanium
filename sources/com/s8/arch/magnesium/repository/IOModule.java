@@ -6,38 +6,30 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 
-import com.s8.arch.magnesium.shared.LoadMgTask;
-import com.s8.arch.magnesium.shared.MgSharedResourceHandler;
+import com.s8.arch.magnesium.shared.MgIOModule;
 import com.s8.io.joos.JOOS_Lexicon;
 import com.s8.io.joos.parsing.JOOS_ParsingException;
 import com.s8.io.joos.types.JOOS_CompilingException;
 import com.s8.io.joos.utilities.JOOS_BufferedFileReader;
+import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
 
-/**
- * 
- * @author pierreconvert
- *
- */
-class Load extends LoadMgTask<MgRepository> {
+public class IOModule implements MgIOModule<MgRepository> {
 
-
-	public final MgRepositoryHandler handler;
-
-
-
-	/**
-	 * 
-	 * @param handler
-	 */
-	public Load(MgRepositoryHandler handler) {
-		super();
-		this.handler = handler;
+	private static JOOS_Lexicon lexicon;
+	
+	
+	public static JOOS_Lexicon JOOS_getLexicon() throws JOOS_CompilingException {
+		if(lexicon == null) { lexicon = JOOS_Lexicon.from(MgRepository.class); }
+		return lexicon;
 	}
 
-
-	@Override
-	public MgSharedResourceHandler<MgRepository> getHandler() {
-		return handler;
+	
+	public final MgRepositoryHandler handler;
+	
+	
+	public IOModule(MgRepositoryHandler handler) {
+		super();
+		this.handler = handler;
 	}
 
 
@@ -48,7 +40,7 @@ class Load extends LoadMgTask<MgRepository> {
 				StandardOpenOption.READ
 		});
 
-		JOOS_Lexicon lexicon = MgRepositoryHandler.JOOS_getLexicon();
+		JOOS_Lexicon lexicon = JOOS_getLexicon();
 		
 		JOOS_BufferedFileReader reader = new JOOS_BufferedFileReader(channel, StandardCharsets.UTF_8, 64);
 		
@@ -57,7 +49,23 @@ class Load extends LoadMgTask<MgRepository> {
 		reader.close();
 
 		return repo;
-
 	}
+	
+	
 
+	@Override
+	public void save(MgRepository repo) throws Exception {
+
+		FileChannel channel = FileChannel.open(handler.getPath(), new OpenOption[]{ 
+				StandardOpenOption.READ
+		});
+
+		JOOS_Lexicon lexicon = JOOS_getLexicon();
+		
+		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);
+
+		lexicon.compose(writer, repo, "   ", false);
+
+		writer.close();
+	}
 }

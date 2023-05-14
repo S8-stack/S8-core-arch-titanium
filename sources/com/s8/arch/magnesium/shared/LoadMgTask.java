@@ -30,7 +30,7 @@ public class LoadMgTask<R> implements AsyncTask {
 			R resource =  handler.getIOModule().load();
 			
 			/* set resource */
-			handler.setResource(resource);
+			handler.setLoaded(resource);
 			
 			/* continue pumping operations */
 			handler.roll(true);
@@ -38,7 +38,7 @@ public class LoadMgTask<R> implements AsyncTask {
 		} 
 		catch (Exception e) {
 
-			handler.raiseException(e);
+			handler.setFailed(e);
 			
 			/* continue pumping operations */
 			handler.roll(true);

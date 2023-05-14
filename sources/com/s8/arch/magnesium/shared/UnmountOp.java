@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.shared;
 
-import com.s8.arch.magnesium.callbacks.VoidMgCallback;
+import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.silicon.async.AsyncTask;
 import com.s8.arch.silicon.async.MthProfile;
 
@@ -8,13 +8,13 @@ public class UnmountOp<R> extends SystemMgOperation<R> {
 
 	public final long cutOffTimestamp;
 
-	public final VoidMgCallback callback;
+	public final BooleanMgCallback callback;
 
 
-	public UnmountOp(MgSharedResourceHandler<R> handler, long cutOffTimestamp, VoidMgCallback callback) {
+	public UnmountOp(MgSharedResourceHandler<R> handler, long cutOffTimestamp, BooleanMgCallback onUnmounted) {
 		super(handler);
 		this.cutOffTimestamp = cutOffTimestamp;
-		this.callback = callback;
+		this.callback = onUnmounted;
 	}
 
 	@Override
