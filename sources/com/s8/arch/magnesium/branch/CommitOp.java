@@ -4,7 +4,7 @@ import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.handler.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handler.ConsumeResourceMgTask;
-import com.s8.arch.magnesium.handler.MgSharedResourceHandler;
+import com.s8.arch.magnesium.handler.MgHandler;
 import com.s8.arch.magnesium.handler.UserMgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
@@ -54,7 +54,7 @@ class CommitOp extends UserMgOperation<NdBranch> {
 		return new ConsumeResourceMgTask<NdBranch>(branch) {
 
 			@Override
-			public MgSharedResourceHandler<NdBranch> getHandler() {
+			public MgHandler<NdBranch> getHandler() {
 				return handler;
 			}
 			

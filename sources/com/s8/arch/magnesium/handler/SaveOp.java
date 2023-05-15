@@ -14,7 +14,7 @@ public class SaveOp<R> extends SystemMgOperation<R> {
 
 	
 	
-	public SaveOp(MgSharedResourceHandler<R> handler) {
+	public SaveOp(MgHandler<R> handler) {
 		super(handler);
 	}
 	

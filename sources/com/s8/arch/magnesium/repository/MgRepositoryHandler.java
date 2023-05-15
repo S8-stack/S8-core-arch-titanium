@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.s8.arch.magnesium.handler.MgIOModule;
-import com.s8.arch.magnesium.handler.MgSharedResourceHandler;
+import com.s8.arch.magnesium.handler.MgHandler;
 import com.s8.arch.magnesium.handler.MgUnmountable;
 import com.s8.arch.magnesium.store.MgStore;
 
@@ -13,7 +13,7 @@ import com.s8.arch.magnesium.store.MgStore;
  * @author pierreconvert
  *
  */
-public class MgRepositoryHandler extends MgSharedResourceHandler<MgRepository> {
+public class MgRepositoryHandler extends MgHandler<MgRepository> {
 	
 	
 	public MgStore store;

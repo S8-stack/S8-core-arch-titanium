@@ -7,7 +7,7 @@ import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.handler.MgIOModule;
-import com.s8.arch.magnesium.handler.MgSharedResourceHandler;
+import com.s8.arch.magnesium.handler.MgHandler;
 import com.s8.arch.magnesium.handler.MgUnmountable;
 import com.s8.arch.magnesium.repository.MgRepositoryHandler;
 import com.s8.arch.magnesium.store.MgStore;
@@ -24,7 +24,7 @@ import com.s8.io.joos.JOOS_Type;
  *
  */
 @JOOS_Type(name = "branch")
-public class MgBranchHandler extends MgSharedResourceHandler<NdBranch> {
+public class MgBranchHandler extends MgHandler<NdBranch> {
 
 
 	@JOOS_Field(name = "id")

@@ -11,9 +11,9 @@ import com.s8.arch.silicon.async.MthProfile;
  */
 public class LoadMgTask<R> implements AsyncTask {
 
-	public final MgSharedResourceHandler<R> handler;
+	public final MgHandler<R> handler;
 	
-	public LoadMgTask(MgSharedResourceHandler<R> handler) {
+	public LoadMgTask(MgHandler<R> handler) {
 		super();
 		this.handler = handler;
 	}

@@ -12,7 +12,7 @@ import com.s8.arch.silicon.SiliconEngine;
  * @author pierreconvert
  *
  */
-public abstract class MgSharedResourceHandler<R> implements MgUnmountable {
+public abstract class MgHandler<R> implements MgUnmountable {
 
 
 	public enum Status {
@@ -67,7 +67,7 @@ public abstract class MgSharedResourceHandler<R> implements MgUnmountable {
 	private SiliconEngine ng;
 
 
-	public MgSharedResourceHandler() {
+	public MgHandler() {
 		super();
 	}
 

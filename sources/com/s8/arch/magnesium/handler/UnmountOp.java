@@ -11,7 +11,7 @@ public class UnmountOp<R> extends SystemMgOperation<R> {
 	public final BooleanMgCallback callback;
 
 
-	public UnmountOp(MgSharedResourceHandler<R> handler, long cutOffTimestamp, BooleanMgCallback onUnmounted) {
+	public UnmountOp(MgHandler<R> handler, long cutOffTimestamp, BooleanMgCallback onUnmounted) {
 		super(handler);
 		this.cutOffTimestamp = cutOffTimestamp;
 		this.callback = onUnmounted;

@@ -7,7 +7,7 @@ public abstract class DetachMgTask<R> extends ConsumeResourceMgTask<R> {
 	public final VoidMgCallback callback;
 	
 	@Override
-	public abstract MgSharedResourceHandler<R> getHandler();
+	public abstract MgHandler<R> getHandler();
 	
 
 	public DetachMgTask(R resource, VoidMgCallback callback) {

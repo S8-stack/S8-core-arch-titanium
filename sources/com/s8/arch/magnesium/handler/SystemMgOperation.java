@@ -3,10 +3,10 @@ package com.s8.arch.magnesium.handler;
 public abstract class SystemMgOperation<R> extends MgOperation<R> {
 
 	
-	public final MgSharedResourceHandler<R> handler;
+	public final MgHandler<R> handler;
 	
 
-	public SystemMgOperation(MgSharedResourceHandler<R> handler) {
+	public SystemMgOperation(MgHandler<R> handler) {
 		super();
 		this.handler = handler;
 	}	

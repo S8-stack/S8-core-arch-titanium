@@ -17,7 +17,7 @@ public abstract class ConsumeResourceMgTask<R> implements AsyncTask {
 	 * 
 	 * @return
 	 */
-	public abstract MgSharedResourceHandler<R> getHandler();
+	public abstract MgHandler<R> getHandler();
 	
 	
 	/**

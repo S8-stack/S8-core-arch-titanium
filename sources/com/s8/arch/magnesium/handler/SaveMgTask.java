@@ -12,7 +12,7 @@ import com.s8.arch.silicon.async.MthProfile;
 public class SaveMgTask<R> implements AsyncTask {
 
 
-	public final MgSharedResourceHandler<R> handler;
+	public final MgHandler<R> handler;
 	
 	public final R resource;
 	
@@ -21,7 +21,7 @@ public class SaveMgTask<R> implements AsyncTask {
 	 * @param resource
 	 * @param callback
 	 */
-	public SaveMgTask(MgSharedResourceHandler<R> handler, R resource) {
+	public SaveMgTask(MgHandler<R> handler, R resource) {
 		super();
 		this.handler = handler;
 		this.resource = resource;
