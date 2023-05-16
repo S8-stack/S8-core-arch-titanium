@@ -28,7 +28,7 @@ class CommitOp extends UserMgOperation<MgRepository> {
 	
 	public final MgRepositoryHandler handler;
 	
-	public final String branchName;
+	public final String branchId;
 	
 	public final NdObject[] objects;
 	
@@ -45,10 +45,10 @@ class CommitOp extends UserMgOperation<MgRepository> {
 	 * @param onFailed
 	 */
 	public CommitOp(long timestamp,
-			MgRepositoryHandler handler, String branchName, NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+			MgRepositoryHandler handler, String branchId, NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
 		super(timestamp);
 		this.handler = handler;
-		this.branchName = branchName;
+		this.branchId = branchId;
 		this.objects = objects;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
@@ -70,13 +70,13 @@ class CommitOp extends UserMgOperation<MgRepository> {
 
 			@Override
 			public String describe() {
-				return "COMMIT-HEAD on "+branchName+" branch of "+handler.getName()+ " repository";
+				return "COMMIT-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
 			public void consumeResource(MgRepository branch) {
 				try {
-					MgBranchHandler branchHandler = repository.branchHandlers.get(branchName);
+					MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
 					if(branchHandler == null) {
 						throw new IOException("Undefined branch");
 					}

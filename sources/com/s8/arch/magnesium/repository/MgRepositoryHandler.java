@@ -74,8 +74,8 @@ public class MgRepositoryHandler extends MgHandler<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void commit(long t, String branchName, NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new CommitOp(t, this, branchName, objects, onSucceed, onFailed));
+	public void commit(long t, String branchId, NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+		pushOperation(new CommitOp(t, this, branchId, objects, onSucceed, onFailed));
 	}
 
 
@@ -84,21 +84,10 @@ public class MgRepositoryHandler extends MgHandler<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void cloneHead(long t, String branchName, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new CloneHeadOp(t, this, branchName, onSucceed, onFailed));
+	public void cloneHead(long t, String branchId, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
+		pushOperation(new CloneHeadOp(t, this, branchId, onSucceed, onFailed));
 	}
 
-
-
-	/**
-	 * 
-	 * @param version
-	 * @param onSucceed
-	 * @param onFailed
-	 */
-	public void cloneVersion(long t, String branchName, long version, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new CloneVersionOp(t, this, branchName, version, onSucceed, onFailed));
-	}
 
 
 	/**
@@ -107,8 +96,19 @@ public class MgRepositoryHandler extends MgHandler<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void retrieveHeadVersion(long t, String branchName, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new RetrieveHeadVersion(t, this, branchName, onSucceed, onFailed));
+	public void cloneVersion(long t, String branchId, long version, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
+		pushOperation(new CloneVersionOp(t, this, branchId, version, onSucceed, onFailed));
+	}
+
+
+	/**
+	 * 
+	 * @param version
+	 * @param onSucceed
+	 * @param onFailed
+	 */
+	public void retrieveHeadVersion(long t, String branchId, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+		pushOperation(new RetrieveHeadVersion(t, this, branchId, onSucceed, onFailed));
 	}
 
 }

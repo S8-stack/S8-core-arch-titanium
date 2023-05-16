@@ -21,7 +21,7 @@ class CloneVersionOp extends UserMgOperation<MgStore> {
 
 	public final String repositoryAddress;
 	
-	public final String branchName;
+	public final String branchId;
 	
 	public final long version;
 	
@@ -53,7 +53,7 @@ class CloneVersionOp extends UserMgOperation<MgStore> {
 		super(timestamp);
 		this.handler = handler;
 		this.repositoryAddress = repositoryAddress;
-		this.branchName = branchName;
+		this.branchId = branchName;
 		this.version = version;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
@@ -76,7 +76,7 @@ class CloneVersionOp extends UserMgOperation<MgStore> {
 
 			@Override
 			public String describe() {
-				return "CLONE-HEAD on "+branchName+" branch of "+handler.getName()+ " repository";
+				return "CLONE-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
@@ -84,7 +84,7 @@ class CloneVersionOp extends UserMgOperation<MgStore> {
 				try {
 					store.repositoryHandlers.
 					computeIfAbsent(repositoryAddress, address -> new MgRepositoryHandler(handler.ng, store, address)).
-					cloneVersion(timeStamp, branchName, version, onSucceed, onFailed);
+					cloneVersion(timeStamp, branchId, version, onSucceed, onFailed);
 				}
 				catch(Exception exception) { onFailed.call(exception); }
 			}			

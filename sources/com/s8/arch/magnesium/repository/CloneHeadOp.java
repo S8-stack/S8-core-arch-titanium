@@ -28,7 +28,7 @@ class CloneHeadOp extends UserMgOperation<MgRepository> {
 	
 	public final MgRepositoryHandler handler;
 	
-	public final String branchName;
+	public final String branchId;
 	
 	public final ObjectsMgCallback onSucceed;
 	
@@ -41,10 +41,10 @@ class CloneHeadOp extends UserMgOperation<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneHeadOp(long timestamp, MgRepositoryHandler handler, String branchName, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
+	public CloneHeadOp(long timestamp, MgRepositoryHandler handler, String branchId, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
 		super(timestamp);
 		this.handler = handler;
-		this.branchName = branchName;
+		this.branchId = branchId;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
 	}
@@ -66,15 +66,15 @@ class CloneHeadOp extends UserMgOperation<MgRepository> {
 
 			@Override
 			public String describe() {
-				return "CLONE-HEAD on "+branchName+" branch of "+handler.getName()+ " repository";
+				return "CLONE-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
 			public void consumeResource(MgRepository repository) {
 				try {
-					MgBranchHandler branchHandler = repository.branchHandlers.get(branchName);
+					MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
 					if(branchHandler == null) {
-						throw new IOException("No branch "+branchName+" for repo "+repository.address);
+						throw new IOException("No branch "+branchId+" for repo "+repository.address);
 					}
 					branchHandler.cloneHead(timeStamp, onSucceed, onFailed);
 				}

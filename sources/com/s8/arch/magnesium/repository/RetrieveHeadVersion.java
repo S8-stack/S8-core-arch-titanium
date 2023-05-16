@@ -28,7 +28,7 @@ class RetrieveHeadVersion extends UserMgOperation<MgRepository> {
 
 	public final MgRepositoryHandler handler;
 
-	public final String branchName;
+	public final String branchId;
 
 	public final VersionMgCallback onSucceed;
 
@@ -43,12 +43,12 @@ class RetrieveHeadVersion extends UserMgOperation<MgRepository> {
 	 */
 	public RetrieveHeadVersion(long timestamp,
 			MgRepositoryHandler handler, 
-			String branchName,
+			String branchId,
 			VersionMgCallback onSucceed, 
 			ExceptionMgCallback onFailed) {
 		super(timestamp);
 		this.handler = handler;
-		this.branchName = branchName;
+		this.branchId = branchId;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
 	}
@@ -69,14 +69,14 @@ class RetrieveHeadVersion extends UserMgOperation<MgRepository> {
 
 			@Override
 			public String describe() {
-				return "CLONE-HEAD on "+branchName+" branch of "+handler.getName()+ " repository";
+				return "CLONE-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
 			public void consumeResource(MgRepository branch) {
 				try {
-					MgBranchHandler branchHandler = repository.branchHandlers.get(branchName);
-					if(branchHandler == null) { throw new IOException("No branch "+branchName+" on repo "+repository.address); }
+					MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
+					if(branchHandler == null) { throw new IOException("No branch "+branchId+" on repo "+repository.address); }
 					branchHandler.retrieveHeadVersion(timeStamp, onSucceed, onFailed);
 				}
 				catch(Exception exception) {
