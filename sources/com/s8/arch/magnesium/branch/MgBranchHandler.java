@@ -6,10 +6,10 @@ import java.util.List;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.callbacks.VersionMgCallback;
-import com.s8.arch.magnesium.handler.MgIOModule;
 import com.s8.arch.magnesium.handler.MgHandler;
+import com.s8.arch.magnesium.handler.MgIOModule;
 import com.s8.arch.magnesium.handler.MgUnmountable;
-import com.s8.arch.magnesium.repository.MgRepositoryHandler;
+import com.s8.arch.magnesium.repository.MgRepository;
 import com.s8.arch.magnesium.store.MgStore;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
@@ -23,32 +23,60 @@ import com.s8.io.joos.JOOS_Type;
  * @author pierreconvert
  *
  */
-@JOOS_Type(name = "branch")
+
 public class MgBranchHandler extends MgHandler<NdBranch> {
 
 
-	@JOOS_Field(name = "id")
-	public String id;
+	private String id;
+
+	private String name;
+
+	private long version;
+	
+	
+	@JOOS_Type(name = "branch")
+	public static class Serialized {
+		
+		@JOOS_Field(name = "id")
+		public String id;
 
 
-	@JOOS_Field(name = "name")
-	public String name;
+		@JOOS_Field(name = "name")
+		public String name;
+
+		@JOOS_Field(name = "version")
+		public long version;
+		
+		
+		public MgBranchHandler deserialize(SiliconEngine ng, MgStore store, MgRepository repository) {
+			MgBranchHandler handler = new MgBranchHandler(ng, store, repository);
+			handler.id = id;
+			handler.name = name;
+			handler.version = version;
+			return handler;
+		}
+		
+	}
 
 	
-	@JOOS_Field(name = "version")
-	public long version;
-
+	
+	public String getIdentifier() {
+		return id;
+	}
+	
+	public long getVersion() {
+		return version;
+	}
 
 	
 	public final static String DEFAULT_BRANCH_NAME = "prime";
 
 	
-	public static MgBranchHandler create(MgStore store, String name) {
+	public static MgBranchHandler create(SiliconEngine ng, MgStore store, MgRepository repository, String name) {
 
 		String id = DEFAULT_BRANCH_NAME;
 		
-		MgBranchHandler branchHandler = new MgBranchHandler();
-		branchHandler.initialize(store.getEngine());
+		MgBranchHandler branchHandler = new MgBranchHandler(ng, store, repository);
 	
 		NdCodebase codebase = store.getCodebase();
 		
@@ -63,23 +91,19 @@ public class MgBranchHandler extends MgHandler<NdBranch> {
 	
 
 
-	private MgStore store;
+	public final MgStore store;
 
-	public MgRepositoryHandler repository;
+	public final MgRepository repository;
 
 
 	private final MgIOModule<NdBranch> ioModule = new MgBranchIO(this);
 
-	public MgBranchHandler() {
-		super();
-	}
-
-
-
-	public void link(SiliconEngine ng, MgStore store) {
-		initialize(ng);
+	public MgBranchHandler(SiliconEngine ng, MgStore store, MgRepository repository) {
+		super(ng);
 		this.store = store;
+		this.repository = repository;
 	}
+
 
 
 	/**
@@ -138,7 +162,7 @@ public class MgBranchHandler extends MgHandler<NdBranch> {
 	 * @return path to repository branch sequence
 	 */
 	Path getPath() {
-		return repository.path.resolve(id);
+		return repository.getPath().resolve(id);
 	}
 
 
@@ -159,4 +183,12 @@ public class MgBranchHandler extends MgHandler<NdBranch> {
 		// no sub handlers
 	}
 
+	
+	public Serialized serialize() {
+		Serialized serializable = new Serialized();
+		serializable.id = id;
+		serializable.name = name;
+		serializable.version = version;
+		return serializable;
+	}
 }

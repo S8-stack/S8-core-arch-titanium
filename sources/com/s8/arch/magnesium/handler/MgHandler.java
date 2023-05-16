@@ -64,21 +64,14 @@ public abstract class MgHandler<R> implements MgUnmountable {
 
 
 
-	private SiliconEngine ng;
+	public final SiliconEngine ng;
 
 
-	public MgHandler() {
+	public MgHandler(SiliconEngine ng) {
 		super();
-	}
-
-
-	/**
-	 * 
-	 * @param ng
-	 */
-	public void initialize(SiliconEngine ng) {
 		this.ng = ng;
 	}
+
 
 
 	boolean isSaved() {

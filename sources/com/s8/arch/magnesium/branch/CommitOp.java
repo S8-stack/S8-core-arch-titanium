@@ -65,7 +65,7 @@ class CommitOp extends UserMgOperation<NdBranch> {
 
 			@Override
 			public String describe() {
-				return "CLONE-HEAD on "+handler.id+" branch of "+handler.getName()+ " repository";
+				return "CLONE-HEAD on "+handler.getIdentifier()+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override

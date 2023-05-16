@@ -1,5 +1,8 @@
-package com.s8.arch.magnesium.branch;
+package com.s8.arch.magnesium.repository;
 
+import java.io.IOException;
+
+import com.s8.arch.magnesium.branch.MgBranchHandler;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.handler.CatchExceptionMgTask;
@@ -7,55 +10,52 @@ import com.s8.arch.magnesium.handler.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handler.MgHandler;
 import com.s8.arch.magnesium.handler.UserMgOperation;
 import com.s8.arch.silicon.async.MthProfile;
-import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.object.NdObject;
 
 /**
  * 
  * @author pierreconvert
  *
  */
-class CloneVersionOp extends UserMgOperation<NdBranch> {
-	
-	
-	public final MgBranchHandler handler;
-	
-	public final long version;
-	
-	public final ObjectsMgCallback onSucceed;
+class CloneHeadOp extends UserMgOperation<MgRepository> {
 
-	public final ExceptionMgCallback onFailed;
 
-	
 	@Override
 	public boolean isReadOnly() {
 		return true;
 	}
 	
 	
+	
+	public final MgRepositoryHandler handler;
+	
+	public final String branchName;
+	
+	public final ObjectsMgCallback onSucceed;
+	
+	public final ExceptionMgCallback onFailed;
+
+	
 	/**
 	 * 
 	 * @param handler
-	 * @param version
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneVersionOp(long timestamp, 
-			MgBranchHandler handler, long version, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
+	public CloneHeadOp(long timestamp, MgRepositoryHandler handler, String branchName, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
 		super(timestamp);
 		this.handler = handler;
-		this.version = version;
+		this.branchName = branchName;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
 	}
 	
 
 	@Override
-	public ConsumeResourceMgTask<NdBranch> createConsumeResourceTask(NdBranch branch) {
-		return new ConsumeResourceMgTask<NdBranch>(branch) {
+	public ConsumeResourceMgTask<MgRepository> createConsumeResourceTask(MgRepository repo) {
+		return new ConsumeResourceMgTask<MgRepository>(repo) {
 
 			@Override
-			public MgHandler<NdBranch> getHandler() {
+			public MgHandler<MgRepository> getHandler() {
 				return handler;
 			}
 			
@@ -66,17 +66,22 @@ class CloneVersionOp extends UserMgOperation<NdBranch> {
 
 			@Override
 			public String describe() {
-				return "CLONE-HEAD on "+handler.getIdentifier()+" branch of "+handler.getName()+ " repository";
+				return "CLONE-HEAD on "+branchName+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
-			public void consumeResource(NdBranch branch) {
+			public void consumeResource(MgRepository repository) {
 				try {
-					NdObject[] objects = branch.cloneVersion(version).exposure;
-					onSucceed.call(objects);
+					MgBranchHandler branchHandler = repository.branchHandlers.get(branchName);
+					if(branchHandler == null) {
+						throw new IOException("No branch "+branchName+" for repo "+repository.address);
+					}
+					branchHandler.cloneHead(timeStamp, onSucceed, onFailed);
 				}
 				catch(Exception exception) { onFailed.call(exception); }
-			}			
+			}
+
+			
 		};
 	}
 

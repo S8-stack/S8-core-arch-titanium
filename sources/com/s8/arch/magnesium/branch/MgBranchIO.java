@@ -47,7 +47,7 @@ public class MgBranchIO implements MgIOModule<NdBranch> {
 		NdInbound inbound = new NdInbound(store.getCodebase());
 
 		/* build branch */
-		NdBranch branch = new NdBranch(store.getCodebase(), handler.id);
+		NdBranch branch = new NdBranch(store.getCodebase(), handler.getIdentifier());
 
 		/* load branch */
 		inbound.pullFrame(inflow, delta -> branch.appendDelta(delta));

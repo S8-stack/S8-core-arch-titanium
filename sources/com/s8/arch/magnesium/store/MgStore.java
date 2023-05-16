@@ -2,7 +2,6 @@ package com.s8.arch.magnesium.store;
 
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.s8.arch.magnesium.repository.MgRepositoryHandler;
 import com.s8.arch.magnesium.store.config.MgConfiguration;
@@ -26,10 +25,13 @@ public class MgStore {
 	
 	private NdCodebase codebase;
 	
+	public String rootPathname;
+	
 	private Path rootPath;
 	
+	MgPathComposer composer 
 	
-	private Map<String, MgRepositoryHandler> map = new ConcurrentHashMap<>();
+	private Map<String, MgRepositoryHandler> repositoryHandlers;
 	
 	private JOOS_Lexicon mapLexicon;
 	
@@ -40,6 +42,9 @@ public class MgStore {
 		setup(config);
 		codebase = NdCodebase.from(classes);
 		JOOS_init();
+		
+		
+		//composer = new MgPathComposer(Path.of("output"));
 	}
 	
 	
@@ -65,6 +70,10 @@ public class MgStore {
 	
 	public Path getRootPath() {
 		return rootPath;
+	}
+	
+	public Path composeRepositoryPath(String address) {
+		return null;
 	}
 	
 
