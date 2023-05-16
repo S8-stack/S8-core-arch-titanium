@@ -31,8 +31,8 @@ class CloneVersionOp extends UserMgOperation<MgRepository> {
 
 	
 	@Override
-	public boolean isReadOnly() {
-		return true;
+	public boolean isModifyingResource() {
+		return false;
 	}
 	
 	

@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.store;
+package com.s8.arch.magnesium.flow;
 
 import com.s8.arch.silicon.async.MthProfile;
 

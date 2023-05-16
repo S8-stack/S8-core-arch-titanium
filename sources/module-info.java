@@ -9,14 +9,18 @@ module com.s8.arch.magnesium {
 	
 	
 
+	exports com.s8.arch.magnesium.handler;
+	exports com.s8.arch.magnesium.callbacks;
+	exports com.s8.arch.magnesium.branch;
+	exports com.s8.arch.magnesium.repository;
+	exports com.s8.arch.magnesium.store;
+
+	exports com.s8.arch.magnesium.store.config;
 	
 	
 	exports com.s8.arch.magnesium.oldcallbacks;
 	exports com.s8.arch.magnesium.handles.h1;
 	exports com.s8.arch.magnesium.handles.h2;
-	
-	exports com.s8.arch.magnesium.store;
-	exports com.s8.arch.magnesium.store.config;
 	
 	exports com.s8.arch.magnesium.stores.m1;
 	exports com.s8.arch.magnesium.stores.m2;
@@ -39,7 +43,6 @@ module com.s8.arch.magnesium {
 	requires transitive com.s8.io.bohr.neodymium;
 	
 	requires transitive com.s8.arch.silicon;
-	requires com.s8.io.joos;
-	requires com.s8.io.bohr.neon;
+	requires transitive com.s8.io.joos;
 	
 }

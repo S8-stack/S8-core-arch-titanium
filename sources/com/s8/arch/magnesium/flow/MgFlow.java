@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.store;
+package com.s8.arch.magnesium.flow;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

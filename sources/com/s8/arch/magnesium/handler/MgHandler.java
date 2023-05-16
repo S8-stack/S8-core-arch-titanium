@@ -277,7 +277,7 @@ public abstract class MgHandler<R> implements MgUnmountable {
 						MgOperation<R> operation = operations.poll();
 
 						/* update resource modification status */
-						if(!operation.isReadOnly()) { isSaved = false; }
+						if(operation.isModifyingResource()) { isSaved = false; }
 
 						/* update timestamp */
 						if(operation.isUserInduced()) { lastOpTimestamp = operation.getTimestamp(); }						

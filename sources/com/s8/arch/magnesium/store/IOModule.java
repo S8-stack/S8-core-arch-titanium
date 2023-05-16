@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.repository;
+package com.s8.arch.magnesium.store;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -14,30 +14,30 @@ import com.s8.io.joos.types.JOOS_CompilingException;
 import com.s8.io.joos.utilities.JOOS_BufferedFileReader;
 import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
 
-public class IOModule implements MgIOModule<MgRepository> {
+public class IOModule implements MgIOModule<MgStore> {
 
 	private static JOOS_Lexicon lexicon;
 	
 	
 	public static JOOS_Lexicon JOOS_getLexicon() throws JOOS_CompilingException {
-		if(lexicon == null) { lexicon = JOOS_Lexicon.from(MgRepository.Serialized.class, MgBranchHandler.Serialized.class); }
+		if(lexicon == null) { lexicon = JOOS_Lexicon.from(MgStore.Serialized.class, MgBranchHandler.Serialized.class); }
 		return lexicon;
 	}
 
 	
-	public final MgRepositoryHandler handler;
+	public final MgStoreHandler handler;
 	
 	
-	public IOModule(MgRepositoryHandler handler) {
+	public IOModule(MgStoreHandler handler) {
 		super();
 		this.handler = handler;
 	}
 
 
 	@Override
-	public MgRepository load() throws IOException, JOOS_ParsingException, JOOS_CompilingException {
+	public MgStore load() throws IOException, JOOS_ParsingException, JOOS_CompilingException {
 
-		FileChannel channel = FileChannel.open(handler.getPath(), new OpenOption[]{ 
+		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
 				StandardOpenOption.READ
 		});
 
@@ -48,19 +48,19 @@ public class IOModule implements MgIOModule<MgRepository> {
 		
 		JOOS_BufferedFileReader reader = new JOOS_BufferedFileReader(channel, StandardCharsets.UTF_8, 64);
 		
-		MgRepository.Serialized repo = (MgRepository.Serialized) lexicon.parse(reader, true);
+		MgStore.Serialized repo = (MgStore.Serialized) lexicon.parse(reader, true);
 
 		reader.close();
 
-		return repo.deserialize(handler.ng, handler.store);
+		return repo.deserialize(handler, handler.codebase);
 	}
 	
 	
 
 	@Override
-	public void save(MgRepository repo) throws Exception {
+	public void save(MgStore repo) throws Exception {
 
-		FileChannel channel = FileChannel.open(handler.getPath(), new OpenOption[]{ 
+		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
 				StandardOpenOption.WRITE
 		});
 

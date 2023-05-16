@@ -18,7 +18,7 @@ public class UnmountOp<R> extends SystemMgOperation<R> {
 	}
 
 	@Override
-	public boolean isReadOnly() {
+	public boolean isModifyingResource() {
 		return true;
 	}
 

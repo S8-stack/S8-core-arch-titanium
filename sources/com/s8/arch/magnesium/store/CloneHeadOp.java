@@ -1,39 +1,36 @@
-package com.s8.arch.magnesium.repository;
+package com.s8.arch.magnesium.store;
 
-import java.io.IOException;
-
-import com.s8.arch.magnesium.branch.MgBranchHandler;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.handler.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handler.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handler.MgHandler;
 import com.s8.arch.magnesium.handler.UserMgOperation;
+import com.s8.arch.magnesium.repository.MgRepositoryHandler;
 import com.s8.arch.silicon.async.MthProfile;
-import com.s8.io.bohr.neodymium.object.NdObject;
-
 
 /**
  * 
  * @author pierreconvert
  *
  */
-class CommitOp extends UserMgOperation<MgRepository> {
+class CloneHeadOp extends UserMgOperation<MgStore> {
+
 
 	@Override
 	public boolean isModifyingResource() {
-		return true;
+		return false;
 	}
 	
 	
-	public final MgRepositoryHandler handler;
+	
+	public final MgStoreHandler handler;
+	
+	public final String repositoryAddress;
 	
 	public final String branchName;
 	
-	public final NdObject[] objects;
-	
-	
-	public final VersionMgCallback onSucceed;
+	public final ObjectsMgCallback onSucceed;
 	
 	public final ExceptionMgCallback onFailed;
 
@@ -44,22 +41,27 @@ class CommitOp extends UserMgOperation<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CommitOp(long timestamp,
-			MgRepositoryHandler handler, String branchName, NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+	public CloneHeadOp(long timestamp, 
+			MgStoreHandler handler, 
+			String repositoryAddress,
+			String branchName, 
+			ObjectsMgCallback onSucceed, 
+			ExceptionMgCallback onFailed) {
 		super(timestamp);
 		this.handler = handler;
+		this.repositoryAddress = repositoryAddress;
 		this.branchName = branchName;
-		this.objects = objects;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
 	}
+	
 
 	@Override
-	public ConsumeResourceMgTask<MgRepository> createConsumeResourceTask(MgRepository repository) {
-		return new ConsumeResourceMgTask<MgRepository>(repository) {
+	public ConsumeResourceMgTask<MgStore> createConsumeResourceTask(MgStore store) {
+		return new ConsumeResourceMgTask<MgStore>(store) {
 
 			@Override
-			public MgHandler<MgRepository> getHandler() {
+			public MgHandler<MgStore> getHandler() {
 				return handler;
 			}
 			
@@ -70,24 +72,20 @@ class CommitOp extends UserMgOperation<MgRepository> {
 
 			@Override
 			public String describe() {
-				return "COMMIT-HEAD on "+branchName+" branch of "+handler.getName()+ " repository";
+				return "CLONE-HEAD on "+branchName+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
-			public void consumeResource(MgRepository branch) {
+			public void consumeResource(MgStore store) {
 				try {
-					MgBranchHandler branchHandler = repository.branchHandlers.get(branchName);
-					if(branchHandler == null) {
-						throw new IOException("Undefined branch");
-					}
-					
-					// commit on branch
-					branchHandler.commit(timeStamp, objects, onSucceed, onFailed);
+					store.repositoryHandlers.
+					computeIfAbsent(repositoryAddress, address -> new MgRepositoryHandler(handler.ng, store, address)).
+					cloneHead(timeStamp, branchName, onSucceed, onFailed);
 				}
-				catch(Exception exception) {
-					onFailed.call(exception);
-				}
-			}			
+				catch(Exception exception) { onFailed.call(exception); }
+			}
+
+			
 		};
 	}
 
@@ -111,6 +109,7 @@ class CommitOp extends UserMgOperation<MgRepository> {
 			}
 		};
 	}
+
 
 	
 }

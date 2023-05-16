@@ -18,8 +18,8 @@ class RetrieveHeadVersion extends UserMgOperation<NdBranch> {
 
 
 	@Override
-	public boolean isReadOnly() {
-		return true;
+	public boolean isModifyingResource() {
+		return false;
 	}
 	
 	

@@ -18,10 +18,8 @@ import com.s8.io.bohr.neodymium.object.NdObject;
 class CloneHeadOp extends UserMgOperation<NdBranch> {
 
 
-	@Override
-	public boolean isReadOnly() {
-		return true;
-	}
+	
+	public @Override boolean isModifyingResource() { return false; }
 	
 	
 	

@@ -1,16 +1,16 @@
 package com.s8.arch.magnesium.store;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.s8.arch.magnesium.handler.MgUnmountable;
 import com.s8.arch.magnesium.repository.MgRepositoryHandler;
-import com.s8.arch.magnesium.store.config.MgConfiguration;
-import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
-import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.object.NdObject;
-import com.s8.io.joos.JOOS_Lexicon;
-import com.s8.io.joos.types.JOOS_CompilingException;
+import com.s8.io.joos.JOOS_Field;
+import com.s8.io.joos.JOOS_Type;
 
 
 /**
@@ -21,37 +21,32 @@ import com.s8.io.joos.types.JOOS_CompilingException;
 public class MgStore {
 	
 	
-	public final SiliconEngine engine;
+	public final MgStoreHandler handler;
 	
-	private NdCodebase codebase;
+	public final NdCodebase codebase;
 	
-	public String rootPathname;
+	private String rootPathname;
 	
 	private Path rootPath;
 	
-	MgPathComposer composer 
+	private MgPathComposer repoPathComposer;
 	
-	private Map<String, MgRepositoryHandler> repositoryHandlers;
-	
-	private JOOS_Lexicon mapLexicon;
+	public final Map<String, MgRepositoryHandler> repositoryHandlers = new HashMap<>();
 	
 	
-	public MgStore(SiliconEngine engine, MgConfiguration config, Class<?>... classes) throws NdBuildException {
+	public MgStore(MgStoreHandler handler, NdCodebase codebase, String rootPathname) {
 		super();
-		this.engine = engine;
-		setup(config);
-		codebase = NdCodebase.from(classes);
-		JOOS_init();
+		this.handler = handler;
+		this.codebase = codebase;
 		
-		
-		//composer = new MgPathComposer(Path.of("output"));
+		this.rootPathname = rootPathname;
+		this.rootPath = Path.of(rootPathname);
+		this.repoPathComposer = new MgPathComposer(rootPath);
 	}
 	
 	
-	public JOOS_Lexicon JOOS_getLexicon() {
-		return mapLexicon;
-	}
 	
+	/*
 	private void JOOS_init() {
 		try {
 			mapLexicon = JOOS_Lexicon.from(MgRepositoryHandler.class);
@@ -60,12 +55,7 @@ public class MgStore {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	private void setup(MgConfiguration config) {
-		this.rootPath = Path.of(config.rootPath);
-	}
-	
+	*/
 	
 	
 	public Path getRootPath() {
@@ -73,14 +63,9 @@ public class MgStore {
 	}
 	
 	public Path composeRepositoryPath(String address) {
-		return null;
+		return repoPathComposer.composePath(address);
 	}
 	
-
-	public SiliconEngine getEngine() {
-		return engine;
-	}
-
 
 	public NdCodebase getCodebase() {
 		return codebase;
@@ -98,6 +83,40 @@ public class MgStore {
 
 	public void commit(String repositoryId, String branchId, NdObject[] objects) {
 		
+	}
+	
+	
+	
+
+	
+	@JOOS_Type(name = "repository")
+	public static class Serialized {
+		
+		@JOOS_Field(name = "rootPathname") 
+		public String rootPathname;
+		
+		
+		
+		public MgStore deserialize(MgStoreHandler handler, NdCodebase codebase) {
+			return new MgStore(handler, codebase, rootPathname);
+		}
+	}
+
+	
+	
+	public Serialized serialize() {
+		Serialized serialized = new Serialized();
+		
+		// address
+		serialized.rootPathname = rootPathname;
+		
+		return serialized;
+	}
+
+
+
+	public void crawl(List<MgUnmountable> unmountables) {
+		repositoryHandlers.forEach((k, repo) -> unmountables.add(repo));
 	}
 	
 }

@@ -19,8 +19,8 @@ import com.s8.io.bohr.neodymium.object.NdObject;
 class CommitOp extends UserMgOperation<NdBranch> {
 
 	@Override
-	public boolean isReadOnly() {
-		return false;
+	public boolean isModifyingResource() {
+		return true;
 	}
 	
 	

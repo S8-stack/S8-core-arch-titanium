@@ -26,7 +26,7 @@ public abstract class MgOperation<R> {
 	/**
 	 * 
 	 */
-	public abstract boolean isReadOnly();
+	public abstract boolean isModifyingResource();
 	
 	/**
 	 * 

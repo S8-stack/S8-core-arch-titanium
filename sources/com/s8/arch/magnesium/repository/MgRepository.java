@@ -17,43 +17,18 @@ import com.s8.io.joos.JOOS_Type;
 
 public class MgRepository {
 	
-	/*
-	public static MgRepository create(MgStore store) {
+	
+	public static MgRepository create(SiliconEngine ng, MgStore store, String address) {
+		Path path = store.composeRepositoryPath(address);
+		MgRepository repository = new MgRepository(address, path);
 		
-		MgRepository repository = new MgRepository();
-		
-		repository.branchHandlers = new HashMap<>();
-		
-		MgBranchHandler branchHandler = MgBranchHandler.create(store, "Default (prime) branch");
-		repository.branchHandlers.put(branchHandler.id, branchHandler);
+		MgBranchHandler branchHandler = MgBranchHandler.create(ng, store, repository, "Default (prime) branch");
+		repository.branchHandlers.put(branchHandler.getIdentifier(), branchHandler);
 		
 		return repository;
 	}
-	*/
 	
 	
-	@JOOS_Type(name = "repository")
-	public static class Serialized {
-		
-		@JOOS_Field(name = "address") 
-		public String address;
-		
-		
-		@JOOS_Field(name = "branches")
-		public Map<String, MgBranchHandler.Serialized> branches;
-		
-		
-		public MgRepository deserialize(SiliconEngine ng, MgStore store) {
-			Path path = store.composeRepositoryPath(address);
-			MgRepository repository = new MgRepository(address, path);
-			branches.forEach((name, branch) -> {
-				repository.branchHandlers.put(name, branch.deserialize(ng, store, repository));
-			});
-			
-			return repository;
-		}
-	}
-
 	
 	public final String address;
 	
@@ -81,6 +56,32 @@ public class MgRepository {
 	public Path getPath() {
 		return null;
 	}
+	
+	
+
+	
+	@JOOS_Type(name = "repository")
+	public static class Serialized {
+		
+		@JOOS_Field(name = "address") 
+		public String address;
+		
+		
+		@JOOS_Field(name = "branches")
+		public Map<String, MgBranchHandler.Serialized> branches;
+		
+		
+		public MgRepository deserialize(SiliconEngine ng, MgStore store) {
+			Path path = store.composeRepositoryPath(address);
+			MgRepository repository = new MgRepository(address, path);
+			branches.forEach((name, branch) -> {
+				repository.branchHandlers.put(name, branch.deserialize(ng, store, repository));
+			});
+			
+			return repository;
+		}
+	}
+
 	
 	
 	public Serialized serialize() {
