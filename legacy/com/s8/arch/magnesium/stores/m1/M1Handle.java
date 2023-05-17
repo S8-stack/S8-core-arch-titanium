@@ -3,9 +3,9 @@ package com.s8.arch.magnesium.stores.m1;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import com.s8.arch.magnesium.handles.h2.H2Handle;
-import com.s8.arch.magnesium.handles.h2.H2ModelPrototype;
-import com.s8.arch.magnesium.handles.h2.H2Operator;
+import com.s8.arch.magnesium.handlers.h2.H2Handle;
+import com.s8.arch.magnesium.handlers.h2.H2ModelPrototype;
+import com.s8.arch.magnesium.handlers.h2.H2Operator;
 import com.s8.arch.silicon.SiliconEngine;
 
 

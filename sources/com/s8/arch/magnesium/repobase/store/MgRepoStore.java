@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.s8.arch.magnesium.core.handler.MgUnmountable;
+import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.magnesium.repobase.repository.MgRepositoryHandler;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.object.NdObject;
@@ -115,7 +115,7 @@ public class MgRepoStore {
 
 
 
-	public void crawl(List<MgUnmountable> unmountables) {
+	public void crawl(List<H3MgUnmountable> unmountables) {
 		repositoryHandlers.forEach((k, repo) -> unmountables.add(repo));
 	}
 	

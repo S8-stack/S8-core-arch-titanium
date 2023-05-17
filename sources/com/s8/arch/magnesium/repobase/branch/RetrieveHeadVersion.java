@@ -2,10 +2,10 @@ package com.s8.arch.magnesium.repobase.branch;
 
 import com.s8.arch.magnesium.core.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.core.callbacks.VersionMgCallback;
-import com.s8.arch.magnesium.core.handler.CatchExceptionMgTask;
-import com.s8.arch.magnesium.core.handler.ConsumeResourceMgTask;
-import com.s8.arch.magnesium.core.handler.MgHandler;
-import com.s8.arch.magnesium.core.handler.UserMgOperation;
+import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
+import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 
@@ -14,7 +14,7 @@ import com.s8.io.bohr.neodymium.branch.NdBranch;
  * @author pierreconvert
  *
  */
-class RetrieveHeadVersion extends UserMgOperation<NdBranch> {
+class RetrieveHeadVersion extends UserH3MgOperation<NdBranch> {
 
 
 	@Override
@@ -52,7 +52,7 @@ class RetrieveHeadVersion extends UserMgOperation<NdBranch> {
 		return new ConsumeResourceMgTask<NdBranch>(branch) {
 
 			@Override
-			public MgHandler<NdBranch> getHandler() {
+			public H3MgHandler<NdBranch> getHandler() {
 				return handler;
 			}
 

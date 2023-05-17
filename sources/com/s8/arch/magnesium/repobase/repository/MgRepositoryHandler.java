@@ -6,9 +6,9 @@ import java.util.List;
 import com.s8.arch.magnesium.core.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.core.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.core.callbacks.VersionMgCallback;
-import com.s8.arch.magnesium.core.handler.MgHandler;
-import com.s8.arch.magnesium.core.handler.MgIOModule;
-import com.s8.arch.magnesium.core.handler.MgUnmountable;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
+import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.magnesium.repobase.store.MgRepoStore;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.object.NdObject;
@@ -18,7 +18,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-public class MgRepositoryHandler extends MgHandler<MgRepository> {
+public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	
 	
 	private final IOModule ioModule = new IOModule(this);
@@ -53,12 +53,12 @@ public class MgRepositoryHandler extends MgHandler<MgRepository> {
 	}
 
 	@Override
-	public MgIOModule<MgRepository> getIOModule() {
+	public H3MgIOModule<MgRepository> getIOModule() {
 		return ioModule;
 	}
 
 	@Override
-	public void getSubUnmountables(List<MgUnmountable> unmountables) {
+	public void getSubUnmountables(List<H3MgUnmountable> unmountables) {
 		MgRepository repository = getResource();
 		if(repository != null) { repository.crawl(unmountables); }
 	}

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Function;
 
-import com.s8.arch.magnesium.handles.h2.H2Handle;
+import com.s8.arch.magnesium.handlers.h2.H2Handle;
 import com.s8.arch.magnesium.stores.m1.M1Handle;
 import com.s8.arch.magnesium.stores.m1.M1ModelConstructor;
 import com.s8.arch.magnesium.stores.m1.M1Store;

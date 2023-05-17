@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.s8.arch.magnesium.core.callbacks.BooleanMgCallback;
 import com.s8.arch.magnesium.core.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.core.handler.MgHandler;
-import com.s8.arch.magnesium.core.handler.MgIOModule;
-import com.s8.arch.magnesium.core.handler.MgUnmountable;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
+import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.codebase.BeCodebase;
@@ -19,7 +19,7 @@ import com.s8.io.bohr.beryllium.exception.BeBuildException;
  * @author pc
  *
  */
-public class MgUserbase extends MgHandler<BeBranch> {
+public class MgUserbase extends H3MgHandler<BeBranch> {
 
 	
 	
@@ -47,12 +47,12 @@ public class MgUserbase extends MgHandler<BeBranch> {
 	}
 
 	@Override
-	public MgIOModule<BeBranch> getIOModule() {
+	public H3MgIOModule<BeBranch> getIOModule() {
 		return ioModule;
 	}
 
 	@Override
-	public void getSubUnmountables(List<MgUnmountable> unmountables) {
+	public void getSubUnmountables(List<H3MgUnmountable> unmountables) {
 		// nothing to map
 	}
 

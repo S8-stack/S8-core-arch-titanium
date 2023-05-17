@@ -6,9 +6,9 @@ import java.util.List;
 import com.s8.arch.magnesium.core.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.core.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.core.callbacks.VersionMgCallback;
-import com.s8.arch.magnesium.core.handler.MgHandler;
-import com.s8.arch.magnesium.core.handler.MgIOModule;
-import com.s8.arch.magnesium.core.handler.MgUnmountable;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
+import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.magnesium.repobase.repository.MgRepository;
 import com.s8.arch.magnesium.repobase.store.MgRepoStore;
 import com.s8.arch.silicon.SiliconEngine;
@@ -24,7 +24,7 @@ import com.s8.io.joos.JOOS_Type;
  *
  */
 
-public class MgBranchHandler extends MgHandler<NdBranch> {
+public class MgBranchHandler extends H3MgHandler<NdBranch> {
 
 
 	private String id;
@@ -96,7 +96,7 @@ public class MgBranchHandler extends MgHandler<NdBranch> {
 	public final MgRepository repository;
 
 
-	private final MgIOModule<NdBranch> ioModule = new IOModule(this);
+	private final H3MgIOModule<NdBranch> ioModule = new IOModule(this);
 
 	public MgBranchHandler(SiliconEngine ng, MgRepoStore store, MgRepository repository) {
 		super(ng);
@@ -173,13 +173,13 @@ public class MgBranchHandler extends MgHandler<NdBranch> {
 
 
 	@Override
-	public MgIOModule<NdBranch> getIOModule() {
+	public H3MgIOModule<NdBranch> getIOModule() {
 		return ioModule;
 	}
 
 
 	@Override
-	public void getSubUnmountables(List<MgUnmountable> unmountables) {
+	public void getSubUnmountables(List<H3MgUnmountable> unmountables) {
 		// no sub handlers
 	}
 

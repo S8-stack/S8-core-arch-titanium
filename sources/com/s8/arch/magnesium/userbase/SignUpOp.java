@@ -2,15 +2,15 @@ package com.s8.arch.magnesium.userbase;
 
 import com.s8.arch.magnesium.core.callbacks.BooleanMgCallback;
 import com.s8.arch.magnesium.core.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.core.handler.CatchExceptionMgTask;
-import com.s8.arch.magnesium.core.handler.ConsumeResourceMgTask;
-import com.s8.arch.magnesium.core.handler.MgHandler;
-import com.s8.arch.magnesium.core.handler.UserMgOperation;
+import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
+import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.exception.BeIOException;
 
-public class SignUpOp extends UserMgOperation<BeBranch> {
+public class SignUpOp extends UserH3MgOperation<BeBranch> {
 	
 	public final MgUserbase handler;
 	
@@ -46,7 +46,7 @@ public class SignUpOp extends UserMgOperation<BeBranch> {
 			}
 
 			@Override
-			public MgHandler<BeBranch> getHandler() {
+			public H3MgHandler<BeBranch> getHandler() {
 				return handler;
 			}
 

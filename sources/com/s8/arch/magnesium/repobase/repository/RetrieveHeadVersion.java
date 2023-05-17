@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import com.s8.arch.magnesium.core.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.core.callbacks.VersionMgCallback;
-import com.s8.arch.magnesium.core.handler.CatchExceptionMgTask;
-import com.s8.arch.magnesium.core.handler.ConsumeResourceMgTask;
-import com.s8.arch.magnesium.core.handler.MgHandler;
-import com.s8.arch.magnesium.core.handler.UserMgOperation;
+import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
+import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.magnesium.repobase.branch.MgBranchHandler;
 import com.s8.arch.silicon.async.MthProfile;
 
@@ -16,7 +16,7 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class RetrieveHeadVersion extends UserMgOperation<MgRepository> {
+class RetrieveHeadVersion extends UserH3MgOperation<MgRepository> {
 
 
 	@Override
@@ -58,7 +58,7 @@ class RetrieveHeadVersion extends UserMgOperation<MgRepository> {
 		return new ConsumeResourceMgTask<MgRepository>(repository) {
 
 			@Override
-			public MgHandler<MgRepository> getHandler() {
+			public H3MgHandler<MgRepository> getHandler() {
 				return handler;
 			}
 

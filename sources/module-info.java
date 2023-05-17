@@ -9,7 +9,7 @@ module com.s8.arch.magnesium {
 	
 	
 
-	exports com.s8.arch.magnesium.core.handler;
+	exports com.s8.arch.magnesium.handlers.h3;
 	exports com.s8.arch.magnesium.core.callbacks;
 	
 	exports com.s8.arch.magnesium.repobase.branch;
@@ -22,8 +22,8 @@ module com.s8.arch.magnesium {
 	
 	
 	exports com.s8.arch.magnesium.oldcallbacks;
-	exports com.s8.arch.magnesium.handles.h1;
-	exports com.s8.arch.magnesium.handles.h2;
+	exports com.s8.arch.magnesium.handlers.h1;
+	exports com.s8.arch.magnesium.handlers.h2;
 	
 	exports com.s8.arch.magnesium.stores.m1;
 	exports com.s8.arch.magnesium.stores.m2;

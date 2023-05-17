@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.userbase;
 
-import com.s8.arch.magnesium.core.handler.MgIOModule;
+import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.branch.BeInbound;
 import com.s8.io.bohr.beryllium.branch.BeOutbound;
@@ -16,7 +16,7 @@ import com.s8.io.bytes.linked.LinkedBytesIO;
  * @author pierreconvert
  *
  */
-public class IOModule implements MgIOModule<BeBranch> {
+public class IOModule implements H3MgIOModule<BeBranch> {
 
 	
 	public final MgUserbase handler;

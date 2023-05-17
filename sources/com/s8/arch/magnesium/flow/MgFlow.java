@@ -1,25 +1,15 @@
 package com.s8.arch.magnesium.flow;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
-import com.s8.arch.magnesium.repobase.branch.CommitMgOperation;
-import com.s8.arch.magnesium.repobase.branch.ThenMgOperation;
-import com.s8.arch.magnesium.repobase.store.operations.MgOperation;
-import com.s8.arch.silicon.async.MthProfile;
-
-
 /**
  * 
  * @author pierreconvert
  *
  */
-public class MgFlow extends S8Flow {
+public abstract class MgFlow extends S8Flow {
 	
 	
 	/**
 	 * 
-	 */
 	public final Deque<MgOperation> operations = new ArrayDeque<>();
 	
 	
@@ -69,5 +59,5 @@ public class MgFlow extends S8Flow {
 		
 	}
 
-
+*/
 }

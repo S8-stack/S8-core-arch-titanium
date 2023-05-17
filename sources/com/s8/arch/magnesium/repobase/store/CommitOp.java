@@ -2,10 +2,10 @@ package com.s8.arch.magnesium.repobase.store;
 
 import com.s8.arch.magnesium.core.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.core.callbacks.VersionMgCallback;
-import com.s8.arch.magnesium.core.handler.CatchExceptionMgTask;
-import com.s8.arch.magnesium.core.handler.ConsumeResourceMgTask;
-import com.s8.arch.magnesium.core.handler.MgHandler;
-import com.s8.arch.magnesium.core.handler.UserMgOperation;
+import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
+import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.magnesium.repobase.repository.MgRepositoryHandler;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.object.NdObject;
@@ -16,7 +16,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CommitOp extends UserMgOperation<MgRepoStore> {
+class CommitOp extends UserH3MgOperation<MgRepoStore> {
 
 	@Override
 	public boolean isModifyingResource() {
@@ -65,7 +65,7 @@ class CommitOp extends UserMgOperation<MgRepoStore> {
 		return new ConsumeResourceMgTask<MgRepoStore>(repository) {
 
 			@Override
-			public MgHandler<MgRepoStore> getHandler() {
+			public H3MgHandler<MgRepoStore> getHandler() {
 				return handler;
 			}
 			

@@ -2,7 +2,7 @@ package com.s8.stack.arch.tests.db.mappings.m1;
 
 import java.io.IOException;
 
-import com.s8.arch.magnesium.handles.h2.H2Handle;
+import com.s8.arch.magnesium.handlers.h2.H2Handle;
 import com.s8.io.bytes.ByteFileReadingException;
 
 public class M1StoreTest03 {

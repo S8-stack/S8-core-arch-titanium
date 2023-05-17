@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.s8.arch.magnesium.core.handler.MgUnmountable;
+import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.magnesium.repobase.branch.MgBranchHandler;
 import com.s8.arch.magnesium.repobase.store.MgRepoStore;
 import com.s8.arch.silicon.SiliconEngine;
@@ -48,7 +48,7 @@ public class MgRepository {
 	}
 
 	
-	public void crawl(List<MgUnmountable> unmountables) {
+	public void crawl(List<H3MgUnmountable> unmountables) {
 		branchHandlers.forEach((k, branch) -> unmountables.add(branch));
 	}
 

@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.repobase.branch;
 
-import com.s8.arch.magnesium.core.handler.MgIOModule;
+import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.magnesium.repobase.store.MgRepoStore;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdInbound;
@@ -17,7 +17,7 @@ import com.s8.io.bytes.linked.LinkedBytesIO;
  * @author pierreconvert
  *
  */
-public class IOModule implements MgIOModule<NdBranch> {
+public class IOModule implements H3MgIOModule<NdBranch> {
 
 	
 	public final MgBranchHandler handler;

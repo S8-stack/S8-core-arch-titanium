@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 
-import com.s8.arch.magnesium.core.handler.MgIOModule;
+import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.magnesium.repobase.branch.MgBranchHandler;
 import com.s8.io.joos.JOOS_Lexicon;
 import com.s8.io.joos.parsing.JOOS_ParsingException;
@@ -14,7 +14,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
 import com.s8.io.joos.utilities.JOOS_BufferedFileReader;
 import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
 
-public class IOModule implements MgIOModule<MgRepository> {
+public class IOModule implements H3MgIOModule<MgRepository> {
 
 	private static JOOS_Lexicon lexicon;
 	
