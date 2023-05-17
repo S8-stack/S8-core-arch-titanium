@@ -3,9 +3,9 @@ package com.s8.arch.magnesium.flow;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import com.s8.arch.magnesium.branch.CommitMgOperation;
-import com.s8.arch.magnesium.branch.ThenMgOperation;
-import com.s8.arch.magnesium.store.operations.MgOperation;
+import com.s8.arch.magnesium.repobase.branch.CommitMgOperation;
+import com.s8.arch.magnesium.repobase.branch.ThenMgOperation;
+import com.s8.arch.magnesium.repobase.store.operations.MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 
 

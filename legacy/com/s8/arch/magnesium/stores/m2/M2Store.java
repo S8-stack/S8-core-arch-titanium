@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-import com.s8.arch.magnesium.paths.NodePathComposer;
+import com.s8.arch.magnesium.core.paths.NodePathComposer;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;
 

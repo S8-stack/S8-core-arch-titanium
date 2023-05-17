@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.s8.arch.magnesium.paths.NodePathComposer;
+import com.s8.arch.magnesium.core.paths.NodePathComposer;
 import com.s8.arch.silicon.SiException;
 import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.alpha.ByteOutflow;

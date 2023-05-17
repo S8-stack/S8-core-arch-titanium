@@ -2,7 +2,7 @@ package com.s8.stack.arch.tests.db.mappings.m4;
 
 import java.nio.file.Path;
 
-import com.s8.arch.magnesium.paths.NodePathComposer;
+import com.s8.arch.magnesium.core.paths.NodePathComposer;
 
 public class PathComposerTest01 {
 

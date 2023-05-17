@@ -5,9 +5,9 @@ import java.nio.file.Path;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
+import com.s8.arch.magnesium.core.paths.ShellPathComposer;
 import com.s8.arch.magnesium.handles.h2.H2Handle;
 import com.s8.arch.magnesium.handles.h2.H2Operator;
-import com.s8.arch.magnesium.paths.ShellPathComposer;
 import com.s8.arch.magnesium.stores.m1.modules.Clock;
 import com.s8.arch.magnesium.stores.m1.modules.M1HandleInitializer;
 import com.s8.arch.magnesium.stores.m1.modules.M1StoreAutosaver;
@@ -238,7 +238,7 @@ public class M1Store<M> {
 	
 	/**
 	 * 
-	 * @param address
+	 * @param repositoryAddress
 	 * @param model
 	 */
 	public String createNewModel(M1ModelConstructor<M> constructor) {
