@@ -11,6 +11,7 @@ import com.s8.arch.silicon.async.MthProfile;
 public abstract class S8Flow {
 	
 	
+	
 	/**
 	 * Use the field <code>repository</code> identity for:
 	 * <ul>
@@ -19,7 +20,7 @@ public abstract class S8Flow {
 	 * </ul>
 	 * 
 	 */
-	public String repository;
+	public String repositoryAddress;
 	
 	
 	/**
@@ -30,7 +31,7 @@ public abstract class S8Flow {
 	 * </ul>
 	 * 
 	 */
-	public String branch;
+	public String branchId;
 	
 	
 	/**
@@ -40,7 +41,7 @@ public abstract class S8Flow {
 	
 	
 	/**
-	 * objects
+	 * objects of the graph exposure (Neodymium)
 	 */
 	public Object[] objects;
 
@@ -50,7 +51,7 @@ public abstract class S8Flow {
 	 * @param profile
 	 * @param runnable
 	 */
-	public abstract void prior(MthProfile profile, S8Runnable runnable);
+	public abstract S8Flow prior(MthProfile profile, S8Runnable runnable);
 	
 	
 	
@@ -59,7 +60,7 @@ public abstract class S8Flow {
 	 * @param profile
 	 * @param runnable
 	 */
-	public abstract void then(MthProfile profile, S8Runnable runnable);
+	public abstract S8Flow then(MthProfile profile, S8Runnable runnable);
 	
 	
 	/**
@@ -67,7 +68,7 @@ public abstract class S8Flow {
 	 * @param pre
 	 * @param post
 	 */
-	public abstract void commit(S8Runnable pre, S8Runnable post);
+	public abstract S8Flow commit(S8Runnable pre, S8Runnable post);
 	
 	
 	/**
@@ -75,7 +76,7 @@ public abstract class S8Flow {
 	 * @param pre
 	 * @param post
 	 */
-	public abstract void cloneHead(S8Runnable pre, S8Runnable post);
+	public abstract S8Flow cloneHead(S8Runnable pre, S8Runnable post);
 	
 	
 	/**
@@ -83,7 +84,7 @@ public abstract class S8Flow {
 	 * @param pre
 	 * @param post
 	 */
-	public abstract void cloneVersion(S8Runnable pre, S8Runnable post);
+	public abstract S8Flow cloneVersion(S8Runnable pre, S8Runnable post);
 	
 	
 	
