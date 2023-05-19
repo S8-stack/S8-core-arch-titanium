@@ -2,7 +2,7 @@ package com.s8.arch.magnesium.demos.user;
 
 import java.nio.file.Path;
 
-import com.s8.arch.magnesium.db.user.MgUserbase;
+import com.s8.arch.magnesium.databases.user.UserMgDatabase;
 import com.s8.arch.silicon.SiliconConfiguration;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.beryllium.exception.BeBuildException;
@@ -16,7 +16,7 @@ public class MgUserbaseDemo {
 		ng.start();
 		
 		Path path = Path.of("data/userbase/userbase.be");
-		MgUserbase userbase = new MgUserbase(ng, path);
+		UserMgDatabase userbase = new UserMgDatabase(ng, path);
 		
 		for(int i = 0; i<1000; i++) {
 			userbase.login(0, "convert.pierre@gmail.com", "toto1234", f -> System.out.println("Is logged-in: "+f), e -> e.printStackTrace());	

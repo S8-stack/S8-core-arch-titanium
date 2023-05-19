@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
-import com.s8.arch.magnesium.core.callbacks.BooleanMgCallback;
+import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.silicon.SiliconEngine;
 
 /**

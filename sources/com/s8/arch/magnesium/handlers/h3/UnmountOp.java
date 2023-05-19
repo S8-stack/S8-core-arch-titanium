@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.handlers.h3;
 
-import com.s8.arch.magnesium.core.callbacks.BooleanMgCallback;
+import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.silicon.async.AsyncTask;
 import com.s8.arch.silicon.async.MthProfile;
 

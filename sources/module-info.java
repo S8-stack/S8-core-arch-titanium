@@ -13,13 +13,13 @@ module com.s8.arch.magnesium {
 	exports com.s8.arch.magnesium.handlers.h2;
 	exports com.s8.arch.magnesium.handlers.h3;
 	
-	exports com.s8.arch.magnesium.core.callbacks;
+	exports com.s8.arch.magnesium.callbacks;
 	
-	exports com.s8.arch.magnesium.db.repo.branch;
-	exports com.s8.arch.magnesium.db.repo.repository;
-	exports com.s8.arch.magnesium.db.repo.store;
+	exports com.s8.arch.magnesium.databases.repo.branch;
+	exports com.s8.arch.magnesium.databases.repo.repository;
+	exports com.s8.arch.magnesium.databases.repo.store;
 	
-	exports com.s8.arch.magnesium.db.user;
+	exports com.s8.arch.magnesium.databases.user;
 
 	exports com.s8.arch.magnesium.store.config;
 	

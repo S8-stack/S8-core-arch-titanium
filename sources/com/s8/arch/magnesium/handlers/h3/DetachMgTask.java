@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.handlers.h3;
 
-import com.s8.arch.magnesium.core.callbacks.VoidMgCallback;
+import com.s8.arch.magnesium.callbacks.VoidMgCallback;
 
 public abstract class DetachMgTask<R> extends ConsumeResourceMgTask<R> {
 	
