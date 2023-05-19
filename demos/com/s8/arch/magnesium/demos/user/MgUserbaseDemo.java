@@ -2,7 +2,7 @@ package com.s8.arch.magnesium.demos.user;
 
 import java.nio.file.Path;
 
-import com.s8.arch.magnesium.userbase.MgUserbase;
+import com.s8.arch.magnesium.db.user.MgUserbase;
 import com.s8.arch.silicon.SiliconConfiguration;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.beryllium.exception.BeBuildException;

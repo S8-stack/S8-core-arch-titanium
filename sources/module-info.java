@@ -15,11 +15,11 @@ module com.s8.arch.magnesium {
 	
 	exports com.s8.arch.magnesium.core.callbacks;
 	
-	exports com.s8.arch.magnesium.repobase.branch;
-	exports com.s8.arch.magnesium.repobase.repository;
-	exports com.s8.arch.magnesium.repobase.store;
+	exports com.s8.arch.magnesium.db.repo.branch;
+	exports com.s8.arch.magnesium.db.repo.repository;
+	exports com.s8.arch.magnesium.db.repo.store;
 	
-	exports com.s8.arch.magnesium.userbase;
+	exports com.s8.arch.magnesium.db.user;
 
 	exports com.s8.arch.magnesium.store.config;
 	
@@ -49,5 +49,6 @@ module com.s8.arch.magnesium {
 	requires transitive com.s8.arch.silicon;
 	requires transitive com.s8.io.joos;
 	requires transitive com.s8.io.bohr.beryllium;
+	requires com.s8.io.bohr.lithium;
 	
 }
