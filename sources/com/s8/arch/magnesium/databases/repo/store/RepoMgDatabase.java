@@ -60,8 +60,8 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void commit(long t, String repoAddress, String branchName, NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new CommitOp(t, this, repoAddress, branchName, objects, onSucceed, onFailed));
+	public void commit(long t, String repoAddress, String branchName, Object[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+		pushOperation(new CommitOp(t, this, repoAddress, branchName, (NdObject[]) objects, onSucceed, onFailed));
 	}
 
 

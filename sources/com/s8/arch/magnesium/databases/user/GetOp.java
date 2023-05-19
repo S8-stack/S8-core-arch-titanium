@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.user;
 
-import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
+import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -9,25 +9,23 @@ import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.exception.BeIOException;
+import com.s8.io.bohr.beryllium.object.BeObject;
 
-public class SignUpOp extends UserH3MgOperation<BeBranch> {
+public class GetOp extends UserH3MgOperation<BeBranch> {
 	
 	public final UserMgDatabase handler;
 	
-	public final String username;
+	public final String key;
 	
-	public final String password;
-	
-	public final BooleanMgCallback onProcessed;
+	public final ObjectMgCallback onRetrieved;
 	
 	public final ExceptionMgCallback onFailed;
 
-	public SignUpOp(long timeStamp, UserMgDatabase handler, String username, String password, BooleanMgCallback onProcessed, ExceptionMgCallback onFailed) {
+	public GetOp(long timeStamp, UserMgDatabase handler, String key, ObjectMgCallback onRetrieved, ExceptionMgCallback onFailed) {
 		super(timeStamp);
 		this.handler = handler;
-		this.username = username;
-		this.password = password;
-		this.onProcessed = onProcessed;
+		this.key = key;
+		this.onRetrieved = onRetrieved;
 		this.onFailed = onFailed;
 	}
 
@@ -53,21 +51,8 @@ public class SignUpOp extends UserH3MgOperation<BeBranch> {
 			@Override
 			public void consumeResource(BeBranch branch) {
 				try {
-					MgUser user =  (MgUser) branch.get(username);
-					
-					if(user == null) {
-						
-						MgUser signedUpUser = new MgUser(username);
-						signedUpUser.password = password;
-						
-						
-						
-						
-						onProcessed.call(true);
-					}
-					else {
-						onProcessed.call(false);
-					}
+					BeObject object =  (BeObject) branch.get(key);
+					onRetrieved.call(object);
 					
 				} catch (BeIOException e) {
 					e.printStackTrace();

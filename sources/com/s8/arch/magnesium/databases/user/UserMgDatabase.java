@@ -5,13 +5,14 @@ import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
+import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.codebase.BeCodebase;
-import com.s8.io.bohr.beryllium.exception.BeBuildException;
+import com.s8.io.bohr.beryllium.object.BeObject;
 
 
 /**
@@ -29,10 +30,10 @@ public class UserMgDatabase extends H3MgHandler<BeBranch> {
 	
 	private final IOModule ioModule = new IOModule(this);
 	
-	public UserMgDatabase(SiliconEngine ng, Path path) throws BeBuildException {
+	public UserMgDatabase(SiliconEngine ng, BeCodebase codebase, Path path) {
 		super(ng);
 		
-		this.codebase = BeCodebase.from(MgUser.class);
+		this.codebase = codebase;
 		this.path = path;
 	}
 
@@ -61,8 +62,12 @@ public class UserMgDatabase extends H3MgHandler<BeBranch> {
 	}
 	
 	
-	public void login(long t, String username, String password, BooleanMgCallback onProcessed, ExceptionMgCallback onFailed) {
-		pushOperation(new LogInOp(t, this, username, password, onProcessed, onFailed));
+	public void get(long t, String key, ObjectMgCallback onRetrieved, ExceptionMgCallback onFailed) {
+		pushOperation(new GetOp(t, this, key, onRetrieved, onFailed));
+	}
+	
+	public void put(long t, String key, BeObject object, BooleanMgCallback onInserted, ExceptionMgCallback onFailed) {
+		pushOperation(new PutOp(t, this, key, object, onInserted, onFailed));
 	}
 	
 }

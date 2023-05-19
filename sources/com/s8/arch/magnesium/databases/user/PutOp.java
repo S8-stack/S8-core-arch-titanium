@@ -9,25 +9,27 @@ import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.exception.BeIOException;
+import com.s8.io.bohr.beryllium.object.BeObject;
 
-public class LogInOp extends UserH3MgOperation<BeBranch> {
+public class PutOp extends UserH3MgOperation<BeBranch> {
 	
 	public final UserMgDatabase handler;
 	
-	public final String username;
+	public final String key;
 	
-	public final String password;
+	public final BeObject object;
 	
-	public final BooleanMgCallback onProcessed;
+	public final BooleanMgCallback onInserted;
 	
 	public final ExceptionMgCallback onFailed;
 
-	public LogInOp(long timeStamp, UserMgDatabase handler, String username, String password, BooleanMgCallback onProcessed, ExceptionMgCallback onFailed) {
+	public PutOp(long timeStamp, UserMgDatabase handler, String key, BeObject object, 
+			BooleanMgCallback onInserted, ExceptionMgCallback onFailed) {
 		super(timeStamp);
 		this.handler = handler;
-		this.username = username;
-		this.password = password;
-		this.onProcessed = onProcessed;
+		this.key = key;
+		this.object = object;
+		this.onInserted = onInserted;
 		this.onFailed = onFailed;
 	}
 
@@ -53,14 +55,9 @@ public class LogInOp extends UserH3MgOperation<BeBranch> {
 			@Override
 			public void consumeResource(BeBranch branch) {
 				try {
-					MgUser user =  (MgUser) branch.get(username);
-					
-					if(user != null && user.getPassword().equals(password)) {
-						onProcessed.call(true);
-					}
-					else {
-						onProcessed.call(false);
-					}
+					BeObject object =  (BeObject) branch.get(key);
+					branch.put(key, object);
+					onInserted.call(true);
 					
 				} catch (BeIOException e) {
 					e.printStackTrace();
