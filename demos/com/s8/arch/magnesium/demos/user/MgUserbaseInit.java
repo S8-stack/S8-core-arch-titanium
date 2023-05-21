@@ -14,11 +14,10 @@ import com.s8.io.bytes.linked.LinkedBytesIO;
 public class MgUserbaseInit {
 
 	public static void main(String[] args) throws BeBuildException, IOException {
+		
 		BeCodebase codebase = BeCodebase.from(MgUser.class);
 		
-		Path path = Path.of("data/userbase/userbase.be");
-		
-		
+		Path path = Path.of("data/user-db/userbase.be");
 		
 		BeBranch branch = new BeBranch(codebase);
 		
