@@ -9,7 +9,7 @@ import java.io.InputStream;
 import com.s8.arch.silicon.SiliconConfiguration;
 import com.s8.io.xml.annotations.XML_SetElement;
 import com.s8.io.xml.annotations.XML_Type;
-import com.s8.io.xml.handler.XML_Lexicon;
+import com.s8.io.xml.codebase.XML_Codebase;
 import com.s8.io.xml.handler.type.XML_TypeCompilationException;
 import com.s8.io.xml.parser.XML_ParsingException;
 
@@ -53,7 +53,7 @@ public class ConfigWrapper {
 			throws IOException, XML_TypeCompilationException {
 		
 		
-		XML_Lexicon lexicon = new XML_Lexicon(ConfigWrapper.class);
+		XML_Codebase lexicon = XML_Codebase.from(ConfigWrapper.class);
 
 		// retrieve configuration
 		InputStream inputStream = new FileInputStream(new File(configPathname));

@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 import com.s8.io.xml.annotations.XML_SetElement;
 import com.s8.io.xml.annotations.XML_Type;
-import com.s8.io.xml.handler.XML_Lexicon;
+import com.s8.io.xml.codebase.XML_Codebase;
 import com.s8.io.xml.handler.type.XML_TypeCompilationException;
 import com.s8.io.xml.parser.XML_ParsingException;
 
@@ -46,7 +46,7 @@ public class MgConfiguration {
 	 * @throws XML_TypeCompilationException
 	 * @throws FileNotFoundException
 	 */
-	public static MgConfiguration load(XML_Lexicon lexicon, String configPathname) 
+	public static MgConfiguration load(XML_Codebase lexicon, String configPathname) 
 			throws 
 			XML_TypeCompilationException, 
 			FileNotFoundException {
