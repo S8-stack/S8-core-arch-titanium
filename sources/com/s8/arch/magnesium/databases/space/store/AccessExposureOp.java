@@ -22,7 +22,7 @@ class AccessExposureOp extends UserH3MgOperation<MgS1Store> {
 	/**
 	 * 
 	 */
-	public final SpaceMgDatabase handler;
+	public final LithiumMgDatabase handler;
 	
 	
 	public final String repositoryAddress;
@@ -47,7 +47,7 @@ class AccessExposureOp extends UserH3MgOperation<MgS1Store> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public AccessExposureOp(long timestamp, SpaceMgDatabase handler, 
+	public AccessExposureOp(long timestamp, LithiumMgDatabase handler, 
 			String repositoryAddress, 
 			ObjectsMgCallback onSucceed, 
 			ExceptionMgCallback onFailed) {
@@ -64,7 +64,7 @@ class AccessExposureOp extends UserH3MgOperation<MgS1Store> {
 		return new ConsumeResourceMgTask<MgS1Store>(store) {
 
 			@Override
-			public SpaceMgDatabase getHandler() {
+			public LithiumMgDatabase getHandler() {
 				return handler;
 			}
 			

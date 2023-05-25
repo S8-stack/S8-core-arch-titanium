@@ -1,10 +1,12 @@
-package com.s8.arch.magnesium.databases.user;
+package com.s8.arch.magnesium.databases.note;
 
 import java.nio.file.Path;
 import java.util.List;
 
+import com.s8.arch.fluor.S8Filter;
 import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
@@ -20,7 +22,7 @@ import com.s8.io.bohr.beryllium.object.BeObject;
  * @author pc
  *
  */
-public class UserMgDatabase extends H3MgHandler<BeBranch> {
+public class NoteMgDatabase extends H3MgHandler<BeBranch> {
 
 	
 	
@@ -30,7 +32,7 @@ public class UserMgDatabase extends H3MgHandler<BeBranch> {
 	
 	private final IOModule ioModule = new IOModule(this);
 	
-	public UserMgDatabase(SiliconEngine ng, BeCodebase codebase, Path path) {
+	public NoteMgDatabase(SiliconEngine ng, BeCodebase codebase, Path path) {
 		super(ng);
 		
 		this.codebase = codebase;
@@ -68,6 +70,22 @@ public class UserMgDatabase extends H3MgHandler<BeBranch> {
 	
 	public void put(long t, String key, BeObject object, BooleanMgCallback onInserted, ExceptionMgCallback onFailed) {
 		pushOperation(new PutOp(t, this, key, object, onInserted, onFailed));
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param <T>
+	 * @param t
+	 * @param filter
+	 * @param onSelected
+	 * @param onFailed
+	 */
+	public <T> void select(long t, S8Filter<T> filter, 
+			MgCallback<List<T>> onSelected, 
+			ExceptionMgCallback onFailed) {
+		pushOperation(new BrowseOp<T>(t, this, filter, onSelected, onFailed));
 	}
 	
 }

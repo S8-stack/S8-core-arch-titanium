@@ -4,8 +4,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
+import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
@@ -18,7 +18,7 @@ import com.s8.io.bohr.lithium.codebase.LiCodebase;
  * @author pc
  *
  */
-public class SpaceMgDatabase extends H3MgHandler<MgS1Store> {
+public class LithiumMgDatabase extends H3MgHandler<MgS1Store> {
 
 	
 	public final LiCodebase codebase;
@@ -27,7 +27,7 @@ public class SpaceMgDatabase extends H3MgHandler<MgS1Store> {
 	
 	public final IOModule ioModule = new IOModule(this);
 	
-	public SpaceMgDatabase(SiliconEngine ng, LiCodebase codebase, Path storeInfoPathname) {
+	public LithiumMgDatabase(SiliconEngine ng, LiCodebase codebase, Path storeInfoPathname) {
 		super(ng);
 		this.codebase = codebase;
 		this.storeInfoPathname = storeInfoPathname;
@@ -54,25 +54,31 @@ public class SpaceMgDatabase extends H3MgHandler<MgS1Store> {
 	}
 
 	
-	/**
-	 * 
-	 * @param onSucceed
-	 * @param onFailed
-	 */
-	public void accessExposed(long t, String repoAddress,int slot, ObjectMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new AccessExposedOp(t, this, repoAddress, slot, onSucceed, onFailed));
-	}
 	
 	
 	/**
 	 * 
 	 * @param t
-	 * @param repoAddress
+	 * @param spaceId
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void accessExposure(long t, String repoAddress, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new AccessExposureOp(t, this, repoAddress, onSucceed, onFailed));
+	public void accessExposure(long t, String spaceId, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
+		pushOperation(new AccessExposureOp(t, this, spaceId, onSucceed, onFailed));
+	}
+
+	
+	
+
+	/**
+	 * 
+	 * @param t
+	 * @param spaceId
+	 * @param onSucceed
+	 * @param onFailed
+	 */
+	public void exposureObjects(long t, String spaceId, Object[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+		pushOperation(new ExposeObjectsOp(t, this, spaceId, objects, onSucceed, onFailed));
 	}
 
 	

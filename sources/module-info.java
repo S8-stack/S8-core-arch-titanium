@@ -17,7 +17,7 @@ module com.s8.arch.magnesium {
 	exports com.s8.arch.magnesium.callbacks;
 	
 
-	exports com.s8.arch.magnesium.databases.user;
+	exports com.s8.arch.magnesium.databases.note;
 
 	exports com.s8.arch.magnesium.databases.space.space;
 	exports com.s8.arch.magnesium.databases.space.store;
@@ -56,5 +56,6 @@ module com.s8.arch.magnesium {
 	requires transitive com.s8.io.joos;
 	requires transitive com.s8.io.bohr.beryllium;
 	requires transitive com.s8.io.bohr.lithium;
+	requires com.s8.arch.fluor;
 	
 }

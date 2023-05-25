@@ -6,6 +6,7 @@ import java.util.List;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
+import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.databases.space.store.MgS1Store;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
@@ -72,8 +73,25 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	}
 	
 	
+	/**
+	 * 
+	 * @param t
+	 * @param onSucceed
+	 * @param onFailed
+	 */
 	public void accessExposure(long t, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
 		pushOperation(new AccessExposureOp(t, this, onSucceed, onFailed));
+	}
+	
+	
+	/**
+	 * 
+	 * @param t
+	 * @param onSucceed
+	 * @param onFailed
+	 */
+	public void exposeObjects(long t, Object[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+		pushOperation(new ExposeObjectsOp(t, this, objects, onSucceed, onFailed));
 	}
 
 

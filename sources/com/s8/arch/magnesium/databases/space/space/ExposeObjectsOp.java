@@ -1,18 +1,20 @@
-package com.s8.arch.magnesium.databases.space.store;
+package com.s8.arch.magnesium.databases.space.space;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
+import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
+import com.s8.io.bohr.lithium.branches.LiBranch;
+import com.s8.io.bohr.lithium.object.LiObject;
 
 /**
  * 
  * @author pierreconvert
  *
  */
-class AccessExposedOp extends UserH3MgOperation<MgS1Store> {
+class ExposeObjectsOp extends UserH3MgOperation<LiBranch> {
 
 
 	
@@ -22,18 +24,15 @@ class AccessExposedOp extends UserH3MgOperation<MgS1Store> {
 	/**
 	 * 
 	 */
-	public final LithiumMgDatabase handler;
+	public final MgSpaceHandler handler;
 	
 	
-	public final String repositoryAddress;
-	
-	public final int slot;
-	
+	public final Object[] objects;
 	
 	/**
 	 * 
 	 */
-	public final ObjectMgCallback onSucceed;
+	public final VersionMgCallback onSucceed;
 	
 	
 	/**
@@ -48,26 +47,24 @@ class AccessExposedOp extends UserH3MgOperation<MgS1Store> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public AccessExposedOp(long timestamp, LithiumMgDatabase handler, 
-			String repositoryAddress, 
-			int slot, 
-			ObjectMgCallback onSucceed, 
+	public ExposeObjectsOp(long timestamp, MgSpaceHandler handler, 
+			Object[] objects,
+			VersionMgCallback onSucceed, 
 			ExceptionMgCallback onFailed) {
 		super(timestamp);
 		this.handler = handler;
-		this.repositoryAddress = repositoryAddress;
-		this.slot = slot;
+		this.objects = objects;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
 	}
 	
 
 	@Override
-	public ConsumeResourceMgTask<MgS1Store> createConsumeResourceTask(MgS1Store store) {
-		return new ConsumeResourceMgTask<MgS1Store>(store) {
+	public ConsumeResourceMgTask<LiBranch> createConsumeResourceTask(LiBranch branch) {
+		return new ConsumeResourceMgTask<LiBranch>(branch) {
 
 			@Override
-			public LithiumMgDatabase getHandler() {
+			public MgSpaceHandler getHandler() {
 				return handler;
 			}
 			
@@ -78,16 +75,25 @@ class AccessExposedOp extends UserH3MgOperation<MgS1Store> {
 
 			@Override
 			public String describe() {
-				return "ACCESS-EXPOSURE on "+handler.getName()+ " repository";
+				return "CLONE-HEAD on "+handler.getIdentifier()+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
-			public void consumeResource(MgS1Store store) {
+			public void consumeResource(LiBranch branch) {
 				try {
-					store.getSpaceHandler(repositoryAddress).accessExposed(timeStamp, slot, onSucceed, onFailed);
+					
+					/* ranges */
+					int range = objects.length;
+					for(int slot = 0; slot < range; slot++) {
+						branch.expose(slot, (LiObject) objects[slot]);	
+					}
+					
+					onSucceed.call(0L);
 				}
 				catch(Exception exception) { onFailed.call(exception); }
 			}
+
+			
 		};
 	}
 

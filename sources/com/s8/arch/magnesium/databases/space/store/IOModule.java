@@ -25,10 +25,10 @@ public class IOModule implements H3MgIOModule<MgS1Store> {
 	}
 
 	
-	public final SpaceMgDatabase handler;
+	public final LithiumMgDatabase handler;
 	
 	
-	public IOModule(SpaceMgDatabase handler) {
+	public IOModule(LithiumMgDatabase handler) {
 		super();
 		this.handler = handler;
 	}

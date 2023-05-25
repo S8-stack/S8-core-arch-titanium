@@ -1,7 +1,10 @@
-package com.s8.arch.magnesium.databases.user;
+package com.s8.arch.magnesium.databases.note;
 
+import java.util.List;
+
+import com.s8.arch.fluor.S8Filter;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -9,23 +12,26 @@ import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.exception.BeIOException;
-import com.s8.io.bohr.beryllium.object.BeObject;
 
-public class GetOp extends UserH3MgOperation<BeBranch> {
+public class BrowseOp<T> extends UserH3MgOperation<BeBranch> {
 	
-	public final UserMgDatabase handler;
+	public final NoteMgDatabase handler;
 	
-	public final String key;
 	
-	public final ObjectMgCallback onRetrieved;
+	public final S8Filter<T> filter;
+	
+	public final MgCallback<List<T>> onSelected;
 	
 	public final ExceptionMgCallback onFailed;
 
-	public GetOp(long timeStamp, UserMgDatabase handler, String key, ObjectMgCallback onRetrieved, ExceptionMgCallback onFailed) {
+	public BrowseOp(long timeStamp, NoteMgDatabase handler, 
+			S8Filter<T> filter,
+			MgCallback<List<T>> onSelected, 
+			ExceptionMgCallback onFailed) {
 		super(timeStamp);
 		this.handler = handler;
-		this.key = key;
-		this.onRetrieved = onRetrieved;
+		this.filter = filter;
+		this.onSelected = onSelected;
 		this.onFailed = onFailed;
 	}
 
@@ -51,8 +57,8 @@ public class GetOp extends UserH3MgOperation<BeBranch> {
 			@Override
 			public void consumeResource(BeBranch branch) {
 				try {
-					BeObject object =  (BeObject) branch.get(key);
-					onRetrieved.call(object);
+					List<T> objects = branch.select(filter);
+					onSelected.call(objects);
 					
 				} catch (BeIOException e) {
 					e.printStackTrace();

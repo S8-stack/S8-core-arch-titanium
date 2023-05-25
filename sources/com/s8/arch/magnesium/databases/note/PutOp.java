@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.databases.user;
+package com.s8.arch.magnesium.databases.note;
 
 import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
@@ -13,7 +13,7 @@ import com.s8.io.bohr.beryllium.object.BeObject;
 
 public class PutOp extends UserH3MgOperation<BeBranch> {
 	
-	public final UserMgDatabase handler;
+	public final NoteMgDatabase handler;
 	
 	public final String key;
 	
@@ -23,7 +23,7 @@ public class PutOp extends UserH3MgOperation<BeBranch> {
 	
 	public final ExceptionMgCallback onFailed;
 
-	public PutOp(long timeStamp, UserMgDatabase handler, String key, BeObject object, 
+	public PutOp(long timeStamp, NoteMgDatabase handler, String key, BeObject object, 
 			BooleanMgCallback onInserted, ExceptionMgCallback onFailed) {
 		super(timeStamp);
 		this.handler = handler;

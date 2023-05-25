@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.space.store;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
+import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
@@ -12,7 +12,7 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class AccessExposedOp extends UserH3MgOperation<MgS1Store> {
+class ExposeObjectsOp extends UserH3MgOperation<MgS1Store> {
 
 
 	
@@ -25,15 +25,15 @@ class AccessExposedOp extends UserH3MgOperation<MgS1Store> {
 	public final LithiumMgDatabase handler;
 	
 	
-	public final String repositoryAddress;
+	public final String spaceId;
 	
-	public final int slot;
+	public final Object[] objects;
 	
 	
 	/**
 	 * 
 	 */
-	public final ObjectMgCallback onSucceed;
+	public final VersionMgCallback onSucceed;
 	
 	
 	/**
@@ -48,15 +48,15 @@ class AccessExposedOp extends UserH3MgOperation<MgS1Store> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public AccessExposedOp(long timestamp, LithiumMgDatabase handler, 
-			String repositoryAddress, 
-			int slot, 
-			ObjectMgCallback onSucceed, 
+	public ExposeObjectsOp(long timestamp, LithiumMgDatabase handler, 
+			String spaceId,
+			Object[] objects,
+			VersionMgCallback onSucceed, 
 			ExceptionMgCallback onFailed) {
 		super(timestamp);
 		this.handler = handler;
-		this.repositoryAddress = repositoryAddress;
-		this.slot = slot;
+		this.spaceId = spaceId;
+		this.objects = objects;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
 	}
@@ -84,7 +84,7 @@ class AccessExposedOp extends UserH3MgOperation<MgS1Store> {
 			@Override
 			public void consumeResource(MgS1Store store) {
 				try {
-					store.getSpaceHandler(repositoryAddress).accessExposed(timeStamp, slot, onSucceed, onFailed);
+					store.getSpaceHandler(spaceId).exposeObjects(timeStamp, objects, onSucceed, onFailed);
 				}
 				catch(Exception exception) { onFailed.call(exception); }
 			}

@@ -21,7 +21,7 @@ import com.s8.io.joos.JOOS_Type;
 public class MgS1Store {
 	
 	
-	public final SpaceMgDatabase handler;
+	public final LithiumMgDatabase handler;
 	
 	public final LiCodebase codebase;
 	
@@ -34,7 +34,7 @@ public class MgS1Store {
 	public final Map<String, MgSpaceHandler> repositoryHandlers = new HashMap<>();
 	
 	
-	public MgS1Store(SpaceMgDatabase handler, LiCodebase codebase, String rootPathname) {
+	public MgS1Store(LithiumMgDatabase handler, LiCodebase codebase, String rootPathname) {
 		super();
 		this.handler = handler;
 		this.codebase = codebase;
@@ -109,7 +109,7 @@ public class MgS1Store {
 		
 		
 		
-		public MgS1Store deserialize(SpaceMgDatabase handler, LiCodebase codebase) {
+		public MgS1Store deserialize(LithiumMgDatabase handler, LiCodebase codebase) {
 			return new MgS1Store(handler, codebase, rootPathname);
 		}
 	}

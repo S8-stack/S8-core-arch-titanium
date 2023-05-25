@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.databases.user;
+package com.s8.arch.magnesium.databases.note;
 
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
@@ -19,14 +19,14 @@ import com.s8.io.bytes.linked.LinkedBytesIO;
 public class IOModule implements H3MgIOModule<BeBranch> {
 
 	
-	public final UserMgDatabase handler;
+	public final NoteMgDatabase handler;
 	
 	
 	/**
 	 * 
 	 * @param handler
 	 */
-	public IOModule(UserMgDatabase handler) {
+	public IOModule(NoteMgDatabase handler) {
 		super();
 		this.handler = handler;
 	}
