@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
-import com.s8.arch.magnesium.oldcallbacks.C0Callback;
+import com.s8.arch.magnesium.handlers.h2.C0Callback;
 import com.s8.arch.magnesium.oldcallbacks.C0GroupCallback;
 import com.s8.arch.magnesium.stores.m1.M1Handle;
 import com.s8.arch.magnesium.stores.m1.M1Store;

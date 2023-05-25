@@ -3,6 +3,8 @@ package com.s8.arch.magnesium.oldcallbacks;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
+import com.s8.arch.magnesium.handlers.h2.C0Callback;
+
 
 /**
  * 

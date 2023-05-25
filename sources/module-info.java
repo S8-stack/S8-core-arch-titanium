@@ -29,16 +29,6 @@ module com.s8.arch.magnesium {
 
 	exports com.s8.arch.magnesium.service;
 	
-	
-	exports com.s8.arch.magnesium.oldcallbacks;
-	
-	exports com.s8.arch.magnesium.stores.m1;
-	exports com.s8.arch.magnesium.stores.m2;
-	exports com.s8.arch.magnesium.stores.m3;
-	exports com.s8.arch.magnesium.stores.m3.nodes;
-	exports com.s8.arch.magnesium.stores.m3.requests;
-	
-	exports com.s8.arch.magnesium.stores.m4;
 	exports com.s8.arch.magnesium.core.paths;
 	
 	

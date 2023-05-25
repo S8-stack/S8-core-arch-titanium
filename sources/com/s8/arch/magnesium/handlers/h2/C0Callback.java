@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.oldcallbacks;
+package com.s8.arch.magnesium.handlers.h2;
 
 public interface C0Callback {
 
