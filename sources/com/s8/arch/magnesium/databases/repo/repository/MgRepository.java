@@ -1,13 +1,14 @@
 package com.s8.arch.magnesium.databases.repo.repository;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.s8.arch.magnesium.databases.repo.branch.MgBranchHandler;
 import com.s8.arch.magnesium.databases.repo.store.MgRepoStore;
-import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.joos.JOOS_Field;
 import com.s8.io.joos.JOOS_Type;
@@ -48,8 +49,10 @@ public class MgRepository {
 	}
 
 	
-	public void crawl(List<H3MgUnmountable> unmountables) {
-		branchHandlers.forEach((k, branch) -> unmountables.add(branch));
+	public List<H3MgHandler<?>> crawl() {
+		List<H3MgHandler<?>> subHandlers = new ArrayList<>();
+		branchHandlers.forEach((k, branch) -> subHandlers.add(branch));
+		return subHandlers;
 	}
 
 

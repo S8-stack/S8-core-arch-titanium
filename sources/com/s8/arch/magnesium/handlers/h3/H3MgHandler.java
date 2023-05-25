@@ -12,7 +12,7 @@ import com.s8.arch.silicon.SiliconEngine;
  * @author pierreconvert
  *
  */
-public abstract class H3MgHandler<R> implements H3MgUnmountable {
+public abstract class H3MgHandler<R> {
 
 
 	public enum Status {
@@ -117,7 +117,10 @@ public abstract class H3MgHandler<R> implements H3MgUnmountable {
 	}
 
 
-	@Override
+	
+	/**
+	 * 
+	 */
 	public void unmount(long cutOffTimestamp, BooleanMgCallback onUnmounted) {
 		pushOperation(new UnmountOp<>(this, cutOffTimestamp, onUnmounted));
 	}
@@ -178,6 +181,7 @@ public abstract class H3MgHandler<R> implements H3MgUnmountable {
 		synchronized (lock) {
 			this.resource = resource;
 			this.status = Status.LOADED;
+			this.isSaved = true;
 		}
 	}
 
@@ -314,6 +318,6 @@ public abstract class H3MgHandler<R> implements H3MgUnmountable {
 
 	
 	
-	public abstract void getSubUnmountables(List<H3MgUnmountable> unmountables);
+	public abstract List<H3MgHandler<?>> getSubHandlers();
 	
 }

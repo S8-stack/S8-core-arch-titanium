@@ -1,6 +1,5 @@
 package com.s8.arch.magnesium.handlers.h3;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
@@ -48,8 +47,7 @@ public class UnmountMgTask<R> implements AsyncTask {
 
 		try {
 			
-			List<H3MgUnmountable> unmountables = new ArrayList<>();
-			handler.getSubUnmountables(unmountables);
+			List<H3MgHandler<?>> unmountables = handler.getSubHandlers();
 			
 			Unmounter unmounter = new Unmounter(unmountables, onUnmounted);
 			
@@ -96,7 +94,7 @@ public class UnmountMgTask<R> implements AsyncTask {
 
 	private class Unmounter {
 
-		private final List<H3MgUnmountable> unmountables;
+		private final List<H3MgHandler<?>> unmountables;
 
 		private final int n;
 
@@ -109,7 +107,7 @@ public class UnmountMgTask<R> implements AsyncTask {
 
 		private final Object lock = new Object();
 
-		public Unmounter(List<H3MgUnmountable> unmountables, BooleanMgCallback onUnmounted) {
+		public Unmounter(List<H3MgHandler<?>> unmountables, BooleanMgCallback onUnmounted) {
 			this.unmountables = unmountables;
 			this.n = unmountables.size();
 

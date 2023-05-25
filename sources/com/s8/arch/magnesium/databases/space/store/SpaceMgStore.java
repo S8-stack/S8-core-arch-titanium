@@ -1,12 +1,13 @@
 package com.s8.arch.magnesium.databases.space.store;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.s8.arch.magnesium.databases.space.space.MgSpaceHandler;
-import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.JOOS_Field;
@@ -18,10 +19,10 @@ import com.s8.io.joos.JOOS_Type;
  * @author pierreconvert
  *
  */
-public class MgS1Store {
+public class SpaceMgStore {
 	
 	
-	public final LithiumMgDatabase handler;
+	public final SpaceMgDatabase handler;
 	
 	public final LiCodebase codebase;
 	
@@ -31,10 +32,10 @@ public class MgS1Store {
 	
 	private MgPathComposer pathComposer;
 	
-	public final Map<String, MgSpaceHandler> repositoryHandlers = new HashMap<>();
+	public final Map<String, MgSpaceHandler> spaceHandlers = new HashMap<>();
 	
 	
-	public MgS1Store(LithiumMgDatabase handler, LiCodebase codebase, String rootPathname) {
+	public SpaceMgStore(SpaceMgDatabase handler, LiCodebase codebase, String rootPathname) {
 		super();
 		this.handler = handler;
 		this.codebase = codebase;
@@ -50,7 +51,7 @@ public class MgS1Store {
 	 * @return
 	 */
 	public MgSpaceHandler getSpaceHandler(String repositoryAddress) {
-		return repositoryHandlers.computeIfAbsent(repositoryAddress, 
+		return spaceHandlers.computeIfAbsent(repositoryAddress, 
 				address -> new MgSpaceHandler(
 						handler.ng, 
 						this, 
@@ -109,8 +110,8 @@ public class MgS1Store {
 		
 		
 		
-		public MgS1Store deserialize(LithiumMgDatabase handler, LiCodebase codebase) {
-			return new MgS1Store(handler, codebase, rootPathname);
+		public SpaceMgStore deserialize(SpaceMgDatabase handler, LiCodebase codebase) {
+			return new SpaceMgStore(handler, codebase, rootPathname);
 		}
 	}
 
@@ -127,8 +128,12 @@ public class MgS1Store {
 
 
 
-	public void crawl(List<H3MgUnmountable> unmountables) {
-		repositoryHandlers.forEach((k, repo) -> unmountables.add(repo));
+	
+	public List<H3MgHandler<?>> getSpaceHandlers() {
+		List<H3MgHandler<?>> unmountables = new ArrayList<>();
+		spaceHandlers.forEach((k, repo) -> unmountables.add(repo));
+		return unmountables;
 	}
+	
 	
 }

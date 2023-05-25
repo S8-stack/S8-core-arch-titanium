@@ -1,6 +1,7 @@
 package com.s8.arch.magnesium.databases.note;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.arch.fluor.S8Filter;
@@ -10,7 +11,6 @@ import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.codebase.BeCodebase;
@@ -55,8 +55,8 @@ public class NoteMgDatabase extends H3MgHandler<BeBranch> {
 	}
 
 	@Override
-	public void getSubUnmountables(List<H3MgUnmountable> unmountables) {
-		// nothing to map
+	public List<H3MgHandler<?>> getSubHandlers() {
+		return new ArrayList<>();
 	}
 
 	public Path getPath() {

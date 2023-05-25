@@ -1,12 +1,13 @@
 package com.s8.arch.magnesium.databases.repo.store;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.s8.arch.magnesium.databases.repo.repository.MgRepositoryHandler;
-import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
+import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.JOOS_Field;
@@ -128,8 +129,10 @@ public class MgRepoStore {
 
 
 
-	public void crawl(List<H3MgUnmountable> unmountables) {
-		repositoryHandlers.forEach((k, repo) -> unmountables.add(repo));
+	public List<H3MgHandler<?>> crawl() {
+		List<H3MgHandler<?>> subHandlers = new ArrayList<>();
+		repositoryHandlers.forEach((k, repo) -> subHandlers.add(repo));
+		return subHandlers;
 	}
 	
 }

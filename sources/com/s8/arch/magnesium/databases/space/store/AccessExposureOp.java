@@ -12,7 +12,7 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class AccessExposureOp extends UserH3MgOperation<MgS1Store> {
+class AccessExposureOp extends UserH3MgOperation<SpaceMgStore> {
 
 
 	
@@ -22,7 +22,7 @@ class AccessExposureOp extends UserH3MgOperation<MgS1Store> {
 	/**
 	 * 
 	 */
-	public final LithiumMgDatabase handler;
+	public final SpaceMgDatabase handler;
 	
 	
 	public final String repositoryAddress;
@@ -47,7 +47,7 @@ class AccessExposureOp extends UserH3MgOperation<MgS1Store> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public AccessExposureOp(long timestamp, LithiumMgDatabase handler, 
+	public AccessExposureOp(long timestamp, SpaceMgDatabase handler, 
 			String repositoryAddress, 
 			ObjectsMgCallback onSucceed, 
 			ExceptionMgCallback onFailed) {
@@ -60,11 +60,11 @@ class AccessExposureOp extends UserH3MgOperation<MgS1Store> {
 	
 
 	@Override
-	public ConsumeResourceMgTask<MgS1Store> createConsumeResourceTask(MgS1Store store) {
-		return new ConsumeResourceMgTask<MgS1Store>(store) {
+	public ConsumeResourceMgTask<SpaceMgStore> createConsumeResourceTask(SpaceMgStore store) {
+		return new ConsumeResourceMgTask<SpaceMgStore>(store) {
 
 			@Override
-			public LithiumMgDatabase getHandler() {
+			public SpaceMgDatabase getHandler() {
 				return handler;
 			}
 			
@@ -79,7 +79,7 @@ class AccessExposureOp extends UserH3MgOperation<MgS1Store> {
 			}
 
 			@Override
-			public void consumeResource(MgS1Store store) {
+			public void consumeResource(SpaceMgStore store) {
 				try {
 					store.getSpaceHandler(repositoryAddress).accessExposure(timeStamp, onSucceed, onFailed);
 				}

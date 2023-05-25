@@ -1,6 +1,9 @@
 package com.s8.arch.magnesium.databases.space.space;
 
-import com.s8.arch.magnesium.databases.space.store.MgS1Store;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+
+import com.s8.arch.magnesium.databases.space.store.SpaceMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 import com.s8.io.bohr.lithium.branches.LiInbound;
@@ -36,35 +39,52 @@ public class IOModule implements H3MgIOModule<LiBranch> {
 	@Override
 	public LiBranch load() throws Exception {
 
-		/* read from disk */
-		LinkedBytes head = LinkedBytesIO.read(handler.getPath(), true);
+		SpaceMgStore store = handler.getStore();
 
-		/* build inflow */
-		ByteInflow inflow = new LinkedByteInflow(head);
+		boolean isExisting = Files.exists(handler.getPath(), LinkOption.NOFOLLOW_LINKS);
 
-		/* build inbound session */
-		MgS1Store store = handler.getStore();
-		LiInbound inbound = new LiInbound(store.getCodebase());
+		if(isExisting) {
 
-		/* build branch */
-		LiBranch branch = new LiBranch("m", store.getCodebase());
+			/* read from disk */
+			LinkedBytes head = LinkedBytesIO.read(handler.getPath(), true);
 
-		/* load branch */
-		inbound.pullFrame(inflow, branch);
+			/* build inflow */
+			ByteInflow inflow = new LinkedByteInflow(head);
 
-		return branch;
+			/* build inbound session */
+
+			LiInbound inbound = new LiInbound(store.getCodebase());
+
+			/* build branch */
+			LiBranch branch = new LiBranch("m", store.getCodebase());
+
+			/* load branch */
+			inbound.pullFrame(inflow, branch);
+
+			return branch;
+
+		}
+		else {
+			LiBranch branch = new LiBranch("m", store.getCodebase());
+
+			return branch;
+		}
+
+
 	}
 
 
 	@Override
 	public void save(LiBranch branch) throws Exception {
 
+		/* commit changes */
+		branch.commit();
 
 		/* build inflow */
 		LinkedByteOutflow outflow = new LinkedByteOutflow();
 
 		/* build outbound session */
-		MgS1Store store = handler.getStore();
+		SpaceMgStore store = handler.getStore();
 		LiOutbound outbound = new LiOutbound(store.getCodebase());
 
 		/* push branch */

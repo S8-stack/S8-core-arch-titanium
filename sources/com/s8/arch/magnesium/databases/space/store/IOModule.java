@@ -14,28 +14,28 @@ import com.s8.io.joos.types.JOOS_CompilingException;
 import com.s8.io.joos.utilities.JOOS_BufferedFileReader;
 import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
 
-public class IOModule implements H3MgIOModule<MgS1Store> {
+public class IOModule implements H3MgIOModule<SpaceMgStore> {
 
 	private static JOOS_Lexicon lexicon;
 	
 	
 	public static JOOS_Lexicon JOOS_getLexicon() throws JOOS_CompilingException {
-		if(lexicon == null) { lexicon = JOOS_Lexicon.from(MgS1Store.Serialized.class, MgBranchHandler.Serialized.class); }
+		if(lexicon == null) { lexicon = JOOS_Lexicon.from(SpaceMgStore.Serialized.class, MgBranchHandler.Serialized.class); }
 		return lexicon;
 	}
 
 	
-	public final LithiumMgDatabase handler;
+	public final SpaceMgDatabase handler;
 	
 	
-	public IOModule(LithiumMgDatabase handler) {
+	public IOModule(SpaceMgDatabase handler) {
 		super();
 		this.handler = handler;
 	}
 
 
 	@Override
-	public MgS1Store load() throws IOException, JOOS_ParsingException, JOOS_CompilingException {
+	public SpaceMgStore load() throws IOException, JOOS_ParsingException, JOOS_CompilingException {
 
 		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
 				StandardOpenOption.READ
@@ -48,7 +48,7 @@ public class IOModule implements H3MgIOModule<MgS1Store> {
 		
 		JOOS_BufferedFileReader reader = new JOOS_BufferedFileReader(channel, StandardCharsets.UTF_8, 64);
 		
-		MgS1Store.Serialized repo = (MgS1Store.Serialized) lexicon.parse(reader, true);
+		SpaceMgStore.Serialized repo = (SpaceMgStore.Serialized) lexicon.parse(reader, true);
 
 		reader.close();
 
@@ -58,7 +58,7 @@ public class IOModule implements H3MgIOModule<MgS1Store> {
 	
 
 	@Override
-	public void save(MgS1Store repo) throws Exception {
+	public void save(SpaceMgStore repo) throws Exception {
 
 		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
 				StandardOpenOption.WRITE

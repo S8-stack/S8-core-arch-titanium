@@ -18,7 +18,7 @@ class ExposeObjectsOp extends UserH3MgOperation<LiBranch> {
 
 
 	
-	public @Override boolean isModifyingResource() { return false; }
+	public @Override boolean isModifyingResource() { return true; }
 	
 	
 	/**

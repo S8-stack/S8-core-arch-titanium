@@ -36,15 +36,20 @@ public class SaveMgTask<R> implements AsyncTask {
 		 * run callback on resource
 		 */
 
+		// save sub handlers
+		handler.getSubHandlers().forEach(subHandler -> subHandler.save());
+		
 		try {
 			/* save resource */
 			/* save resource */
 			if(!handler.isSaved()) {
 				
-				handler.getIOModule().save(resource);
+				handler.getIOModule().save(handler.getResource());
 				
 				handler.notifySuccessfullySaved();	
 			}
+			
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();

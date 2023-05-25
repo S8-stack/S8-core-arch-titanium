@@ -1,23 +1,23 @@
 package com.s8.arch.magnesium.databases.space.space;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
 import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.callbacks.VersionMgCallback;
-import com.s8.arch.magnesium.databases.space.store.MgS1Store;
+import com.s8.arch.magnesium.databases.space.store.SpaceMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 
 public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 
 	
-	private final MgS1Store store;
+	private final SpaceMgStore store;
 	
 	private final IOModule ioModule = new IOModule(this);
 	
@@ -26,7 +26,7 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	
 	private final Path path;
 	
-	public MgSpaceHandler(SiliconEngine ng, MgS1Store store, String id, Path path) {
+	public MgSpaceHandler(SiliconEngine ng, SpaceMgStore store, String id, Path path) {
 		super(ng);
 		this.store = store;
 		this.id = id;
@@ -44,15 +44,15 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	}
 
 	@Override
-	public void getSubUnmountables(List<H3MgUnmountable> unmountables) {
-		// final node
+	public List<H3MgHandler<?>> getSubHandlers() {
+		return new ArrayList<>(); // no subhandler
 	}
 
 	public Path getPath() {
 		return path;
 	}
 
-	public MgS1Store getStore() {
+	public SpaceMgStore getStore() {
 		return store;
 	}
 

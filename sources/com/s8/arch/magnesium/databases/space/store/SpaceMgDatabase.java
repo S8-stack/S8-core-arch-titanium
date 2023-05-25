@@ -1,6 +1,7 @@
 package com.s8.arch.magnesium.databases.space.store;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
@@ -8,7 +9,6 @@ import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
 
@@ -18,7 +18,7 @@ import com.s8.io.bohr.lithium.codebase.LiCodebase;
  * @author pc
  *
  */
-public class LithiumMgDatabase extends H3MgHandler<MgS1Store> {
+public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 
 	
 	public final LiCodebase codebase;
@@ -27,7 +27,7 @@ public class LithiumMgDatabase extends H3MgHandler<MgS1Store> {
 	
 	public final IOModule ioModule = new IOModule(this);
 	
-	public LithiumMgDatabase(SiliconEngine ng, LiCodebase codebase, Path storeInfoPathname) {
+	public SpaceMgDatabase(SiliconEngine ng, LiCodebase codebase, Path storeInfoPathname) {
 		super(ng);
 		this.codebase = codebase;
 		this.storeInfoPathname = storeInfoPathname;
@@ -39,14 +39,19 @@ public class LithiumMgDatabase extends H3MgHandler<MgS1Store> {
 	}
 
 	@Override
-	public H3MgIOModule<MgS1Store> getIOModule() {
+	public H3MgIOModule<SpaceMgStore> getIOModule() {
 		return ioModule;
 	}
 
 	@Override
-	public void getSubUnmountables(List<H3MgUnmountable> unmountables) {
-		MgS1Store store = getResource();
-		if(store != null) { store.crawl(unmountables); }
+	public List<H3MgHandler<?>> getSubHandlers() {
+		SpaceMgStore store = getResource();
+		if(store != null) { 
+			return store.getSpaceHandlers(); 
+		}
+		else {
+			return new ArrayList<>();
+		}
 	}
 
 	public Path getInfoPath() {
@@ -77,7 +82,7 @@ public class LithiumMgDatabase extends H3MgHandler<MgS1Store> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void exposureObjects(long t, String spaceId, Object[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+	public void exposeObjects(long t, String spaceId, Object[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
 		pushOperation(new ExposeObjectsOp(t, this, spaceId, objects, onSucceed, onFailed));
 	}
 

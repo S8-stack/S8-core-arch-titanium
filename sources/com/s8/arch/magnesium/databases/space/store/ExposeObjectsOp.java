@@ -12,7 +12,7 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class ExposeObjectsOp extends UserH3MgOperation<MgS1Store> {
+class ExposeObjectsOp extends UserH3MgOperation<SpaceMgStore> {
 
 
 	
@@ -22,7 +22,7 @@ class ExposeObjectsOp extends UserH3MgOperation<MgS1Store> {
 	/**
 	 * 
 	 */
-	public final LithiumMgDatabase handler;
+	public final SpaceMgDatabase handler;
 	
 	
 	public final String spaceId;
@@ -48,7 +48,7 @@ class ExposeObjectsOp extends UserH3MgOperation<MgS1Store> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public ExposeObjectsOp(long timestamp, LithiumMgDatabase handler, 
+	public ExposeObjectsOp(long timestamp, SpaceMgDatabase handler, 
 			String spaceId,
 			Object[] objects,
 			VersionMgCallback onSucceed, 
@@ -63,11 +63,11 @@ class ExposeObjectsOp extends UserH3MgOperation<MgS1Store> {
 	
 
 	@Override
-	public ConsumeResourceMgTask<MgS1Store> createConsumeResourceTask(MgS1Store store) {
-		return new ConsumeResourceMgTask<MgS1Store>(store) {
+	public ConsumeResourceMgTask<SpaceMgStore> createConsumeResourceTask(SpaceMgStore store) {
+		return new ConsumeResourceMgTask<SpaceMgStore>(store) {
 
 			@Override
-			public LithiumMgDatabase getHandler() {
+			public SpaceMgDatabase getHandler() {
 				return handler;
 			}
 			
@@ -82,7 +82,7 @@ class ExposeObjectsOp extends UserH3MgOperation<MgS1Store> {
 			}
 
 			@Override
-			public void consumeResource(MgS1Store store) {
+			public void consumeResource(SpaceMgStore store) {
 				try {
 					store.getSpaceHandler(spaceId).exposeObjects(timeStamp, objects, onSucceed, onFailed);
 				}

@@ -1,6 +1,7 @@
 package com.s8.arch.magnesium.databases.repo.store;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
@@ -8,7 +9,6 @@ import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
 import com.s8.arch.magnesium.callbacks.VersionMgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.arch.magnesium.handlers.h3.H3MgUnmountable;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.object.NdObject;
@@ -43,12 +43,19 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	public H3MgIOModule<MgRepoStore> getIOModule() {
 		return ioModule;
 	}
+	
 
 	@Override
-	public void getSubUnmountables(List<H3MgUnmountable> unmountables) {
+	public List<H3MgHandler<?>> getSubHandlers() {
 		MgRepoStore store = getResource();
-		if(store != null) { store.crawl(unmountables); }
+		if(store != null) { 
+			return store.crawl(); 
+		}
+		else {
+			return new ArrayList<>();
+		}
 	}
+	
 
 	public Path getInfoPath() {
 		return storeInfoPathname;
