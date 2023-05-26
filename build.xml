@@ -2,9 +2,11 @@
 <project name="MyProject" basedir="." default="package-jar">
 
 	<property name="module" value="com.s8.arch.magnesium" />
+	<property name="name" value="s8-arch-magnesium" />
+		
 	<property name="stack" value="/Users/pc/qx/git/com.s8.stack/modules" />
-	<property name="stack-sources" value="/Users/pc/qx/git/com.s8.stack/mod-sources" />
-	<property name="jar-name" value="${stack}/s8-arch-magnesium" />
+	<property name="java-sources" value="/Users/pc/qx/git/com.s8.stack/mod-sources" />
+	<property name="jar-path" value="${stack}/${name}.jar" />
 	<property name="d0" value="${stack}/s8-io-xml.jar" />
 	<property name="d1" value="${stack}/s8-io-joos.jar" />
 	<property name="d2" value="${stack}/s8-io-bytes.jar" />
@@ -21,11 +23,11 @@
 
 	<target name="clean-up">
 		<delete dir="forge" />
-		<delete dir="${stack-sources}/${module}" />
+		<delete dir="${java-sources}/${module}" />
 		<mkdir dir="forge" />
 		<mkdir dir="forge/java" />
 		<mkdir dir="forge/java/${module}" />
-		<mkdir dir="${stack-sources}/${module}" />
+		<mkdir dir="${java-sources}/${module}" />
 	</target>
 
 	<target name="copy-sources" depends="clean-up">
@@ -37,7 +39,7 @@
 				<exclude name="**/*.toto" />
 			</fileset>
 		</copy>
-		<copy todir="${stack-sources}/${module}">
+		<copy todir="${java-sources}/${module}">
 			<fileset dir="sources">
 				<exclude name="**/*.toto" />
 			</fileset>
@@ -70,7 +72,7 @@
 	<target name="package-jar" depends="copy-resources">
 		<exec executable="${javahome}/bin/jar" dir="${basedir}">
 			<arg value="-c" />
-			<arg value="--file=${jar-name}.jar" />
+			<arg value="--file=${jar-path}" />
 			<arg value="-C" />
 			<arg value="forge/classes/${module}" />
 			<arg value="." />
