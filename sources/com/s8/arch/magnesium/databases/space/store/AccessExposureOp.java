@@ -25,7 +25,7 @@ class AccessExposureOp extends UserH3MgOperation<SpaceMgStore> {
 	public final SpaceMgDatabase handler;
 	
 	
-	public final String repositoryAddress;
+	public final String spaceId;
 	
 	
 	
@@ -53,7 +53,7 @@ class AccessExposureOp extends UserH3MgOperation<SpaceMgStore> {
 			ExceptionMgCallback onFailed) {
 		super(timestamp);
 		this.handler = handler;
-		this.repositoryAddress = repositoryAddress;
+		this.spaceId = repositoryAddress;
 		this.onSucceed = onSucceed;
 		this.onFailed = onFailed;
 	}
@@ -81,7 +81,7 @@ class AccessExposureOp extends UserH3MgOperation<SpaceMgStore> {
 			@Override
 			public void consumeResource(SpaceMgStore store) {
 				try {
-					store.getSpaceHandler(repositoryAddress).accessExposure(timeStamp, onSucceed, onFailed);
+					store.getSpaceHandler(spaceId).accessExposure(timeStamp, onSucceed, onFailed);
 				}
 				catch(Exception exception) { onFailed.call(exception); }
 			}
