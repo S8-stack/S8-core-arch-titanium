@@ -4,9 +4,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.fluor.outputs.RepoCreationS8AsyncOutput;
+import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.fluor.outputs.RepoCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
@@ -67,6 +68,8 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 
 
 	
+	
+	
 	/**
 	 * 
 	 * @param onSucceed
@@ -77,6 +80,19 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 			long options) {
 		pushOperation(new CreateRepoOp(t, this, repoAddress, onSucceed, options));
 	}
+	
+	
+	/**
+	 * 
+	 * @param onSucceed
+	 * @param onFailed
+	 */
+	public void createBranch(long t, String repoAddress, String branchId,
+			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
+			long options) {
+		pushOperation(new CreateBranchOp(t, this, repoAddress, branchId, onSucceed, options));
+	}
+	
 	
 	/**
 	 * 
