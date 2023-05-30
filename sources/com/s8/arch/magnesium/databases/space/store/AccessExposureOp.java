@@ -1,11 +1,14 @@
 package com.s8.arch.magnesium.databases.space.store;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
+import com.s8.arch.fluor.S8AsyncFlow;
+import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.space.space.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
+import com.s8.io.bytes.alpha.Bool64;
 
 /**
  * 
@@ -15,49 +18,46 @@ import com.s8.arch.silicon.async.MthProfile;
 class AccessExposureOp extends UserH3MgOperation<SpaceMgStore> {
 
 
-	
+
 	public @Override boolean isModifyingResource() { return false; }
-	
-	
+
+
 	/**
 	 * 
 	 */
 	public final SpaceMgDatabase handler;
-	
-	
-	public final String spaceId;
-	
-	
-	
-	/**
-	 * 
-	 */
-	public final ObjectsMgCallback onSucceed;
-	
-	
-	/**
-	 * 
-	 */
-	public final ExceptionMgCallback onFailed;
 
-	
+
+	public final String spaceId;
+
+
+
+	/**
+	 * 
+	 */
+	public final MgCallback<SpaceExposureS8AsyncOutput> onProcessed;
+
+
+	public final long options;
+
+
 	/**
 	 * 
 	 * @param handler
-	 * @param onSucceed
+	 * @param onProcessed
 	 * @param onFailed
 	 */
 	public AccessExposureOp(long timestamp, SpaceMgDatabase handler, 
 			String repositoryAddress, 
-			ObjectsMgCallback onSucceed, 
-			ExceptionMgCallback onFailed) {
+			MgCallback<SpaceExposureS8AsyncOutput> onProcessed, 
+			long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.spaceId = repositoryAddress;
-		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.onProcessed = onProcessed;
+		this.options = options;
 	}
-	
+
 
 	@Override
 	public ConsumeResourceMgTask<SpaceMgStore> createConsumeResourceTask(SpaceMgStore store) {
@@ -67,10 +67,10 @@ class AccessExposureOp extends UserH3MgOperation<SpaceMgStore> {
 			public SpaceMgDatabase getHandler() {
 				return handler;
 			}
-			
+
 			@Override
 			public MthProfile profile() { 
-				return MthProfile.FX0; 
+				return MthProfile.IO_SSD; 
 			}
 
 			@Override
@@ -80,10 +80,34 @@ class AccessExposureOp extends UserH3MgOperation<SpaceMgStore> {
 
 			@Override
 			public void consumeResource(SpaceMgStore store) {
+
+				
 				try {
-					store.getSpaceHandler(spaceId).accessExposure(timeStamp, onSucceed, onFailed);
+
+					boolean isCreateOptionEnabled = Bool64.has(options, S8AsyncFlow.CREATE_SPACE_IF_NOT_PRESENT);
+					MgSpaceHandler spaceHandler = store.resolveSpaceHandler(spaceId, isCreateOptionEnabled);
+
+					if(spaceHandler != null) {
+						/* exit point 1 -> continue */
+						spaceHandler.accessExposure(timeStamp, onProcessed, options);
+					}
+					else {
+						
+						/* exit point 2 -> soft fail */
+						SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
+						output.isSuccessful = false;
+						output.isSpaceDoesNotExist = true;
+						onProcessed.call(output);
+					}				
 				}
-				catch(Exception exception) { onFailed.call(exception); }
+				catch(Exception exception) {
+					exception.printStackTrace();
+					
+					/* exit point 3 -> hard fail */
+					SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
+					output.reportException(exception);
+					onProcessed.call(output);
+				}
 			}
 		};
 	}
@@ -104,11 +128,10 @@ class AccessExposureOp extends UserH3MgOperation<SpaceMgStore> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
+				output.reportException(exception);
+				onProcessed.call(output);
 			}
 		};
 	}
-
-
-	
 }

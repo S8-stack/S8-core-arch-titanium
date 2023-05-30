@@ -20,10 +20,10 @@ public class MgUserbaseDemo {
 		NoteMgDatabase userbase = new NoteMgDatabase(ng, BeCodebase.from(MgUser.class), path);
 
 		for(int i = 0; i<1; i++) {
-			userbase.get(0, "convert.pierre@gmail.com", object -> {
-				MgUser user = (MgUser) object;
+			userbase.get(0, "convert.pierre@gmail.com", output -> {
+				MgUser user = (MgUser) output.user;
 				System.out.println("Is logged-in: "+user.password.equals("toto1234"));
-			}, e -> e.printStackTrace());	
+			}, 0);	
 		}
 
 

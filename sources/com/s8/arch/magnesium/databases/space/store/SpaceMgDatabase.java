@@ -4,13 +4,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
+import com.s8.io.joos.types.JOOS_CompilingException;
 
 
 /**
@@ -25,13 +26,29 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	
 	public final Path storeInfoPathname;
 	
-	public final IOModule ioModule = new IOModule(this);
+	public final IOModule ioModule;
 	
-	public SpaceMgDatabase(SiliconEngine ng, LiCodebase codebase, Path storeInfoPathname) {
+	public final MgSpaceInitializer initializer;
+	
+	/**
+	 * 
+	 * @param ng
+	 * @param codebase
+	 * @param storeInfoPathname
+	 * @param initializer
+	 * @throws JOOS_CompilingException
+	 */
+	public SpaceMgDatabase(SiliconEngine ng, 
+			LiCodebase codebase, 
+			Path storeInfoPathname, 
+			MgSpaceInitializer initializer) throws JOOS_CompilingException {
 		super(ng);
 		this.codebase = codebase;
 		this.storeInfoPathname = storeInfoPathname;
+		this.ioModule = new IOModule(this);
+		this.initializer = initializer;
 	}
+	
 
 	@Override
 	public String getName() {
@@ -65,25 +82,24 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	 * 
 	 * @param t
 	 * @param spaceId
-	 * @param onSucceed
+	 * @param onProceed
 	 * @param onFailed
 	 */
-	public void accessExposure(long t, String spaceId, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new AccessExposureOp(t, this, spaceId, onSucceed, onFailed));
+	public void accessExposure(long t, String spaceId, MgCallback<SpaceExposureS8AsyncOutput> onProceed, long options) {
+		pushOperation(new AccessExposureOp(t, this, spaceId, onProceed, options));
 	}
 
-	
 	
 
 	/**
 	 * 
 	 * @param t
 	 * @param spaceId
-	 * @param onSucceed
+	 * @param onProceed
 	 * @param onFailed
 	 */
-	public void exposeObjects(long t, String spaceId, Object[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new ExposeObjectsOp(t, this, spaceId, objects, onSucceed, onFailed));
+	public void exposeObjects(long t, String spaceId, Object[] objects, MgCallback<SpaceVersionS8AsyncOutput> onProceed, long options) {
+		pushOperation(new ExposeObjectsOp(t, this, spaceId, objects, onProceed, options));
 	}
 
 	

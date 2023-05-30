@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.databases.repo.repository;
 
-import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repo.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
@@ -8,41 +8,40 @@ import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
+import com.s8.io.bohr.neodymium.branch.NdBranch;
+
 
 /**
  * 
  * @author pierreconvert
  *
  */
-class RetrieveHeadVersion extends UserH3MgOperation<MgRepository> {
-
+class CreateBranchOp extends UserH3MgOperation<MgRepository> {
 
 	@Override
 	public boolean isModifyingResource() {
-		return false;
+		return true;
 	}
-
-
-
+	
+	
 	public final MgRepositoryHandler handler;
-
+	
 	public final String branchId;
-
-	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
-
+	
+	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
+	
 	public final long options;
 
-
+	
 	/**
 	 * 
 	 * @param handler
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public RetrieveHeadVersion(long timestamp,
-			MgRepositoryHandler handler, 
-			String branchId,
-			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
+	public CreateBranchOp(long timestamp,
+			MgRepositoryHandler handler, String branchId,
+			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
 		super(timestamp);
 		this.handler = handler;
@@ -59,7 +58,7 @@ class RetrieveHeadVersion extends UserH3MgOperation<MgRepository> {
 			public H3MgHandler<MgRepository> getHandler() {
 				return handler;
 			}
-
+			
 			@Override
 			public MthProfile profile() { 
 				return MthProfile.FX0; 
@@ -67,25 +66,33 @@ class RetrieveHeadVersion extends UserH3MgOperation<MgRepository> {
 
 			@Override
 			public String describe() {
-				return "CLONE-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
+				return "COMMIT-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
 			public void consumeResource(MgRepository repository) {
 				try {
 					MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
-					if(branchHandler != null) { 
-						branchHandler.retrieveHeadVersion(timeStamp, onSucceed, options);
+					if(branchHandler == null) {
+						
+						branchHandler = new MgBranchHandler(handler.ng, handler.store, repository);
+						
+						NdBranch branch = new NdBranch(handler.store.codebase, branchId);
+						branchHandler.initializeResource(branch);
+						
+						repository.branchHandlers.put(branchId, branchHandler);
+						
+						onSucceed.call(BranchCreationS8AsyncOutput.successful(0x0L));
 					}
 					else {
-						BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
-						output.isBranchDoesNotExist = true;
+						BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
+						output.isSuccessful = false;
+						output.hasIdConflict = true;
 						onSucceed.call(output);
 					}
-					
 				}
 				catch(Exception exception) {
-					BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+					BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
 					output.reportException(exception);
 					onSucceed.call(output);
 				}
@@ -109,13 +116,12 @@ class RetrieveHeadVersion extends UserH3MgOperation<MgRepository> {
 
 			@Override
 			public void catchException(Exception exception) {
-				BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+				BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
 				output.reportException(exception);
 				onSucceed.call(output);
 			}
 		};
 	}
 
-
-
+	
 }

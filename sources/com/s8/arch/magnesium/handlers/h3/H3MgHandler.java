@@ -1,5 +1,6 @@
 package com.s8.arch.magnesium.handlers.h3;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
@@ -169,6 +170,27 @@ public abstract class H3MgHandler<R> {
 	 */
 	public abstract H3MgIOModule<R> getIOModule();
 
+	
+
+	/**
+	 * 
+	 * @param resource
+	 * @throws IOException 
+	 */
+	public void initializeResource(R resource) throws IOException {
+
+		/* low-contention probability synchronized section */
+		synchronized (lock) {
+			if(status == Status.UNMOUNTED) {
+				this.resource = resource;
+				this.status = Status.LOADED;
+				this.isSaved = false;	
+			}
+			else {
+				throw new IOException("Handler state cannot be initialized");
+			}
+		}
+	}
 
 
 	/**

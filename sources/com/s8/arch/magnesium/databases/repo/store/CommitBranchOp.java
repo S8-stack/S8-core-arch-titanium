@@ -1,7 +1,8 @@
 package com.s8.arch.magnesium.databases.repo.store;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.repo.repository.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -15,48 +16,48 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CommitOp extends UserH3MgOperation<MgRepoStore> {
+class CommitBranchOp extends UserH3MgOperation<MgRepoStore> {
 
 	@Override
 	public boolean isModifyingResource() {
 		return true;
 	}
-	
-	
-	public final RepoMgDatabase handler;
-	
-	public final String repositoryAddress;
-	
-	public final String branchName;
-	
-	public final NdObject[] objects;
-	
-	
-	public final VersionMgCallback onSucceed;
-	
-	public final ExceptionMgCallback onFailed;
 
-	
+
+	public final RepoMgDatabase handler;
+
+	public final String repositoryAddress;
+
+	public final String branchId;
+
+	public final NdObject[] objects;
+
+
+	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
+
+	public final long options;
+
+
 	/**
 	 * 
 	 * @param handler
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CommitOp(long timestamp,
+	public CommitBranchOp(long timestamp,
 			RepoMgDatabase handler, 
 			String repositoryAddress,
-			String branchName, 
+			String branchId, 
 			NdObject[] objects, 
-			VersionMgCallback onSucceed, 
-			ExceptionMgCallback onFailed) {
+			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
+			long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.repositoryAddress = repositoryAddress;
-		this.branchName = branchName;
+		this.branchId = branchId;
 		this.objects = objects;
 		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
 
 	@Override
@@ -67,7 +68,7 @@ class CommitOp extends UserH3MgOperation<MgRepoStore> {
 			public H3MgHandler<MgRepoStore> getHandler() {
 				return handler;
 			}
-			
+
 			@Override
 			public MthProfile profile() { 
 				return MthProfile.FX0; 
@@ -75,19 +76,31 @@ class CommitOp extends UserH3MgOperation<MgRepoStore> {
 
 			@Override
 			public String describe() {
-				return "COMMIT-HEAD on "+branchName+" branch of "+handler.getName()+ " repository";
+				return "COMMIT-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
 			public void consumeResource(MgRepoStore store) {
 				try {
-					store.getRepositoryHandler(repositoryAddress).
-					commit(timeStamp, branchName, objects, onSucceed, onFailed);
+
+					MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress, false);
+					
+					if(repoHandler != null) {
+						repoHandler.commit(timeStamp, branchId, objects, onSucceed, options);
+					}
+					else {
+						BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+						output.isSuccessful = false;
+						output.isRepositoryDoesNotExist = true;
+						onSucceed.call(output);
+					}
 				}
-				catch(Exception exception) {
-					onFailed.call(exception);
+				catch(Exception exception) { 
+					BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+					output.reportException(exception);
+					onSucceed.call(output);
 				}
-			}			
+			}		
 		};
 	}
 
@@ -107,10 +120,12 @@ class CommitOp extends UserH3MgOperation<MgRepoStore> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+				output.reportException(exception);
+				onSucceed.call(output);
 			}
 		};
 	}
 
-	
+
 }

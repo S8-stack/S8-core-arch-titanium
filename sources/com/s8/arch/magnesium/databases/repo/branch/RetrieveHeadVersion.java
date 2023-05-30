@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.repo.branch;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -26,10 +26,10 @@ class RetrieveHeadVersion extends UserH3MgOperation<NdBranch> {
 
 	public final MgBranchHandler handler;
 
-	public final VersionMgCallback onSucceed;
+	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
 
-	public final ExceptionMgCallback onFailed;
-
+	public final long options;
+	
 
 	/**
 	 * 
@@ -39,12 +39,12 @@ class RetrieveHeadVersion extends UserH3MgOperation<NdBranch> {
 	 */
 	public RetrieveHeadVersion(long timestamp,
 			MgBranchHandler handler, 
-			VersionMgCallback onSucceed, 
-			ExceptionMgCallback onFailed) {
+			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
+			long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
 
 	@Override
@@ -68,13 +68,15 @@ class RetrieveHeadVersion extends UserH3MgOperation<NdBranch> {
 
 			@Override
 			public void consumeResource(NdBranch branch) {
+				BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
 				try {
 					long version = branch.getHeadVersion();
-					onSucceed.call(version);
+					output.version = version;
 				}
 				catch(Exception exception) {
-					onFailed.call(exception);
+					output.reportException(exception);
 				}
+				onSucceed.call(output);
 			}			
 		};
 	}
@@ -95,7 +97,9 @@ class RetrieveHeadVersion extends UserH3MgOperation<NdBranch> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+				output.reportException(exception);
+				onSucceed.call(output);
 			}
 		};
 	}

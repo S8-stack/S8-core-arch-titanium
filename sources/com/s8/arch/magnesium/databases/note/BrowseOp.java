@@ -3,7 +3,7 @@ package com.s8.arch.magnesium.databases.note;
 import java.util.List;
 
 import com.s8.arch.fluor.S8Filter;
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
+import com.s8.arch.fluor.outputs.ObjectsListS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
@@ -15,25 +15,44 @@ import com.s8.io.bohr.beryllium.exception.BeIOException;
 
 public class BrowseOp<T> extends UserH3MgOperation<BeBranch> {
 	
+	@Override
+	public boolean isModifyingResource() { return false; }
+
+	
+	/**
+	 * handler
+	 */
 	public final NoteMgDatabase handler;
 	
 	
+	/**
+	 * 
+	 */
 	public final S8Filter<T> filter;
 	
-	public final MgCallback<List<T>> onSelected;
 	
-	public final ExceptionMgCallback onFailed;
+	/**
+	 * on selected
+	 */
+	public final MgCallback<ObjectsListS8AsyncOutput<T>> onSelected;
 
+	
+	/**
+	 * options
+	 */
+	public final long options;
+	
 	public BrowseOp(long timeStamp, NoteMgDatabase handler, 
 			S8Filter<T> filter,
-			MgCallback<List<T>> onSelected, 
-			ExceptionMgCallback onFailed) {
+			MgCallback<ObjectsListS8AsyncOutput<T>> onSelected, long options) {
 		super(timeStamp);
 		this.handler = handler;
 		this.filter = filter;
 		this.onSelected = onSelected;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
+	
+	
 
 	@Override
 	public ConsumeResourceMgTask<BeBranch> createConsumeResourceTask(BeBranch branch) {
@@ -56,14 +75,17 @@ public class BrowseOp<T> extends UserH3MgOperation<BeBranch> {
 
 			@Override
 			public void consumeResource(BeBranch branch) {
+				ObjectsListS8AsyncOutput<T> output = new ObjectsListS8AsyncOutput<T>();
 				try {
 					List<T> objects = branch.select(filter);
-					onSelected.call(objects);
+					output.users = objects;
+					output.isSuccessful = true;
 					
 				} catch (BeIOException e) {
 					e.printStackTrace();
-					onFailed.call(e);
+					output.reportException(e);
 				}
+				onSelected.call(output);
 			}
 		};
 	}
@@ -84,14 +106,12 @@ public class BrowseOp<T> extends UserH3MgOperation<BeBranch> {
 			
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);	
+				ObjectsListS8AsyncOutput<T> output = new ObjectsListS8AsyncOutput<T>();
+				output.reportException(exception);
+				onSelected.call(output);
 			}
 		};
 	}
 
-	@Override
-	public boolean isModifyingResource() {
-		return false;
-	}
 
 }

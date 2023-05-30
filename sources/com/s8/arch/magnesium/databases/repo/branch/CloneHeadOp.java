@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.repo.branch;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
+import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -18,31 +18,31 @@ import com.s8.io.bohr.neodymium.object.NdObject;
 class CloneHeadOp extends UserH3MgOperation<NdBranch> {
 
 
-	
-	public @Override boolean isModifyingResource() { return false; }
-	
-	
-	
-	public final MgBranchHandler handler;
-	
-	public final ObjectsMgCallback onSucceed;
-	
-	public final ExceptionMgCallback onFailed;
 
-	
+	public @Override boolean isModifyingResource() { return false; }
+
+
+
+	public final MgBranchHandler handler;
+
+	public final MgCallback<BranchExposureS8AsyncOutput> onProceed;
+
+	public final long options;
+
+
 	/**
 	 * 
 	 * @param handler
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneHeadOp(long timestamp, MgBranchHandler handler, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
+	public CloneHeadOp(long timestamp, MgBranchHandler handler, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
 		super(timestamp);
 		this.handler = handler;
-		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.onProceed = onSucceed;
+		this.options = options;
 	}
-	
+
 
 	@Override
 	public ConsumeResourceMgTask<NdBranch> createConsumeResourceTask(NdBranch branch) {
@@ -52,7 +52,7 @@ class CloneHeadOp extends UserH3MgOperation<NdBranch> {
 			public H3MgHandler<NdBranch> getHandler() {
 				return handler;
 			}
-			
+
 			@Override
 			public MthProfile profile() { 
 				return MthProfile.FX0; 
@@ -65,14 +65,18 @@ class CloneHeadOp extends UserH3MgOperation<NdBranch> {
 
 			@Override
 			public void consumeResource(NdBranch branch) {
+				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
 				try {
 					NdObject[] objects = branch.cloneHead().exposure;
-					onSucceed.call(objects);
+					output.objects = objects;
+					output.isSuccessful = true;
 				}
-				catch(Exception exception) { onFailed.call(exception); }
+				catch(Exception exception) { 
+					exception.printStackTrace();
+					output.reportException(exception);
+				}
+				onProceed.call(output);
 			}
-
-			
 		};
 	}
 
@@ -92,11 +96,13 @@ class CloneHeadOp extends UserH3MgOperation<NdBranch> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
+				output.reportException(exception);
+				onProceed.call(output);
 			}
 		};
 	}
 
 
-	
+
 }

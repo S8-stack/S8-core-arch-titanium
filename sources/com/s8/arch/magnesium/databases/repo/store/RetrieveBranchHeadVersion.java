@@ -1,7 +1,8 @@
 package com.s8.arch.magnesium.databases.repo.store;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
+import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.repo.repository.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -13,47 +14,46 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class CloneHeadOp extends UserH3MgOperation<MgRepoStore> {
+class RetrieveBranchHeadVersion extends UserH3MgOperation<MgRepoStore> {
 
 
 	@Override
 	public boolean isModifyingResource() {
 		return false;
 	}
-	
-	
-	
-	public final RepoMgDatabase handler;
-	
-	public final String repositoryAddress;
-	
-	public final String branchName;
-	
-	public final ObjectsMgCallback onSucceed;
-	
-	public final ExceptionMgCallback onFailed;
 
-	
+
+
+	public final RepoMgDatabase handler;
+
+	public final String repositoryAddress;
+
+	public final String branchName;
+
+	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
+
+	public final long options;
+
+
 	/**
 	 * 
 	 * @param handler
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneHeadOp(long timestamp, 
+	public RetrieveBranchHeadVersion(long timestamp,
 			RepoMgDatabase handler, 
 			String repositoryAddress,
-			String branchName, 
-			ObjectsMgCallback onSucceed, 
-			ExceptionMgCallback onFailed) {
+			String branchName,
+			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
+			long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.repositoryAddress = repositoryAddress;
 		this.branchName = branchName;
 		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
-	
 
 	@Override
 	public ConsumeResourceMgTask<MgRepoStore> createConsumeResourceTask(MgRepoStore store) {
@@ -63,7 +63,7 @@ class CloneHeadOp extends UserH3MgOperation<MgRepoStore> {
 			public H3MgHandler<MgRepoStore> getHandler() {
 				return handler;
 			}
-			
+
 			@Override
 			public MthProfile profile() { 
 				return MthProfile.FX0; 
@@ -77,13 +77,23 @@ class CloneHeadOp extends UserH3MgOperation<MgRepoStore> {
 			@Override
 			public void consumeResource(MgRepoStore store) {
 				try {
-					store.getRepositoryHandler(repositoryAddress).
-					cloneHead(timeStamp, branchName, onSucceed, onFailed);
+					MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress, false);
+					if(repoHandler != null) {
+						repoHandler.retrieveHeadVersion(timeStamp, branchName, onSucceed, options);
+					}
+					else {
+						BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+						output.isSuccessful = false;
+						output.isRepositoryDoesNotExist = true;
+						onSucceed.call(output);
+					}
 				}
-				catch(Exception exception) { onFailed.call(exception); }
-			}
-
-			
+				catch(Exception exception) {
+					BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+					output.reportException(exception);
+					onSucceed.call(output);
+				}
+			}			
 		};
 	}
 
@@ -103,11 +113,13 @@ class CloneHeadOp extends UserH3MgOperation<MgRepoStore> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+				output.reportException(exception);
+				onSucceed.call(output);
 			}
 		};
 	}
 
 
-	
+
 }

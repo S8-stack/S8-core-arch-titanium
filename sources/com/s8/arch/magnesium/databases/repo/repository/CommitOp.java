@@ -1,9 +1,7 @@
 package com.s8.arch.magnesium.databases.repo.repository;
 
-import java.io.IOException;
-
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repo.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
@@ -33,9 +31,9 @@ class CommitOp extends UserH3MgOperation<MgRepository> {
 	public final NdObject[] objects;
 	
 	
-	public final VersionMgCallback onSucceed;
+	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
 	
-	public final ExceptionMgCallback onFailed;
+	public final long options;
 
 	
 	/**
@@ -45,13 +43,15 @@ class CommitOp extends UserH3MgOperation<MgRepository> {
 	 * @param onFailed
 	 */
 	public CommitOp(long timestamp,
-			MgRepositoryHandler handler, String branchId, NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+			MgRepositoryHandler handler, String branchId, NdObject[] objects, 
+			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
+			long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.branchId = branchId;
 		this.objects = objects;
 		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
 
 	@Override
@@ -74,18 +74,24 @@ class CommitOp extends UserH3MgOperation<MgRepository> {
 			}
 
 			@Override
-			public void consumeResource(MgRepository branch) {
+			public void consumeResource(MgRepository repository) {
 				try {
 					MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
-					if(branchHandler == null) {
-						throw new IOException("Undefined branch");
+					if(branchHandler != null) {
+						// commit on branch
+						branchHandler.commit(timeStamp, objects, onSucceed, options);
 					}
-					
-					// commit on branch
-					branchHandler.commit(timeStamp, objects, onSucceed, onFailed);
+					else {
+						BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+						output.isSuccessful = false;
+						output.isBranchDoesNotExist = true;
+						onSucceed.call(output);
+					}
 				}
 				catch(Exception exception) {
-					onFailed.call(exception);
+					BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+					output.reportException(exception);
+					onSucceed.call(output);
 				}
 			}			
 		};
@@ -107,7 +113,9 @@ class CommitOp extends UserH3MgOperation<MgRepository> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+				output.reportException(exception);
+				onSucceed.call(output);
 			}
 		};
 	}

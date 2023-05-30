@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.space.space;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
@@ -32,13 +32,13 @@ class ExposeObjectsOp extends UserH3MgOperation<LiBranch> {
 	/**
 	 * 
 	 */
-	public final VersionMgCallback onSucceed;
+	public final MgCallback<SpaceVersionS8AsyncOutput> onExposed;
 	
 	
 	/**
 	 * 
 	 */
-	public final ExceptionMgCallback onFailed;
+	public final long options;
 
 	
 	/**
@@ -49,13 +49,13 @@ class ExposeObjectsOp extends UserH3MgOperation<LiBranch> {
 	 */
 	public ExposeObjectsOp(long timestamp, MgSpaceHandler handler, 
 			Object[] objects,
-			VersionMgCallback onSucceed, 
-			ExceptionMgCallback onFailed) {
+			MgCallback<SpaceVersionS8AsyncOutput> onExposed, 
+			long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.objects = objects;
-		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.onExposed = onExposed;
+		this.options = options;
 	}
 	
 
@@ -80,6 +80,7 @@ class ExposeObjectsOp extends UserH3MgOperation<LiBranch> {
 
 			@Override
 			public void consumeResource(LiBranch branch) {
+				SpaceVersionS8AsyncOutput output = new SpaceVersionS8AsyncOutput();
 				try {
 					
 					/* ranges */
@@ -88,9 +89,12 @@ class ExposeObjectsOp extends UserH3MgOperation<LiBranch> {
 						branch.expose(slot, (LiObject) objects[slot]);	
 					}
 					
-					onSucceed.call(0L);
+					output.version = 0x0L; // TODO
 				}
-				catch(Exception exception) { onFailed.call(exception); }
+				catch(Exception exception) { 
+					output.reportException(exception);
+				}
+				onExposed.call(output);
 			}
 
 			
@@ -113,7 +117,9 @@ class ExposeObjectsOp extends UserH3MgOperation<LiBranch> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				SpaceVersionS8AsyncOutput output = new SpaceVersionS8AsyncOutput();
+				output.reportException(exception);
+				onExposed.call(output);
 			}
 		};
 	}

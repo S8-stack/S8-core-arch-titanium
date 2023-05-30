@@ -4,9 +4,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
+import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repo.repository.MgRepository;
 import com.s8.arch.magnesium.databases.repo.store.MgRepoStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -114,13 +114,16 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 		return store;
 	}
 
+	
+
+	
 	/**
 	 * 
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void commit(long t, NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new CommitOp(t, this, objects, onSucceed, onFailed));
+	public void commit(long t, NdObject[] objects, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new CommitOp(t, this, objects, onSucceed, options));
 	}
 
 
@@ -129,8 +132,8 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void cloneHead(long t, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new CloneHeadOp(t, this, onSucceed, onFailed));
+	public void cloneHead(long t, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new CloneHeadOp(t, this, onSucceed, options));
 	}
 
 
@@ -141,8 +144,8 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void cloneVersion(long t, long version, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new CloneVersionOp(t, this, version, onSucceed, onFailed));
+	public void cloneVersion(long t, long version, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new CloneVersionOp(t, this, version, onSucceed, options));
 	}
 
 
@@ -152,8 +155,8 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void retrieveHeadVersion(long t, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
-		pushOperation(new RetrieveHeadVersion(t, this, onSucceed, onFailed));
+	public void retrieveHeadVersion(long t, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new RetrieveHeadVersion(t, this, onSucceed, options));
 	}
 
 

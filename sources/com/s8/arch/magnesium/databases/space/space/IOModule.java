@@ -1,5 +1,6 @@
 package com.s8.arch.magnesium.databases.space.space;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 
@@ -37,7 +38,7 @@ public class IOModule implements H3MgIOModule<LiBranch> {
 
 
 	@Override
-	public LiBranch load() throws Exception {
+	public LiBranch load() throws IOException {
 
 		SpaceMgStore store = handler.getStore();
 
@@ -75,7 +76,7 @@ public class IOModule implements H3MgIOModule<LiBranch> {
 
 
 	@Override
-	public void save(LiBranch branch) throws Exception {
+	public void save(LiBranch branch) throws IOException {
 
 		/* commit changes */
 		branch.commit();

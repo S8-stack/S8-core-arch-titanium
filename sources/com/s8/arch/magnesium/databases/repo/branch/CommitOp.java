@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.repo.branch;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -29,9 +29,9 @@ class CommitOp extends UserH3MgOperation<NdBranch> {
 	public final NdObject[] objects;
 	
 	
-	public final VersionMgCallback onSucceed;
+	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
 	
-	public final ExceptionMgCallback onFailed;
+	public final long options;
 
 	
 	/**
@@ -41,13 +41,15 @@ class CommitOp extends UserH3MgOperation<NdBranch> {
 	 * @param onFailed
 	 */
 	public CommitOp(long timestamp,
-			MgBranchHandler handler,  NdObject[] objects, VersionMgCallback onSucceed, ExceptionMgCallback onFailed) {
+			MgBranchHandler handler,  NdObject[] objects, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.objects = objects;
 		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
+	
+	
 
 	@Override
 	public ConsumeResourceMgTask<NdBranch> createConsumeResourceTask(NdBranch branch) {
@@ -70,13 +72,15 @@ class CommitOp extends UserH3MgOperation<NdBranch> {
 
 			@Override
 			public void consumeResource(NdBranch branch) {
+				BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
 				try {
 					long version = branch.commit(objects);
-					onSucceed.call(version);
+					output.version = version;
 				}
 				catch(Exception exception) {
-					onFailed.call(exception);
+					output.reportException(exception);
 				}
+				onSucceed.call(output);
 			}			
 		};
 	}
@@ -97,7 +101,9 @@ class CommitOp extends UserH3MgOperation<NdBranch> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();
+				output.reportException(exception);
+				onSucceed.call(output);
 			}
 		};
 	}

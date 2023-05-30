@@ -2,8 +2,8 @@ package com.s8.arch.magnesium.databases.repo.repository;
 
 import java.io.IOException;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
+import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repo.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
@@ -25,9 +25,9 @@ class CloneVersionOp extends UserH3MgOperation<MgRepository> {
 	
 	public final long version;
 	
-	public final ObjectsMgCallback onSucceed;
+	public final MgCallback<BranchExposureS8AsyncOutput> onSucceed;
 
-	public final ExceptionMgCallback onFailed;
+	public final long options;
 
 	
 	@Override
@@ -44,13 +44,15 @@ class CloneVersionOp extends UserH3MgOperation<MgRepository> {
 	 * @param onFailed
 	 */
 	public CloneVersionOp(long timestamp, 
-			MgRepositoryHandler handler, String branchId, long version, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
+			MgRepositoryHandler handler, String branchId, long version, 
+			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
+			long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.branchId = branchId;
 		this.version = version;
 		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
 	
 
@@ -78,10 +80,16 @@ class CloneVersionOp extends UserH3MgOperation<MgRepository> {
 				try {
 					MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
 					
-					if(branchHandler == null) { throw new IOException("No branch "+branchId+" on repo "+repository.address); }
-					branchHandler.cloneVersion(timeStamp, version, onSucceed, onFailed);
+					if(branchHandler == null) { 
+						throw new IOException("No branch "+branchId+" on repo "+repository.address); 
+					}
+					branchHandler.cloneVersion(timeStamp, version, onSucceed, options);
 				}
-				catch(Exception exception) { onFailed.call(exception); }
+				catch(Exception exception) { 
+					BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
+					output.reportException(exception);
+					onSucceed.call(output);
+				}
 			}			
 		};
 	}
@@ -102,7 +110,9 @@ class CloneVersionOp extends UserH3MgOperation<MgRepository> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
+				output.reportException(exception);
+				onSucceed.call(output);
 			}
 		};
 	}

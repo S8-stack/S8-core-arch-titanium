@@ -20,22 +20,30 @@ public class IOModule implements H3MgIOModule<MgRepoStore> {
 	
 	
 	public static JOOS_Lexicon JOOS_getLexicon() throws JOOS_CompilingException {
-		if(lexicon == null) { lexicon = JOOS_Lexicon.from(MgRepoStore.Serialized.class, MgBranchHandler.Serialized.class); }
+		
 		return lexicon;
 	}
 
 	
 	public final RepoMgDatabase handler;
 	
-	
-	public IOModule(RepoMgDatabase handler) {
+	/**
+	 * 
+	 * @param handler
+	 * @throws JOOS_CompilingException
+	 */
+	public IOModule(RepoMgDatabase handler) throws JOOS_CompilingException {
 		super();
 		this.handler = handler;
+		
+		if(lexicon == null) { 
+			lexicon = JOOS_Lexicon.from(MgRepoStore.Serialized.class, MgBranchHandler.Serialized.class); 
+		}
 	}
 
 
 	@Override
-	public MgRepoStore load() throws IOException, JOOS_ParsingException, JOOS_CompilingException {
+	public MgRepoStore load() throws IOException, JOOS_ParsingException {
 
 		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
 				StandardOpenOption.READ
@@ -44,7 +52,6 @@ public class IOModule implements H3MgIOModule<MgRepoStore> {
 		/**
 		 * lexicon
 		 */
-		JOOS_Lexicon lexicon = JOOS_getLexicon();
 		
 		JOOS_BufferedFileReader reader = new JOOS_BufferedFileReader(channel, StandardCharsets.UTF_8, 64);
 		
@@ -58,13 +65,11 @@ public class IOModule implements H3MgIOModule<MgRepoStore> {
 	
 
 	@Override
-	public void save(MgRepoStore repo) throws Exception {
+	public void save(MgRepoStore repo) throws IOException {
 
 		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
 				StandardOpenOption.WRITE
 		});
-
-		JOOS_Lexicon lexicon = JOOS_getLexicon();
 		
 		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);
 

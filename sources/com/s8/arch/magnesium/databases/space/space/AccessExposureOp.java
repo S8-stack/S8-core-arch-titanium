@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.space.space;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectsMgCallback;
+import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
@@ -30,13 +30,13 @@ class AccessExposureOp extends UserH3MgOperation<LiBranch> {
 	/**
 	 * 
 	 */
-	public final ObjectsMgCallback onSucceed;
+	public final MgCallback<SpaceExposureS8AsyncOutput> onSucceed;
 	
 	
 	/**
 	 * 
 	 */
-	public final ExceptionMgCallback onFailed;
+	public final long options;
 
 	
 	/**
@@ -45,11 +45,11 @@ class AccessExposureOp extends UserH3MgOperation<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public AccessExposureOp(long timestamp, MgSpaceHandler handler, ObjectsMgCallback onSucceed, ExceptionMgCallback onFailed) {
+	public AccessExposureOp(long timestamp, MgSpaceHandler handler, MgCallback<SpaceExposureS8AsyncOutput> onSucceed, long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
 	
 
@@ -74,14 +74,18 @@ class AccessExposureOp extends UserH3MgOperation<LiBranch> {
 
 			@Override
 			public void consumeResource(LiBranch branch) {
+				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
 				try {
 					LiObject[] objects = branch.getCurrentExposure();
-					onSucceed.call(objects);
+					output.isSuccessful = true;
+					output.objects = objects;
 				}
-				catch(Exception exception) { onFailed.call(exception); }
+				catch(Exception exception) { 
+					output.isSuccessful = false;
+					output.reportException(exception);
+				}
+				onSucceed.call(output);
 			}
-
-			
 		};
 	}
 
@@ -101,7 +105,9 @@ class AccessExposureOp extends UserH3MgOperation<LiBranch> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
+				output.reportException(exception);
+				onSucceed.call(output);
 			}
 		};
 	}

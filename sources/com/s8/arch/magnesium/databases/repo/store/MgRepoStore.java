@@ -1,17 +1,20 @@
 package com.s8.arch.magnesium.databases.repo.store;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.s8.arch.magnesium.databases.repo.repository.MgRepository;
 import com.s8.arch.magnesium.databases.repo.repository.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.JOOS_Field;
 import com.s8.io.joos.JOOS_Type;
+import com.s8.io.joos.types.JOOS_CompilingException;
 
 
 /**
@@ -30,9 +33,9 @@ public class MgRepoStore {
 	
 	private Path rootPath;
 	
-	private MgPathComposer repoPathComposer;
+	public final MgPathComposer repoPathComposer;
 	
-	public final Map<String, MgRepositoryHandler> repositoryHandlers = new HashMap<>();
+	private final Map<String, MgRepositoryHandler> repositoryHandlers = new HashMap<>();
 	
 	
 	public MgRepoStore(RepoMgDatabase handler, NdCodebase codebase, String rootPathname) {
@@ -52,11 +55,40 @@ public class MgRepoStore {
 	 * 
 	 * @param repositoryAddress
 	 * @return
+	 * @throws JOOS_CompilingException 
+	 * @throws IOException 
 	 */
-	public MgRepositoryHandler getRepositoryHandler(String repositoryAddress) {
-		return repositoryHandlers.computeIfAbsent(repositoryAddress, 
-				address -> new MgRepositoryHandler(handler.ng, this, address));
+	
+	MgRepositoryHandler getRepositoryHandler(String repositoryAddress, boolean isCreateEnabled) 
+			throws JOOS_CompilingException, IOException {
+		MgRepositoryHandler repoHandler = repositoryHandlers.get(repositoryAddress);
+		if(repoHandler != null) {
+			return repoHandler;
+		}
+		else {
+			Path dataPath = repoPathComposer.composePath(repositoryAddress);
+			boolean hasBeenCreated = dataPath.toFile().exists();
+			if(hasBeenCreated) {
+				repoHandler = new MgRepositoryHandler(handler.ng, this, repositoryAddress);
+				repositoryHandlers.put(repositoryAddress, repoHandler);
+				return repoHandler;
+			}
+			else if(isCreateEnabled){
+				
+				repoHandler = new MgRepositoryHandler(handler.ng, this, repositoryAddress);
+				
+				MgRepository repository = new MgRepository(repositoryAddress, dataPath);
+				repoHandler.initializeResource(repository);
+				
+				repositoryHandlers.put(repositoryAddress, repoHandler);
+				return repoHandler;
+			}
+			else {
+				return null;
+			}
+		}
 	}
+	
 	
 	
 	

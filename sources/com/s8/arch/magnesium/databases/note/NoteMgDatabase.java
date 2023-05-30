@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.arch.fluor.S8Filter;
-import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
+import com.s8.arch.fluor.outputs.GetUserS8AsyncOutput;
+import com.s8.arch.fluor.outputs.ObjectsListS8AsyncOutput;
+import com.s8.arch.fluor.outputs.PutUserS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
@@ -64,12 +64,12 @@ public class NoteMgDatabase extends H3MgHandler<BeBranch> {
 	}
 	
 	
-	public void get(long t, String key, ObjectMgCallback onRetrieved, ExceptionMgCallback onFailed) {
-		pushOperation(new GetOp(t, this, key, onRetrieved, onFailed));
+	public void get(long t, String key, MgCallback<GetUserS8AsyncOutput> onRetrieved, long options) {
+		pushOperation(new GetOp(t, this, key, onRetrieved, options));
 	}
 	
-	public void put(long t, String key, BeObject object, BooleanMgCallback onInserted, ExceptionMgCallback onFailed) {
-		pushOperation(new PutOp(t, this, key, object, onInserted, onFailed));
+	public void put(long t, String key, BeObject object, MgCallback<PutUserS8AsyncOutput> onInserted, long options) {
+		pushOperation(new PutOp(t, this, key, object, onInserted, options));
 	}
 	
 	
@@ -82,10 +82,8 @@ public class NoteMgDatabase extends H3MgHandler<BeBranch> {
 	 * @param onSelected
 	 * @param onFailed
 	 */
-	public <T> void select(long t, S8Filter<T> filter, 
-			MgCallback<List<T>> onSelected, 
-			ExceptionMgCallback onFailed) {
-		pushOperation(new BrowseOp<T>(t, this, filter, onSelected, onFailed));
+	public <T> void select(long t, S8Filter<T> filter, MgCallback<ObjectsListS8AsyncOutput<T>> onSelected, long options) {
+		pushOperation(new BrowseOp<T>(t, this, filter, onSelected, options));
 	}
 	
 }

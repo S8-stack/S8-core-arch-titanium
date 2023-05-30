@@ -1,7 +1,8 @@
 package com.s8.arch.magnesium.databases.note;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.ObjectMgCallback;
+import com.s8.arch.fluor.S8User;
+import com.s8.arch.fluor.outputs.GetUserS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -13,20 +14,30 @@ import com.s8.io.bohr.beryllium.object.BeObject;
 
 public class GetOp extends UserH3MgOperation<BeBranch> {
 	
+	@Override
+	public boolean isModifyingResource() {
+		return false;
+	}
+	
 	public final NoteMgDatabase handler;
 	
 	public final String key;
 	
-	public final ObjectMgCallback onRetrieved;
+	public final MgCallback<GetUserS8AsyncOutput> onRetrieved;
 	
-	public final ExceptionMgCallback onFailed;
+	public final long options;
+	
+	//public final ExceptionMgCallback onFailed;
 
-	public GetOp(long timeStamp, NoteMgDatabase handler, String key, ObjectMgCallback onRetrieved, ExceptionMgCallback onFailed) {
+	public GetOp(long timeStamp, NoteMgDatabase handler, 
+			String key, 
+			MgCallback<GetUserS8AsyncOutput> onRetrieved, 
+			long options) {
 		super(timeStamp);
 		this.handler = handler;
 		this.key = key;
 		this.onRetrieved = onRetrieved;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
 
 	@Override
@@ -50,14 +61,17 @@ public class GetOp extends UserH3MgOperation<BeBranch> {
 
 			@Override
 			public void consumeResource(BeBranch branch) {
+				GetUserS8AsyncOutput output = new GetUserS8AsyncOutput();
 				try {
 					BeObject object =  (BeObject) branch.get(key);
-					onRetrieved.call(object);
+					output.setUser((S8User) object);
 					
-				} catch (BeIOException e) {
+				} 
+				catch (BeIOException e) {
 					e.printStackTrace();
-					onFailed.call(e);
+					output.reportException(e);
 				}
+				onRetrieved.call(output);
 			}
 		};
 	}
@@ -78,14 +92,13 @@ public class GetOp extends UserH3MgOperation<BeBranch> {
 			
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);	
+				GetUserS8AsyncOutput output = new GetUserS8AsyncOutput();
+				output.reportException(exception);	
+				onRetrieved.call(output);
 			}
 		};
 	}
 
-	@Override
-	public boolean isModifyingResource() {
-		return false;
-	}
+	
 
 }

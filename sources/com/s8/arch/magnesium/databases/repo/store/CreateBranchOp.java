@@ -1,8 +1,8 @@
-package com.s8.arch.magnesium.databases.repo.repository;
+package com.s8.arch.magnesium.databases.repo.store;
 
-import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
+import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
-import com.s8.arch.magnesium.databases.repo.branch.MgBranchHandler;
+import com.s8.arch.magnesium.databases.repo.repository.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -14,51 +14,60 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class CloneHeadOp extends UserH3MgOperation<MgRepository> {
+class CreateBranchOp extends UserH3MgOperation<MgRepoStore> {
+
+
+	public final RepoMgDatabase handler;
+
+	public final String repositoryAddress;
+
+	public final String branchId;
+
+	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
+
+	public final long options;
+
 
 
 	@Override
 	public boolean isModifyingResource() {
 		return false;
 	}
-	
-	
-	
-	public final MgRepositoryHandler handler;
-	
-	public final String branchId;
-	
-	public final MgCallback<BranchExposureS8AsyncOutput> onSucceed;
-	
-	public final long options;
 
-	
+
 	/**
 	 * 
 	 * @param handler
+	 * @param version
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneHeadOp(long timestamp, MgRepositoryHandler handler, String branchId, 
-			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
+	public CreateBranchOp(long timestamp, 
+			RepoMgDatabase handler, 
+			String repositoryAddress,
+			String branchId,
+			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
 		super(timestamp);
+
+		/* fields */
 		this.handler = handler;
+		this.repositoryAddress = repositoryAddress;
 		this.branchId = branchId;
 		this.onSucceed = onSucceed;
 		this.options = options;
 	}
-	
+
 
 	@Override
-	public ConsumeResourceMgTask<MgRepository> createConsumeResourceTask(MgRepository repo) {
-		return new ConsumeResourceMgTask<MgRepository>(repo) {
+	public ConsumeResourceMgTask<MgRepoStore> createConsumeResourceTask(MgRepoStore store) {
+		return new ConsumeResourceMgTask<MgRepoStore>(store) {
 
 			@Override
-			public H3MgHandler<MgRepository> getHandler() {
+			public H3MgHandler<MgRepoStore> getHandler() {
 				return handler;
 			}
-			
+
 			@Override
 			public MthProfile profile() { 
 				return MthProfile.FX0; 
@@ -66,31 +75,30 @@ class CloneHeadOp extends UserH3MgOperation<MgRepository> {
 
 			@Override
 			public String describe() {
-				return "CLONE-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
+				return "CREATE-REPO for "+handler.getName()+ " repository";
 			}
 
 			@Override
-			public void consumeResource(MgRepository repository) {
+			public void consumeResource(MgRepoStore store) {
 				try {
-					MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
-					if(branchHandler != null) {
-						branchHandler.cloneHead(timeStamp, onSucceed, options);
+
+					MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress, false);
+					if(repoHandler != null) {
+						repoHandler.createBranch(timeStamp, branchId, onSucceed, options);
 					}
 					else {
-						BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
+						BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
 						output.isSuccessful = false;
-						output.isBranchDoesNotExist = true;
+						output.isRepositoryDoesNotExist = true;
 						onSucceed.call(output);
 					}
 				}
 				catch(Exception exception) { 
-					BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
+					BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
 					output.reportException(exception);
 					onSucceed.call(output);
 				}
 			}
-
-			
 		};
 	}
 
@@ -110,7 +118,7 @@ class CloneHeadOp extends UserH3MgOperation<MgRepository> {
 
 			@Override
 			public void catchException(Exception exception) {
-				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
+				BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
 				output.reportException(exception);
 				onSucceed.call(output);
 			}
@@ -118,5 +126,5 @@ class CloneHeadOp extends UserH3MgOperation<MgRepository> {
 	}
 
 
-	
+
 }

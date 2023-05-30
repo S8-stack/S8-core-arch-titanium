@@ -1,5 +1,7 @@
 package com.s8.arch.magnesium.databases.note;
 
+import java.io.IOException;
+
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.branch.BeInbound;
@@ -33,7 +35,7 @@ public class IOModule implements H3MgIOModule<BeBranch> {
 	
 
 	@Override
-	public BeBranch load() throws Exception {
+	public BeBranch load() throws IOException {
 		
 		/* read from disk */
 		LinkedBytes head = LinkedBytesIO.read(handler.getPath(), true);
@@ -57,7 +59,7 @@ public class IOModule implements H3MgIOModule<BeBranch> {
 	
 	
 	@Override
-	public void save(BeBranch branch) throws Exception {
+	public void save(BeBranch branch) throws IOException {
 		
 
 		/* build inflow */

@@ -1,11 +1,14 @@
 package com.s8.arch.magnesium.databases.space.store;
 
-import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.magnesium.callbacks.VersionMgCallback;
+import com.s8.arch.fluor.S8AsyncFlow;
+import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
+import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.space.space.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
+import com.s8.io.bytes.alpha.Bool64;
 
 /**
  * 
@@ -33,13 +36,13 @@ class ExposeObjectsOp extends UserH3MgOperation<SpaceMgStore> {
 	/**
 	 * 
 	 */
-	public final VersionMgCallback onSucceed;
+	public final MgCallback<SpaceVersionS8AsyncOutput> onSucceed;
 	
 	
 	/**
 	 * 
 	 */
-	public final ExceptionMgCallback onFailed;
+	public final long options;
 
 	
 	/**
@@ -51,14 +54,14 @@ class ExposeObjectsOp extends UserH3MgOperation<SpaceMgStore> {
 	public ExposeObjectsOp(long timestamp, SpaceMgDatabase handler, 
 			String spaceId,
 			Object[] objects,
-			VersionMgCallback onSucceed, 
-			ExceptionMgCallback onFailed) {
+			MgCallback<SpaceVersionS8AsyncOutput> onSucceed, 
+			long options) {
 		super(timestamp);
 		this.handler = handler;
 		this.spaceId = spaceId;
 		this.objects = objects;
 		this.onSucceed = onSucceed;
-		this.onFailed = onFailed;
+		this.options = options;
 	}
 	
 
@@ -83,10 +86,29 @@ class ExposeObjectsOp extends UserH3MgOperation<SpaceMgStore> {
 
 			@Override
 			public void consumeResource(SpaceMgStore store) {
+				
 				try {
-					store.getSpaceHandler(spaceId).exposeObjects(timeStamp, objects, onSucceed, onFailed);
+					boolean isCreateOptionEnabled = Bool64.has(options, S8AsyncFlow.CREATE_SPACE_IF_NOT_PRESENT);
+					MgSpaceHandler spaceHandler = store.resolveSpaceHandler(spaceId, isCreateOptionEnabled);
+					if(spaceHandler != null) {
+						spaceHandler.exposeObjects(timeStamp, objects, onSucceed, options);	
+					}
+					else {
+						SpaceVersionS8AsyncOutput output = new SpaceVersionS8AsyncOutput();
+						output.isSuccessful = false;
+						output.isResourceUnavailable = true;
+						onSucceed.call(output);
+					}
 				}
-				catch(Exception exception) { onFailed.call(exception); }
+				catch(Exception exception) { 
+					exception.printStackTrace();
+					
+					SpaceVersionS8AsyncOutput output = new SpaceVersionS8AsyncOutput();
+					output.isSuccessful = false;
+					output.reportException(exception);
+					onSucceed.call(output);
+				}
+				
 			}
 		};
 	}
@@ -107,7 +129,9 @@ class ExposeObjectsOp extends UserH3MgOperation<SpaceMgStore> {
 
 			@Override
 			public void catchException(Exception exception) {
-				onFailed.call(exception);
+				SpaceVersionS8AsyncOutput output = new SpaceVersionS8AsyncOutput();
+				output.reportException(exception);
+				onSucceed.call(output);
 			}
 		};
 	}

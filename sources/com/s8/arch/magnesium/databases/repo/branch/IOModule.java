@@ -1,5 +1,7 @@
 package com.s8.arch.magnesium.databases.repo.branch;
 
+import java.io.IOException;
+
 import com.s8.arch.magnesium.databases.repo.store.MgRepoStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
@@ -34,7 +36,7 @@ public class IOModule implements H3MgIOModule<NdBranch> {
 	
 
 	@Override
-	public NdBranch load() throws Exception {
+	public NdBranch load() throws IOException {
 		
 		/* read from disk */
 		LinkedBytes head = LinkedBytesIO.read(handler.getPath(), true);
@@ -57,7 +59,7 @@ public class IOModule implements H3MgIOModule<NdBranch> {
 
 	
 	@Override
-	public void save(NdBranch branch) throws Exception {
+	public void save(NdBranch branch) throws IOException {
 		
 
 		/* build inflow */
