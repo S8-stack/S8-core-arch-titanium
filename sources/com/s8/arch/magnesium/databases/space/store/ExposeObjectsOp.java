@@ -6,7 +6,7 @@ import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.space.space.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
-import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
+import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bytes.alpha.Bool64;
 
@@ -15,7 +15,7 @@ import com.s8.io.bytes.alpha.Bool64;
  * @author pierreconvert
  *
  */
-class ExposeObjectsOp extends UserH3MgOperation<SpaceMgStore> {
+class ExposeObjectsOp extends RequestH3MgOperation<SpaceMgStore> {
 
 
 	

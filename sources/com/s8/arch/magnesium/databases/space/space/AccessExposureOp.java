@@ -4,7 +4,7 @@ import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
-import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
+import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 import com.s8.io.bohr.lithium.object.LiObject;
@@ -14,7 +14,7 @@ import com.s8.io.bohr.lithium.object.LiObject;
  * @author pierreconvert
  *
  */
-class AccessExposureOp extends UserH3MgOperation<LiBranch> {
+class AccessExposureOp extends RequestH3MgOperation<LiBranch> {
 
 
 	

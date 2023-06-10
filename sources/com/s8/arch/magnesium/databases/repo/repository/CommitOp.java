@@ -6,7 +6,7 @@ import com.s8.arch.magnesium.databases.repo.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
+import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.object.NdObject;
 
@@ -16,7 +16,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CommitOp extends UserH3MgOperation<MgRepository> {
+class CommitOp extends RequestH3MgOperation<MgRepository> {
 
 	@Override
 	public boolean isModifyingResource() {

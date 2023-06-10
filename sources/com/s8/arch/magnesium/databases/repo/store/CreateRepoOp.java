@@ -6,7 +6,7 @@ import com.s8.arch.magnesium.databases.repo.repository.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
+import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 
 /**
@@ -14,7 +14,7 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class CreateRepoOp extends UserH3MgOperation<MgRepoStore> {
+class CreateRepoOp extends RequestH3MgOperation<MgRepoStore> {
 
 
 	public final RepoMgDatabase handler;

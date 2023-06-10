@@ -8,7 +8,7 @@ import com.s8.arch.magnesium.databases.repo.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
+import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 
 /**
@@ -16,7 +16,7 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class CloneVersionOp extends UserH3MgOperation<MgRepository> {
+class CloneVersionOp extends RequestH3MgOperation<MgRepository> {
 	
 	
 	public final MgRepositoryHandler handler;

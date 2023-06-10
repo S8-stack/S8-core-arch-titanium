@@ -9,7 +9,7 @@ package com.s8.arch.magnesium.handlers.h3;
  *
  * @param <R>
  */
-public abstract class UserH3MgOperation<R> extends H3MgOperation<R> {
+public abstract class RequestH3MgOperation<R> extends H3MgOperation<R> {
 
 
 	/**
@@ -18,7 +18,7 @@ public abstract class UserH3MgOperation<R> extends H3MgOperation<R> {
 	public final long timeStamp;
 	
 
-	public UserH3MgOperation(long timeStamp) {
+	public RequestH3MgOperation(long timeStamp) {
 		super();
 		this.timeStamp = timeStamp;
 	}

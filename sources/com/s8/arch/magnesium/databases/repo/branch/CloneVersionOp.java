@@ -5,7 +5,7 @@ import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.UserH3MgOperation;
+import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 import com.s8.io.bohr.neodymium.object.NdObject;
@@ -15,7 +15,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CloneVersionOp extends UserH3MgOperation<NdBranch> {
+class CloneVersionOp extends RequestH3MgOperation<NdBranch> {
 	
 	
 	public final MgBranchHandler handler;
