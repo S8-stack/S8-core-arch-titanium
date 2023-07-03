@@ -23,23 +23,22 @@ public abstract class H3MgOperation<R> {
 	public abstract long getTimestamp();
 	
 	
+	
 	/**
 	 * 
+	 * @return
 	 */
-	public abstract boolean isModifyingResource();
+	public abstract H3MgHandler<R> getHandler();
+	
+	
 	
 	/**
 	 * 
 	 * @param resource
 	 */
-	public abstract AsyncTask createConsumeResourceTask(R resource);
+	public abstract AsyncTask createAsyncTask();
 
-	
-	/**
-	 * 
-	 * @param exception
-	 */
-	public abstract AsyncTask createCatchExceptionTask(Exception exception);
+
 
 
 }

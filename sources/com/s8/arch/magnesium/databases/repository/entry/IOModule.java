@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.databases.space.store;
+package com.s8.arch.magnesium.databases.repository.entry;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -9,39 +9,35 @@ import java.nio.file.StandardOpenOption;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.joos.JOOS_Lexicon;
+import com.s8.io.joos.composing.JOOS_ComposingException;
 import com.s8.io.joos.parsing.JOOS_ParsingException;
 import com.s8.io.joos.types.JOOS_CompilingException;
 import com.s8.io.joos.utilities.JOOS_BufferedFileReader;
 import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
 
-public class IOModule implements H3MgIOModule<SpaceMgStore> {
+public class IOModule implements H3MgIOModule<MgRepository> {
 
 	private static JOOS_Lexicon lexicon;
 	
-	
-	public static JOOS_Lexicon JOOS_getLexicon() throws JOOS_CompilingException {
-	
-		return lexicon;
-	}
 
 	
-	public final SpaceMgDatabase handler;
+	public final MgRepositoryHandler handler;
 	
 	
-	public IOModule(SpaceMgDatabase handler) throws JOOS_CompilingException {
+	public IOModule(MgRepositoryHandler handler) throws JOOS_CompilingException {
 		super();
 		this.handler = handler;
 		
 		if(lexicon == null) { 
-			lexicon = JOOS_Lexicon.from(SpaceMgStore.Serialized.class, MgBranchHandler.Serialized.class); 
+			lexicon = JOOS_Lexicon.from(MgRepository.Serialized.class, MgBranchHandler.Serialized.class); 
 		}
 	}
 
 
 	@Override
-	public SpaceMgStore load() throws IOException, JOOS_ParsingException {
+	public MgRepository load() throws IOException, JOOS_ParsingException {
 
-		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
+		FileChannel channel = FileChannel.open(handler.getPath(), new OpenOption[]{ 
 				StandardOpenOption.READ
 		});
 
@@ -51,21 +47,22 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 		
 		JOOS_BufferedFileReader reader = new JOOS_BufferedFileReader(channel, StandardCharsets.UTF_8, 64);
 		
-		SpaceMgStore.Serialized repo = (SpaceMgStore.Serialized) lexicon.parse(reader, true);
+		MgRepository.Serialized repo = (MgRepository.Serialized) lexicon.parse(reader, true);
 
 		reader.close();
 
-		return repo.deserialize(handler, handler.codebase);
+		return repo.deserialize(handler.ng, handler.store);
 	}
 	
 	
 
 	@Override
-	public void save(SpaceMgStore repo) throws IOException {
+	public void save(MgRepository repo) throws IOException, JOOS_ComposingException {
 
-		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
+		FileChannel channel = FileChannel.open(handler.getPath(), new OpenOption[]{ 
 				StandardOpenOption.WRITE
 		});
+
 		
 		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);
 

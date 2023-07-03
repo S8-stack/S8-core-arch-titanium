@@ -1,11 +1,12 @@
 package com.s8.arch.magnesium.databases.space.store;
 
+import java.io.IOException;
+
 import com.s8.arch.fluor.S8AsyncFlow;
 import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
-import com.s8.arch.magnesium.databases.space.space.MgSpaceHandler;
-import com.s8.arch.magnesium.handlers.h3.CatchExceptionMgTask;
-import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgTask;
+import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
+import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bytes.alpha.Bool64;
@@ -19,13 +20,11 @@ class AccessExposureOp extends RequestH3MgOperation<SpaceMgStore> {
 
 
 
-	public @Override boolean isModifyingResource() { return false; }
-
 
 	/**
 	 * 
 	 */
-	public final SpaceMgDatabase handler;
+	public final SpaceMgDatabase spaceHandler;
 
 
 	public final String spaceId;
@@ -52,21 +51,21 @@ class AccessExposureOp extends RequestH3MgOperation<SpaceMgStore> {
 			MgCallback<SpaceExposureS8AsyncOutput> onProcessed, 
 			long options) {
 		super(timestamp);
-		this.handler = handler;
+		this.spaceHandler = handler;
 		this.spaceId = repositoryAddress;
 		this.onProcessed = onProcessed;
 		this.options = options;
 	}
 
+	@Override
+	public SpaceMgDatabase getHandler() {
+		return spaceHandler;
+	}
 
 	@Override
-	public ConsumeResourceMgTask<SpaceMgStore> createConsumeResourceTask(SpaceMgStore store) {
-		return new ConsumeResourceMgTask<SpaceMgStore>(store) {
+	public ConsumeResourceMgAsyncTask<SpaceMgStore> createAsyncTask() {
+		return new ConsumeResourceMgAsyncTask<SpaceMgStore>(spaceHandler) {
 
-			@Override
-			public SpaceMgDatabase getHandler() {
-				return handler;
-			}
 
 			@Override
 			public MthProfile profile() { 
@@ -79,59 +78,49 @@ class AccessExposureOp extends RequestH3MgOperation<SpaceMgStore> {
 			}
 
 			@Override
-			public void consumeResource(SpaceMgStore store) {
+			public boolean consumeResource(SpaceMgStore store) throws IOException {
 
-				
-				try {
 
-					boolean isCreateOptionEnabled = Bool64.has(options, S8AsyncFlow.CREATE_SPACE_IF_NOT_PRESENT);
-					MgSpaceHandler spaceHandler = store.resolveSpaceHandler(spaceId, isCreateOptionEnabled);
+				boolean isCreateOptionEnabled = Bool64.has(options, S8AsyncFlow.CREATE_SPACE_IF_NOT_PRESENT);
+				MgSpaceHandler spaceHandler = store.resolveSpaceHandler(spaceId, isCreateOptionEnabled);
 
-					if(spaceHandler != null) {
-						/* exit point 1 -> continue */
-						spaceHandler.accessExposure(timeStamp, onProcessed, options);
+				if(spaceHandler != null) {
+					/* exit point 1 -> continue */
+					spaceHandler.accessExposure(timeStamp, onProcessed, options);
+
+					if(spaceHandler.isNewlyCreated) {
+						if(Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {
+							handler.save();
+						}
+						spaceHandler.isNewlyCreated = false; // clear flag
+						return true;
 					}
 					else {
-						
-						/* exit point 2 -> soft fail */
-						SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-						output.isSuccessful = false;
-						output.isSpaceDoesNotExist = true;
-						onProcessed.call(output);
-					}				
+						return false;
+					}
 				}
-				catch(Exception exception) {
-					exception.printStackTrace();
-					
-					/* exit point 3 -> hard fail */
+				else {
+
+					/* exit point 2 -> soft fail */
 					SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-					output.reportException(exception);
+					output.isSuccessful = false;
+					output.isSpaceDoesNotExist = true;
 					onProcessed.call(output);
+					return false;
 				}
-			}
-		};
-	}
-
-	@Override
-	public CatchExceptionMgTask createCatchExceptionTask(Exception exception) { 
-		return new CatchExceptionMgTask(exception) {
-
-			@Override
-			public MthProfile profile() { 
-				return MthProfile.FX0; 
-			}
-
-			@Override
-			public String describe() {
-				return "failed to access resource on "+handler.getName()+": catching exception";
 			}
 
 			@Override
 			public void catchException(Exception exception) {
+
+				exception.printStackTrace();
+
+				/* exit point 3 -> hard fail */
 				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
 				output.reportException(exception);
 				onProcessed.call(output);
 			}
 		};
 	}
+
 }

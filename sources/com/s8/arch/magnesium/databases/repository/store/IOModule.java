@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.databases.space.store;
+package com.s8.arch.magnesium.databases.repository.store;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -14,32 +14,36 @@ import com.s8.io.joos.types.JOOS_CompilingException;
 import com.s8.io.joos.utilities.JOOS_BufferedFileReader;
 import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
 
-public class IOModule implements H3MgIOModule<SpaceMgStore> {
+public class IOModule implements H3MgIOModule<MgRepoStore> {
 
 	private static JOOS_Lexicon lexicon;
 	
 	
 	public static JOOS_Lexicon JOOS_getLexicon() throws JOOS_CompilingException {
-	
+		
 		return lexicon;
 	}
 
 	
-	public final SpaceMgDatabase handler;
+	public final RepoMgDatabase handler;
 	
-	
-	public IOModule(SpaceMgDatabase handler) throws JOOS_CompilingException {
+	/**
+	 * 
+	 * @param handler
+	 * @throws JOOS_CompilingException
+	 */
+	public IOModule(RepoMgDatabase handler) throws JOOS_CompilingException {
 		super();
 		this.handler = handler;
 		
 		if(lexicon == null) { 
-			lexicon = JOOS_Lexicon.from(SpaceMgStore.Serialized.class, MgBranchHandler.Serialized.class); 
+			lexicon = JOOS_Lexicon.from(MgRepoStore.Serialized.class, MgBranchHandler.Serialized.class); 
 		}
 	}
 
 
 	@Override
-	public SpaceMgStore load() throws IOException, JOOS_ParsingException {
+	public MgRepoStore load() throws IOException, JOOS_ParsingException {
 
 		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
 				StandardOpenOption.READ
@@ -51,7 +55,7 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 		
 		JOOS_BufferedFileReader reader = new JOOS_BufferedFileReader(channel, StandardCharsets.UTF_8, 64);
 		
-		SpaceMgStore.Serialized repo = (SpaceMgStore.Serialized) lexicon.parse(reader, true);
+		MgRepoStore.Serialized repo = (MgRepoStore.Serialized) lexicon.parse(reader, true);
 
 		reader.close();
 
@@ -61,7 +65,7 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 	
 
 	@Override
-	public void save(SpaceMgStore repo) throws IOException {
+	public void save(MgRepoStore repo) throws IOException {
 
 		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
 				StandardOpenOption.WRITE

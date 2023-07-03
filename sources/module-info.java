@@ -17,14 +17,14 @@ module com.s8.arch.magnesium {
 	exports com.s8.arch.magnesium.callbacks;
 	
 
-	exports com.s8.arch.magnesium.databases.note;
+	exports com.s8.arch.magnesium.databases.record;
 
-	exports com.s8.arch.magnesium.databases.space.space;
+	exports com.s8.arch.magnesium.databases.space.entry;
 	exports com.s8.arch.magnesium.databases.space.store;
 	
-	exports com.s8.arch.magnesium.databases.repo.branch;
-	exports com.s8.arch.magnesium.databases.repo.repository;
-	exports com.s8.arch.magnesium.databases.repo.store;
+	exports com.s8.arch.magnesium.databases.repository.branch;
+	exports com.s8.arch.magnesium.databases.repository.entry;
+	exports com.s8.arch.magnesium.databases.repository.store;
 	
 
 	exports com.s8.arch.magnesium.service;

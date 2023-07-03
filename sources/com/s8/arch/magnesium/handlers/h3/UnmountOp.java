@@ -1,8 +1,6 @@
 package com.s8.arch.magnesium.handlers.h3;
 
 import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
-import com.s8.arch.silicon.async.AsyncTask;
-import com.s8.arch.silicon.async.MthProfile;
 
 public class UnmountOp<R> extends SystemH3MgOperation<R> {
 
@@ -17,46 +15,11 @@ public class UnmountOp<R> extends SystemH3MgOperation<R> {
 		this.callback = onUnmounted;
 	}
 
-	@Override
-	public boolean isModifyingResource() {
-		return true;
-	}
 
 	@Override
-	public UnmountMgTask<R> createConsumeResourceTask(R resource) {
-		return new UnmountMgTask<R>(handler, resource, cutOffTimestamp, callback);
+	public UnmountMgAsyncTask<R> createAsyncTask() {
+		return new UnmountMgAsyncTask<R>(handler, cutOffTimestamp, callback);
 	}
 
-	@Override
-	public AsyncTask createCatchExceptionTask(Exception exception) {
-		return new AsyncTask() {
-
-
-			@Override
-			public void run() {
-
-				exception.printStackTrace();
-				
-				/**
-				 * 
-				 */
-				handler.roll(true);
-			}
-
-
-
-			@Override
-			public String describe() {
-				return "handling failed resource access for handler: "+handler.getName();
-			}
-
-
-
-			@Override
-			public MthProfile profile() {
-				return MthProfile.FX0;
-			}
-		};
-	}
 
 }

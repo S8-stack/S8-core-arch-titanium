@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.s8.arch.magnesium.databases.space.space.MgSpaceHandler;
+import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
@@ -48,7 +48,7 @@ public class SpaceMgStore {
 		this.pathComposer = new MgPathComposer(path);
 	}
 
-
+	
 
 
 	/**
@@ -66,8 +66,8 @@ public class SpaceMgStore {
 		}
 		else {
 			Path dataPath = pathComposer.composePath(spaceId);
-			boolean hasBeenCreated = dataPath.toFile().exists();
-			if(hasBeenCreated) {
+			boolean isPresent = dataPath.toFile().exists();
+			if(isPresent) {
 				/* Already created -> just need to create the handler and tha will automatically load it */
 				MgSpaceHandler spaceHandler2 = new MgSpaceHandler(
 						handler.ng, 
@@ -76,11 +76,13 @@ public class SpaceMgStore {
 						dataPath);
 
 				spaceHandlers.put(spaceId, spaceHandler2);
-
+				
+				/* already present, so not newly created */
+				spaceHandler2.isNewlyCreated = false;
+				
 				return spaceHandler2;
 			}
-
-			else if(!hasBeenCreated && isCreateIfNotPresentEnabled) {
+			else if(!isPresent && isCreateIfNotPresentEnabled) {
 
 				/* create branch */
 				LiBranch branch = new LiBranch("m", getCodebase());
@@ -95,6 +97,9 @@ public class SpaceMgStore {
 						spaceId, 
 						dataPath);
 
+				/* NOT already present, so not newly created */
+				spaceHandler2.isNewlyCreated = true;
+				
 				spaceHandler2.initializeResource(branch);
 
 				spaceHandlers.put(spaceId, spaceHandler2);

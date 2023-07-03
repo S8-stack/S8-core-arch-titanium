@@ -19,19 +19,20 @@ public abstract class H3MgHandler<R> {
 	public enum Status {
 		UNMOUNTED, LOADED, FAILED;
 	}
+	
 
 	public abstract String getName();
 
 	/**
 	 * Internal lock
 	 */
-	private final Object lock = new Object();
+	final Object lock = new Object();
 
 
 	/**
 	 * Status of the handler
 	 */
-	private volatile Status status = Status.UNMOUNTED;
+	volatile Status status;
 
 
 	/**
@@ -42,16 +43,17 @@ public abstract class H3MgHandler<R> {
 	private volatile boolean isActive = false;
 
 
-	private volatile boolean isSaved = false;
+	volatile boolean isSaved = false;
 
 
 	/**
 	 * In cas eth handler failed to load the resources
 	 */
-	private Exception exception;
+	Exception exception;
 
 
 	/** 
+	 * (access only via synchronized)
 	 * The resoucre the handler can load
 	 */
 	R resource;
@@ -74,16 +76,6 @@ public abstract class H3MgHandler<R> {
 	}
 
 
-
-	boolean isSaved() {
-		/* volatile implementation of the field */
-		return isSaved;
-	}
-
-
-	void notifySuccessfullySaved(){
-		isSaved = true;
-	}
 
 
 	/**
@@ -193,33 +185,7 @@ public abstract class H3MgHandler<R> {
 	}
 
 
-	/**
-	 * 
-	 * @param resource
-	 */
-	public void setLoaded(R resource) {
-
-		/* low-contention probability synchronized section */
-		synchronized (lock) {
-			this.resource = resource;
-			this.status = Status.LOADED;
-			this.isSaved = true;
-		}
-	}
-
-
-	/**
-	 * 
-	 * @param exception
-	 */
-	public void setFailed(Exception exception) {
-
-		/* low-contention probability synchronized section */
-		synchronized (lock) {
-			this.exception = exception;
-			this.status = Status.FAILED;
-		}
-	}
+	
 	
 	
 	
@@ -240,9 +206,7 @@ public abstract class H3MgHandler<R> {
 	 * @return
 	 */
 	public R getResource() {
-		synchronized (lock) {
-			return resource;	
-		}
+		synchronized (lock) { return resource; }
 	}
 	
 	
@@ -279,6 +243,7 @@ public abstract class H3MgHandler<R> {
 		 * => Almost equal to re-entrant lock
 		 */
 
+		/* <low-contention synchronized block> */
 		synchronized (lock) {
 
 			if(isActive == isContinued) {
@@ -288,7 +253,7 @@ public abstract class H3MgHandler<R> {
 				case UNMOUNTED:
 					if(!operations.isEmpty()) { // has operations to perform
 						isActive = true;
-						ng.pushAsyncTask(new LoadMgTask<R>(this));
+						ng.pushAsyncTask(new LoadMgAsyncTask<R>(this));
 						/*
 						 * Immediately exit Syncchronized block after pushing the task
 						 * --> Leave time to avoid contention
@@ -301,16 +266,17 @@ public abstract class H3MgHandler<R> {
 					 * Get next operation to be performed
 					 */
 					if(!operations.isEmpty()) {
+						
+						/* force active status (might have entered has not active) */
 						isActive = true;
+						
 						H3MgOperation<R> operation = operations.poll();
 
-						/* update resource modification status */
-						if(operation.isModifyingResource()) { isSaved = false; }
 
 						/* update timestamp */
 						if(operation.isUserInduced()) { lastOpTimestamp = operation.getTimestamp(); }						
 
-						ng.pushAsyncTask(operation.createConsumeResourceTask(resource));
+						ng.pushAsyncTask(operation.createAsyncTask());
 						/*
 						 * Immediately exit Syncchronized block after pushing the task
 						 * --> Leave time to avoid contention
@@ -329,17 +295,62 @@ public abstract class H3MgHandler<R> {
 					while(!operations.isEmpty()) {
 
 						H3MgOperation<R> operation = operations.poll();
-						ng.pushAsyncTask(operation.createCatchExceptionTask(exception));
+						ng.pushAsyncTask(operation.createAsyncTask());
 					}
 
 					break;
 				}
 			}
 		}
+		/* </low-contention synchronized block> */
 	}
 
 	
 	
 	public abstract List<H3MgHandler<?>> getSubHandlers();
+
+
+	/* <MgTask interface> */
+
 	
+
+	boolean isSaved() {
+		synchronized (lock) { return isSaved; }
+	}
+	
+	
+	void notifySuccessfullySaved() {
+		synchronized (lock) {  isSaved = true; }	
+	}
+	
+	
+	/**
+	 * 
+	 * @param resource
+	 */
+	public void setLoaded(R resource) {
+		/* low-contention probability synchronized section */
+		synchronized (lock) {
+			this.resource = resource;
+			status = Status.LOADED;
+			isSaved = true;
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param e
+	 */
+	void setFailed(Exception e) {
+		/* low-contention probability synchronized section */
+		synchronized (lock) {
+			exception = e;
+			status = Status.FAILED;
+		}		
+	}
+
+	
+	
+
 }

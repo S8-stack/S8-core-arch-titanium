@@ -35,15 +35,6 @@ public abstract class RequestH3MgOperation<R> extends H3MgOperation<R> {
 		return true;
 	}
 	
-	
-	@Override
-	public abstract ConsumeResourceMgTask<R> createConsumeResourceTask(R resource);
 
-	
-
-	@Override
-	public abstract CatchExceptionMgTask createCatchExceptionTask(Exception exception);
-	
-	
 
 }
