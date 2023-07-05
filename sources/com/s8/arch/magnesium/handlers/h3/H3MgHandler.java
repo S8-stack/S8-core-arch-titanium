@@ -32,7 +32,7 @@ public abstract class H3MgHandler<R> {
 	/**
 	 * Status of the handler
 	 */
-	volatile Status status;
+	volatile Status status = Status.UNMOUNTED;
 
 
 	/**
