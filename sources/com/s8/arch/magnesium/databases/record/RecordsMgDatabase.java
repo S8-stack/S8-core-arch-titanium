@@ -68,8 +68,8 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 		pushOperation(new GetOp(t, this, key, onRetrieved, options));
 	}
 	
-	public void put(long t, String key, BeObject object, MgCallback<PutUserS8AsyncOutput> onInserted, long options) {
-		pushOperation(new PutOp(t, this, key, object, onInserted, options));
+	public void put(long t, BeObject object, MgCallback<PutUserS8AsyncOutput> onInserted, long options) {
+		pushOperation(new PutOp(t, this, object, onInserted, options));
 	}
 	
 	

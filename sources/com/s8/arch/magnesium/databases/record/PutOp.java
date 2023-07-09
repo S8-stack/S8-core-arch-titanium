@@ -22,20 +22,17 @@ public class PutOp extends RequestH3MgOperation<BeBranch> {
 
 	public final RecordsMgDatabase dbHandler;
 
-	public final String key;
-
 	public final BeObject object;
 
 	public final MgCallback<PutUserS8AsyncOutput> onInserted;
 
 	public final long options;
 
-	public PutOp(long timeStamp, RecordsMgDatabase dbHandler, String key, BeObject object, 
+	public PutOp(long timeStamp, RecordsMgDatabase dbHandler, BeObject object, 
 			MgCallback<PutUserS8AsyncOutput> onInserted, 
 			long options) {
 		super(timeStamp);
 		this.dbHandler = dbHandler;
-		this.key = key;
 		this.object = object;
 		this.onInserted = onInserted;
 		this.options = options;
@@ -68,15 +65,25 @@ public class PutOp extends RequestH3MgOperation<BeBranch> {
 				PutUserS8AsyncOutput output = new PutUserS8AsyncOutput();
 				boolean hasBeenModified = false;
 
-				if(!branch.hasEntry(key)) {
-
-					branch.put(key, object);
+				String key = object.S8_key;
+				
+				boolean isCheckingOverride = Bool64.has(options, S8AsyncFlow.SHOULD_NOT_OVERRIDE);
+				
+				if(!isCheckingOverride) {
+					branch.put(object);
 					hasBeenModified = true;
 					output.isSuccessful = true;
 				}
 				else {
-					output.isSuccessful = false;
-					output.hasIdConflict = true;
+					if(!branch.hasEntry(key)) {
+						branch.put(object);
+						hasBeenModified = true;
+						output.isSuccessful = true;
+					}
+					else {
+						output.isSuccessful = false;
+						output.hasIdConflict = true;
+					}
 				}
 
 				if(hasBeenModified && Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {

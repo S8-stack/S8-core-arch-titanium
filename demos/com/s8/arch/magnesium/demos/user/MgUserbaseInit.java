@@ -33,8 +33,8 @@ public class MgUserbaseInit {
 		chris.workspace = "christophe.convert@gmail.com-workspace";
 		
 		
-		branch.set(pierre);
-		branch.set(chris);
+		branch.put(pierre);
+		branch.put(chris);
 		
 		
 		
