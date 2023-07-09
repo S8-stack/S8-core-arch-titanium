@@ -89,6 +89,10 @@ public class PutOp extends RequestH3MgOperation<BeBranch> {
 				if(hasBeenModified && Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {
 					handler.save();
 				}
+				
+				/* run function */
+				onInserted.call(output);
+				
 				return hasBeenModified;
 			}
 
