@@ -24,19 +24,20 @@ import com.s8.io.bohr.beryllium.object.BeObject;
  */
 public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 
+	public final static String DATA_FILENAME = "records-data.be";
 	
 	
 	public final BeCodebase codebase;
 	
-	public final Path path;
+	public final Path rootFolderPath;
 	
 	private final IOModule ioModule = new IOModule(this);
 	
-	public RecordsMgDatabase(SiliconEngine ng, BeCodebase codebase, Path path) {
+	public RecordsMgDatabase(SiliconEngine ng, BeCodebase codebase, Path rootFolderPath) {
 		super(ng);
 		
 		this.codebase = codebase;
-		this.path = path;
+		this.rootFolderPath = rootFolderPath;
 	}
 
 	
@@ -59,8 +60,12 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 		return new ArrayList<>();
 	}
 
-	public Path getPath() {
-		return path;
+	public Path getRootFolderPath() {
+		return rootFolderPath;
+	}
+	
+	public Path getDataFilePath() {
+		return rootFolderPath.resolve(DATA_FILENAME);
 	}
 	
 	
@@ -85,5 +90,7 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 	public <T> void select(long t, S8Filter<T> filter, MgCallback<ObjectsListS8AsyncOutput<T>> onSelected, long options) {
 		pushOpLast(new BrowseOp<T>(t, this, filter, onSelected, options));
 	}
+	
+	
 	
 }

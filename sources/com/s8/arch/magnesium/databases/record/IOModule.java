@@ -38,7 +38,7 @@ public class IOModule implements H3MgIOModule<BeBranch> {
 	public BeBranch load() throws IOException {
 		
 		/* read from disk */
-		LinkedBytes head = LinkedBytesIO.read(handler.getPath(), true);
+		LinkedBytes head = LinkedBytesIO.read(handler.getDataFilePath(), true);
 
 		/* build inflow */
 		ByteInflow inflow = new LinkedByteInflow(head);
@@ -72,7 +72,7 @@ public class IOModule implements H3MgIOModule<BeBranch> {
 		outbound.pushFrame(outflow, branch.pullDeltas());
 
 		/* read from disk */
-		LinkedBytesIO.write(outflow.getHead() ,handler.getPath(), true);
+		LinkedBytesIO.write(outflow.getHead() ,handler.getDataFilePath(), true);
 	}
 
 }
