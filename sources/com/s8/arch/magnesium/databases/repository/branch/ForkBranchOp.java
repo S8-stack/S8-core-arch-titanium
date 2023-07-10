@@ -6,9 +6,9 @@ import com.s8.arch.fluor.S8AsyncFlow;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
@@ -20,7 +20,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class ForkBranchOp extends RequestH3MgOperation<NdBranch> {
+class ForkBranchOp extends RequestDbMgOperation<NdBranch> {
 
 
 	public final MgBranchHandler originBranchHandler;
@@ -30,8 +30,6 @@ class ForkBranchOp extends RequestH3MgOperation<NdBranch> {
 	public final MgBranchHandler targetBranchHandler;
 
 	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
-
-	public final long options;
 
 
 	/**
@@ -44,12 +42,11 @@ class ForkBranchOp extends RequestH3MgOperation<NdBranch> {
 	public ForkBranchOp(long timestamp, S8User initiator,
 			MgBranchHandler originBranchHandler, long version, MgBranchHandler targetBranchHandler,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
-		super(timestamp, initiator);
+		super(timestamp, initiator, options);
 		this.originBranchHandler = originBranchHandler;
 		this.version = version;
 		this.targetBranchHandler = targetBranchHandler;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 

@@ -1,11 +1,12 @@
 package com.s8.arch.magnesium.databases.repository.entry;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 
 /**
@@ -13,7 +14,7 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class RetrieveHeadVersion extends RequestH3MgOperation<MgRepository> {
+class RetrieveHeadVersion extends RequestDbMgOperation<MgRepository> {
 
 
 	public final MgRepositoryHandler repoHandler;
@@ -22,7 +23,6 @@ class RetrieveHeadVersion extends RequestH3MgOperation<MgRepository> {
 
 	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
 
-	public final long options;
 
 
 	/**
@@ -31,16 +31,15 @@ class RetrieveHeadVersion extends RequestH3MgOperation<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public RetrieveHeadVersion(long timestamp,
+	public RetrieveHeadVersion(long timestamp, S8User initiator,
 			MgRepositoryHandler repoHandler, 
 			String branchId,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initiator, options);
 		this.repoHandler = repoHandler;
 		this.branchId = branchId;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 	
 
@@ -70,7 +69,7 @@ class RetrieveHeadVersion extends RequestH3MgOperation<MgRepository> {
 				try {
 					MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
 					if(branchHandler != null) { 
-						branchHandler.retrieveHeadVersion(timeStamp, onSucceed, options);
+						branchHandler.retrieveHeadVersion(timeStamp, initiator, onSucceed, options);
 					}
 					else {
 						BranchVersionS8AsyncOutput output = new BranchVersionS8AsyncOutput();

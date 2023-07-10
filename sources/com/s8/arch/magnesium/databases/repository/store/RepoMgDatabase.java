@@ -159,10 +159,10 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void retrieveBranchHeadVersion(long t, String repoAddress, String branchName, 
+	public void retrieveBranchHeadVersion(long t, S8User initiator, String repoAddress, String branchName, 
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new RetrieveBranchHeadVersion(t, this, repoAddress, branchName, onSucceed, options));
+		pushOperation(new RetrieveBranchHeadVersion(t, initiator, this, repoAddress, branchName, onSucceed, options));
 	}
 	
 	

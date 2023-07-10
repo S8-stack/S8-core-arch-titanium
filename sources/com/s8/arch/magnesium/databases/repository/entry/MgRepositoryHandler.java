@@ -138,8 +138,8 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void retrieveHeadVersion(long t, String branchId, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new RetrieveHeadVersion(t, this, branchId, onSucceed, options));
+	public void retrieveHeadVersion(long t, S8User initiator, String branchId, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new RetrieveHeadVersion(t, initiator, this, branchId, onSucceed, options));
 	}
 
 }

@@ -1,10 +1,11 @@
 package com.s8.arch.magnesium.databases.space.entry;
 
 import com.s8.arch.fluor.S8AsyncFlow;
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 import com.s8.io.bohr.lithium.exceptions.LiIOException;
@@ -16,7 +17,7 @@ import com.s8.io.bytes.alpha.Bool64;
  * @author pierreconvert
  *
  */
-class ExposeObjectsOp extends RequestH3MgOperation<LiBranch> {
+class ExposeObjectsOp extends RequestDbMgOperation<LiBranch> {
 
 
 
@@ -35,10 +36,6 @@ class ExposeObjectsOp extends RequestH3MgOperation<LiBranch> {
 	public final MgCallback<SpaceVersionS8AsyncOutput> onExposed;
 
 
-	/**
-	 * 
-	 */
-	public final long options;
 
 
 	/**
@@ -47,15 +44,14 @@ class ExposeObjectsOp extends RequestH3MgOperation<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public ExposeObjectsOp(long timestamp, MgSpaceHandler spaceHandler, 
+	public ExposeObjectsOp(long timestamp, S8User initiator, MgSpaceHandler spaceHandler, 
 			Object[] objects,
 			MgCallback<SpaceVersionS8AsyncOutput> onExposed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initiator, options);
 		this.spaceHandler = spaceHandler;
 		this.objects = objects;
 		this.onExposed = onExposed;
-		this.options = options;
 	}
 
 	@Override

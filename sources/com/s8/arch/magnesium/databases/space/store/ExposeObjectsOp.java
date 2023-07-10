@@ -3,11 +3,12 @@ package com.s8.arch.magnesium.databases.space.store;
 import java.io.IOException;
 
 import com.s8.arch.fluor.S8AsyncFlow;
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bytes.alpha.Bool64;
 
@@ -16,7 +17,7 @@ import com.s8.io.bytes.alpha.Bool64;
  * @author pierreconvert
  *
  */
-class ExposeObjectsOp extends RequestH3MgOperation<SpaceMgStore> {
+class ExposeObjectsOp extends RequestDbMgOperation<SpaceMgStore> {
 
 	/**
 	 * 
@@ -35,11 +36,6 @@ class ExposeObjectsOp extends RequestH3MgOperation<SpaceMgStore> {
 	public final MgCallback<SpaceVersionS8AsyncOutput> onSucceed;
 
 
-	/**
-	 * 
-	 */
-	public final long options;
-
 
 	/**
 	 * 
@@ -47,17 +43,16 @@ class ExposeObjectsOp extends RequestH3MgOperation<SpaceMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public ExposeObjectsOp(long timestamp, SpaceMgDatabase spaceHandler, 
+	public ExposeObjectsOp(long timestamp, S8User initiator, SpaceMgDatabase spaceHandler, 
 			String spaceId,
 			Object[] objects,
 			MgCallback<SpaceVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initiator, options);
 		this.spaceHandler = spaceHandler;
 		this.spaceId = spaceId;
 		this.objects = objects;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 	@Override
@@ -86,7 +81,7 @@ class ExposeObjectsOp extends RequestH3MgOperation<SpaceMgStore> {
 				boolean isCreateOptionEnabled = Bool64.has(options, S8AsyncFlow.CREATE_SPACE_IF_NOT_PRESENT);
 				MgSpaceHandler spaceHandler = store.resolveSpaceHandler(spaceId, isCreateOptionEnabled);
 				if(spaceHandler != null) {
-					spaceHandler.exposeObjects(timeStamp, objects, onSucceed, options);
+					spaceHandler.exposeObjects(timeStamp, initiator, objects, onSucceed, options);
 
 					if(spaceHandler.isNewlyCreated) {
 						if(Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {

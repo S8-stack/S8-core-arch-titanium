@@ -3,10 +3,10 @@ package com.s8.arch.magnesium.databases.repository.entry;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.object.NdObject;
 
@@ -16,7 +16,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CommitBranchOp extends RequestH3MgOperation<MgRepository> {
+class CommitBranchOp extends RequestDbMgOperation<MgRepository> {
 
 
 	public final MgRepositoryHandler reporHandler;
@@ -28,8 +28,6 @@ class CommitBranchOp extends RequestH3MgOperation<MgRepository> {
 	public final String comment;
 
 	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
-
-	public final long options;
 
 
 	/**
@@ -43,13 +41,12 @@ class CommitBranchOp extends RequestH3MgOperation<MgRepository> {
 			NdObject[] objects, String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp, initiator);
+		super(timestamp, initiator, options);
 		this.reporHandler = reporHandler;
 		this.branchId = branchId;
 		this.objects = objects;
 		this.comment = comment;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 	@Override

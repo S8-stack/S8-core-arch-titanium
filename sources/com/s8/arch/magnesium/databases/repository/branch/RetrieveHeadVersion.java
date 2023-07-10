@@ -1,10 +1,11 @@
 package com.s8.arch.magnesium.databases.repository.branch;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 
@@ -13,14 +14,12 @@ import com.s8.io.bohr.neodymium.branch.NdBranch;
  * @author pierreconvert
  *
  */
-class RetrieveHeadVersion extends RequestH3MgOperation<NdBranch> {
+class RetrieveHeadVersion extends RequestDbMgOperation<NdBranch> {
 
 
 	public final MgBranchHandler branchHandler;
 
 	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
-
-	public final long options;
 
 
 	/**
@@ -29,14 +28,13 @@ class RetrieveHeadVersion extends RequestH3MgOperation<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public RetrieveHeadVersion(long timestamp,
+	public RetrieveHeadVersion(long timestamp, S8User initiator, 
 			MgBranchHandler branchHandler, 
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initiator, options);
 		this.branchHandler = branchHandler;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 	@Override

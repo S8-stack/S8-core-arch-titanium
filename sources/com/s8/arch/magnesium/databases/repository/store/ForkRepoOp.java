@@ -5,10 +5,10 @@ import java.io.IOException;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.joos.types.JOOS_CompilingException;
 
@@ -17,7 +17,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-class ForkRepoOp extends RequestH3MgOperation<MgRepoStore> {
+class ForkRepoOp extends RequestDbMgOperation<MgRepoStore> {
 
 
 	/**
@@ -53,12 +53,6 @@ class ForkRepoOp extends RequestH3MgOperation<MgRepoStore> {
 	 */
 	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
 
-	
-	/**
-	 * 
-	 */
-	public final long options;
-
 
 
 	/**
@@ -75,7 +69,7 @@ class ForkRepoOp extends RequestH3MgOperation<MgRepoStore> {
 			String targetRepositoryAddress,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp, initiator);
+		super(timestamp, initiator, options);
 
 		/* fields */
 		this.storeHandler = handler;
@@ -86,7 +80,6 @@ class ForkRepoOp extends RequestH3MgOperation<MgRepoStore> {
 		this.targetRepositoryAddress = targetRepositoryAddress;
 		
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 

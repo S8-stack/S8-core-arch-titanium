@@ -3,9 +3,9 @@ package com.s8.arch.magnesium.databases.record;
 import com.s8.arch.fluor.S8AsyncFlow;
 import com.s8.arch.fluor.outputs.PutUserS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.object.BeObject;
@@ -17,7 +17,7 @@ import com.s8.io.bytes.alpha.Bool64;
  * @author pierreconvert
  *
  */
-public class PutOp extends RequestH3MgOperation<BeBranch> {
+public class PutOp extends RequestDbMgOperation<BeBranch> {
 
 
 	public final RecordsMgDatabase dbHandler;
@@ -26,16 +26,14 @@ public class PutOp extends RequestH3MgOperation<BeBranch> {
 
 	public final MgCallback<PutUserS8AsyncOutput> onInserted;
 
-	public final long options;
 
 	public PutOp(long timeStamp, RecordsMgDatabase dbHandler, BeObject object, 
 			MgCallback<PutUserS8AsyncOutput> onInserted, 
 			long options) {
-		super(timeStamp);
+		super(timeStamp, null, options);
 		this.dbHandler = dbHandler;
 		this.object = object;
 		this.onInserted = onInserted;
-		this.options = options;
 	}
 
 

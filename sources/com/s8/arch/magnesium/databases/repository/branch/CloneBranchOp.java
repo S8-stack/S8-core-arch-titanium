@@ -6,9 +6,9 @@ import com.s8.arch.fluor.S8AsyncFlow;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
@@ -19,7 +19,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CloneBranchOp extends RequestH3MgOperation<NdBranch> {
+class CloneBranchOp extends RequestDbMgOperation<NdBranch> {
 
 
 	public final MgBranchHandler branchHandler;
@@ -27,8 +27,6 @@ class CloneBranchOp extends RequestH3MgOperation<NdBranch> {
 	public final long version;
 
 	public final MgCallback<BranchExposureS8AsyncOutput> onSucceed;
-
-	public final long options;
 
 
 	/**
@@ -40,11 +38,10 @@ class CloneBranchOp extends RequestH3MgOperation<NdBranch> {
 	 */
 	public CloneBranchOp(long timestamp, S8User initiator,
 			MgBranchHandler handler, long version, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		super(timestamp, initiator);
+		super(timestamp, initiator, options);
 		this.branchHandler = handler;
 		this.version = version;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 

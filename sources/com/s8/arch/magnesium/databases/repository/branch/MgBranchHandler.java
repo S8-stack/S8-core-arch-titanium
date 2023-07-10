@@ -109,7 +109,7 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 */
 	public void commitBranch(long t, S8User initiator, NdObject[] objects, String comment, 
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CommitOp(t, initiator, this, objects, comment, onSucceed, options));
+		pushOperation(new CommitBranchOp(t, initiator, this, objects, comment, onSucceed, options));
 	}
 
 
@@ -144,8 +144,8 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void retrieveHeadVersion(long t, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new RetrieveHeadVersion(t, this, onSucceed, options));
+	public void retrieveHeadVersion(long t, S8User initiator, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new RetrieveHeadVersion(t, initiator, this, onSucceed, options));
 	}
 
 

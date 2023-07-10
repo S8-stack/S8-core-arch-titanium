@@ -5,10 +5,10 @@ import java.io.IOException;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.joos.types.JOOS_CompilingException;
 
@@ -17,7 +17,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-class CloneBranchOp extends RequestH3MgOperation<MgRepoStore> {
+class CloneBranchOp extends RequestDbMgOperation<MgRepoStore> {
 
 
 	public final RepoMgDatabase storeHandler;
@@ -29,8 +29,6 @@ class CloneBranchOp extends RequestH3MgOperation<MgRepoStore> {
 	public final long version;
 
 	public final MgCallback<BranchExposureS8AsyncOutput> onSucceed;
-
-	public final long options;
 
 
 	/**
@@ -47,13 +45,12 @@ class CloneBranchOp extends RequestH3MgOperation<MgRepoStore> {
 			long version, 
 			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp, initiator);
+		super(timestamp, initiator, options);
 		this.storeHandler = storeHandler;
 		this.repositoryAddress = repositoryAddress;
 		this.branchId = branchName;
 		this.version = version;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 	@Override

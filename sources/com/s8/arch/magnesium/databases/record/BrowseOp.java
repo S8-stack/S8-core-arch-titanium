@@ -5,9 +5,9 @@ import java.util.List;
 import com.s8.arch.fluor.S8Filter;
 import com.s8.arch.fluor.outputs.ObjectsListS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.exception.BeIOException;
@@ -19,7 +19,7 @@ import com.s8.io.bohr.beryllium.exception.BeIOException;
  *
  * @param <T>
  */
-public class BrowseOp<T> extends RequestH3MgOperation<BeBranch> {
+public class BrowseOp<T> extends RequestDbMgOperation<BeBranch> {
 
 
 
@@ -41,19 +41,14 @@ public class BrowseOp<T> extends RequestH3MgOperation<BeBranch> {
 	public final MgCallback<ObjectsListS8AsyncOutput<T>> onSelected;
 
 
-	/**
-	 * options
-	 */
-	public final long options;
 
 	public BrowseOp(long timeStamp, RecordsMgDatabase dbHandler, 
 			S8Filter<T> filter,
 			MgCallback<ObjectsListS8AsyncOutput<T>> onSelected, long options) {
-		super(timeStamp);
+		super(timeStamp, null, options);
 		this.dbHandler = dbHandler;
 		this.filter = filter;
 		this.onSelected = onSelected;
-		this.options = options;
 	}
 
 

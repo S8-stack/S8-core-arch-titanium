@@ -5,10 +5,10 @@ import java.io.IOException;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.types.JOOS_CompilingException;
@@ -19,7 +19,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-class CommitBranchOp extends RequestH3MgOperation<MgRepoStore> {
+class CommitBranchOp extends RequestDbMgOperation<MgRepoStore> {
 
 
 
@@ -36,8 +36,6 @@ class CommitBranchOp extends RequestH3MgOperation<MgRepoStore> {
 	
 	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
 
-	public final long options;
-
 
 	/**
 	 * 
@@ -45,7 +43,7 @@ class CommitBranchOp extends RequestH3MgOperation<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CommitBranchOp(long timestamp, S8User user,
+	public CommitBranchOp(long timestamp, S8User initiator,
 			RepoMgDatabase handler, 
 			String repositoryAddress,
 			String branchId, 
@@ -53,14 +51,13 @@ class CommitBranchOp extends RequestH3MgOperation<MgRepoStore> {
 			String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp, user);
+		super(timestamp, initiator, options);
 		this.storeHandler = handler;
 		this.repositoryAddress = repositoryAddress;
 		this.branchId = branchId;
 		this.objects = objects;
 		this.comment = comment;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 

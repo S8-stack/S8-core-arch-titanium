@@ -5,9 +5,9 @@ import java.io.IOException;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
@@ -19,7 +19,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CommitOp extends RequestH3MgOperation<NdBranch> {
+class CommitBranchOp extends RequestDbMgOperation<NdBranch> {
 
 
 	public final MgBranchHandler branchHandler;
@@ -33,8 +33,6 @@ class CommitOp extends RequestH3MgOperation<NdBranch> {
 
 	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
 
-	public final long options;
-
 
 	/**
 	 * 
@@ -42,15 +40,14 @@ class CommitOp extends RequestH3MgOperation<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CommitOp(long timestamp, S8User initiator,
+	public CommitBranchOp(long timestamp, S8User initiator,
 			MgBranchHandler branchHandler,  NdObject[] objects, String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		super(timestamp, initiator);
+		super(timestamp, initiator, options);
 		this.branchHandler = branchHandler;
 		this.objects = objects;
 		this.comment = comment;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 	@Override

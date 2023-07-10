@@ -7,6 +7,7 @@ import java.util.HashMap;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.RepoCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.arch.magnesium.databases.repository.entry.MgBranchMetadata;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepository;
@@ -14,7 +15,6 @@ import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryMetadata;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.atom.S8ShellStructureException;
@@ -27,7 +27,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-class CreateRepoOp extends RequestH3MgOperation<MgRepoStore> {
+class CreateRepoOp extends RequestDbMgOperation<MgRepoStore> {
 
 
 	public final RepoMgDatabase storeHandler;
@@ -45,8 +45,6 @@ class CreateRepoOp extends RequestH3MgOperation<MgRepoStore> {
 	public final S8User initiator;
 	
 	public final MgCallback<RepoCreationS8AsyncOutput> onSucceed;
-
-	public final long options;
 
 
 
@@ -66,7 +64,7 @@ class CreateRepoOp extends RequestH3MgOperation<MgRepoStore> {
 			String initialCommitComment,
 			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp, initiator);
+		super(timestamp, initiator, options);
 		this.storeHandler = handler;
 		this.repositoryAddress = repositoryAddress;
 		this.repositoryInfo = repositoryInfo;
@@ -75,7 +73,6 @@ class CreateRepoOp extends RequestH3MgOperation<MgRepoStore> {
 		this.initialCommitComment = initialCommitComment;
 		this.initiator = initiator;
 		this.onSucceed = onSucceed;
-		this.options = options;
 	}
 
 

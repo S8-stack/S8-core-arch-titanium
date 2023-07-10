@@ -3,11 +3,11 @@ package com.s8.arch.magnesium.databases.repository.entry;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 
 
@@ -16,7 +16,7 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class ForkRepoOp extends RequestH3MgOperation<MgRepository> {
+class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 
 
 	/**
@@ -38,8 +38,6 @@ class ForkRepoOp extends RequestH3MgOperation<MgRepository> {
 
 	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
 
-	public final long options;
-
 	public final MgRepoStore store;
 
 	/**
@@ -55,14 +53,12 @@ class ForkRepoOp extends RequestH3MgOperation<MgRepository> {
 			MgRepositoryHandler targetRepositoryHandler,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp, initiator);
+		super(timestamp, initiator, options);
 		this.repoHandler = repoHandler;
 		this.originBranchId = originBranchId;
 		this.originBranchVersion = originBranchVersion;
 		this.targetRepositoryHandler = targetRepositoryHandler;
 		this.onSucceed = onSucceed;
-		this.options = options;
-
 
 		this.store = repoHandler.store;
 	}

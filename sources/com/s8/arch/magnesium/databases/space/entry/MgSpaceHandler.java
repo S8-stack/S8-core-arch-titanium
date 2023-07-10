@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
@@ -74,8 +75,8 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void accessExposure(long t, MgCallback<SpaceExposureS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new AccessExposureOp(t, this, onSucceed, options));
+	public void accessExposure(long t, S8User initiator, MgCallback<SpaceExposureS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new AccessExposureOp(t, initiator, this, onSucceed, options));
 	}
 	
 	
@@ -85,8 +86,8 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void exposeObjects(long t, Object[] objects, MgCallback<SpaceVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new ExposeObjectsOp(t, this, objects, onSucceed, options));
+	public void exposeObjects(long t, S8User initiator, Object[] objects, MgCallback<SpaceVersionS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new ExposeObjectsOp(t, initiator, this, objects, onSucceed, options));
 	}
 
 

@@ -3,11 +3,12 @@ package com.s8.arch.magnesium.databases.space.store;
 import java.io.IOException;
 
 import com.s8.arch.fluor.S8AsyncFlow;
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
-import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bytes.alpha.Bool64;
 
@@ -16,7 +17,7 @@ import com.s8.io.bytes.alpha.Bool64;
  * @author pierreconvert
  *
  */
-class AccessExposureOp extends RequestH3MgOperation<SpaceMgStore> {
+class AccessExposureOp extends RequestDbMgOperation<SpaceMgStore> {
 
 
 
@@ -37,8 +38,6 @@ class AccessExposureOp extends RequestH3MgOperation<SpaceMgStore> {
 	public final MgCallback<SpaceExposureS8AsyncOutput> onProcessed;
 
 
-	public final long options;
-
 
 	/**
 	 * 
@@ -46,15 +45,14 @@ class AccessExposureOp extends RequestH3MgOperation<SpaceMgStore> {
 	 * @param onProcessed
 	 * @param onFailed
 	 */
-	public AccessExposureOp(long timestamp, SpaceMgDatabase handler, 
+	public AccessExposureOp(long timestamp, S8User initiator, SpaceMgDatabase handler, 
 			String repositoryAddress, 
 			MgCallback<SpaceExposureS8AsyncOutput> onProcessed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initiator, options);
 		this.spaceHandler = handler;
 		this.spaceId = repositoryAddress;
 		this.onProcessed = onProcessed;
-		this.options = options;
 	}
 
 	@Override
@@ -86,7 +84,7 @@ class AccessExposureOp extends RequestH3MgOperation<SpaceMgStore> {
 
 				if(spaceHandler != null) {
 					/* exit point 1 -> continue */
-					spaceHandler.accessExposure(timeStamp, onProcessed, options);
+					spaceHandler.accessExposure(timeStamp, initiator, onProcessed, options);
 
 					if(spaceHandler.isNewlyCreated) {
 						if(Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {
