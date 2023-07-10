@@ -93,7 +93,10 @@ class ForkBranchOp extends RequestDbMgOperation<NdBranch> {
 					targetBranch.commit(objects, 
 							getTimestamp(), 
 							getInitiator().getUsername(), 
-							"Initial commir from FORK of "+originBranchHandler.getName());
+							"Initial commit from FORK of "+originBranchHandler.getName());
+					
+					/* initialize handler with newly created branch */
+					targetBranchHandler.initializeResource(targetBranch);
 					
 					output.isSuccessful = true;
 				}
@@ -111,7 +114,9 @@ class ForkBranchOp extends RequestDbMgOperation<NdBranch> {
 				output.reportException(exception);
 				onSucceed.call(output);
 			}			
+			
 		};
 	}
+	
 
 }

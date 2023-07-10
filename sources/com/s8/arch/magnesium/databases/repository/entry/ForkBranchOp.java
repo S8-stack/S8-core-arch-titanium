@@ -90,6 +90,8 @@ class ForkBranchOp extends RequestDbMgOperation<MgRepository> {
 						targetBranchMetadata.forkedBranchId = originBranchId;
 						targetBranchMetadata.forkedBranchVersion = originBranchVersion;
 
+						/* add branch metadata to repo meta*/
+						repository.metadata.branches.put(targetBranchId, targetBranchMetadata);
 
 						MgBranchHandler targetBranchHandler = new MgBranchHandler(handler.ng, store, repository, targetBranchMetadata);
 						repository.branchHandlers.put(targetBranchId, targetBranchHandler);

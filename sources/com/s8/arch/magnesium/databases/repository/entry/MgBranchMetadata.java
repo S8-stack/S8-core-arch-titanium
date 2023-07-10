@@ -21,15 +21,15 @@ public class MgBranchMetadata implements S8BranchMetadata {
 	public String info;
 
 
-	@JOOS_Field(name = "head-version")
+	@JOOS_Field(name = "headVersion")
 	public long headVersion;
 
 
-	@JOOS_Field(name = "fork-id")
+	@JOOS_Field(name = "forkId")
 	public String forkedBranchId;
 
 
-	@JOOS_Field(name = "fork-version")
+	@JOOS_Field(name = "forkVersion")
 	public long forkedBranchVersion;
 
 

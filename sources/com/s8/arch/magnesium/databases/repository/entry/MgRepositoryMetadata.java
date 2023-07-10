@@ -19,7 +19,7 @@ public class MgRepositoryMetadata implements S8RepositoryMetadata {
 	@JOOS_Field(name = "address") 
 	public String address;
 	
-	@JOOS_Field(name = "creation-date") 
+	@JOOS_Field(name = "creationDate") 
 	public long creationDate;
 	
 	@JOOS_Field(name = "owner") 
