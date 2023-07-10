@@ -1,6 +1,11 @@
 package com.s8.arch.magnesium.databases.repository.store;
 
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +21,9 @@ import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.object.NdObject;
+import com.s8.io.joos.JOOS_Lexicon;
 import com.s8.io.joos.types.JOOS_CompilingException;
+import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
 
 
 /**
@@ -29,14 +36,15 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	
 	public final NdCodebase codebase;
 	
-	public final Path storeInfoPathname;
-	
 	public final IOModule ioModule;
+
+	private Path rootFolderPath;
 	
-	public RepoMgDatabase(SiliconEngine ng, NdCodebase codebase, Path storeInfoPathname) throws JOOS_CompilingException {
+	
+	public RepoMgDatabase(SiliconEngine ng, NdCodebase codebase, Path rootFolderPath) throws JOOS_CompilingException {
 		super(ng);
 		this.codebase = codebase;
-		this.storeInfoPathname = storeInfoPathname;
+		this.rootFolderPath = rootFolderPath;
 		
 		ioModule = new IOModule(this);
 	}
@@ -64,8 +72,13 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	}
 	
 
-	public Path getInfoPath() {
-		return storeInfoPathname;
+	public Path getRootFolderPath() {
+		return rootFolderPath;
+	}
+	
+	
+	public Path getMetadataPath() {
+		return rootFolderPath.resolve(MgRepoStore.METADATA_FILENAME);
 	}
 
 
@@ -83,13 +96,13 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 			String repositoryInfo, 
 			String mainBranchName,
 			NdObject[] objects,
-			String initialCommitAuthor,
+			String initialCommitComment,
 			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
 			long options) {
 		pushOperation(new CreateRepoOp(t, initiator, this, 
 				repositoryName, repositoryAddress, repositoryInfo, 
 				mainBranchName, 
-				objects, initialCommitAuthor, 
+				objects, initialCommitComment, 
 				onSucceed, options));
 	}
 	
@@ -180,6 +193,24 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	public void getRepositoryMetadata(long t,  S8User initiator, String repoAddress, 
 			MgCallback<RepositoryMetadataS8AsyncOutput> onRead, long options) {
 		pushOperation(new GetRepositoryMetadataOp(t, initiator, this, repoAddress, onRead, options));
+	}
+	
+	
+	
+	
+	/* <utilities> */
+	
+	public static void init(String rootFolderPathname) throws IOException, JOOS_CompilingException {
+		MgRepoStoreMetadata metadata = new MgRepoStoreMetadata();
+		metadata.rootPathname = rootFolderPathname;
+		
+		JOOS_Lexicon lexicon = JOOS_Lexicon.from(MgRepoStoreMetadata.class);
+		FileChannel channel = FileChannel.open(Path.of(rootFolderPathname).resolve(MgRepoStore.METADATA_FILENAME), 
+				new OpenOption[]{ StandardOpenOption.WRITE, StandardOpenOption.CREATE });
+		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);
+
+		lexicon.compose(writer, metadata, "   ", false);
+		writer.close();
 	}
 	
 	

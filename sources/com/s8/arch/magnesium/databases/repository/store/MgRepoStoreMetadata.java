@@ -1,0 +1,16 @@
+package com.s8.arch.magnesium.databases.repository.store;
+
+import com.s8.io.joos.JOOS_Field;
+import com.s8.io.joos.JOOS_Type;
+
+
+
+@JOOS_Type(name = "RepositoryStore")
+public class MgRepoStoreMetadata {
+
+
+	@JOOS_Field(name = "rootPathname") 
+	public String rootPathname;
+
+
+}

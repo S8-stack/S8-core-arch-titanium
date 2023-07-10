@@ -9,7 +9,7 @@ import com.s8.arch.fluor.metadatas.S8RepositoryMetadata;
 import com.s8.io.joos.JOOS_Field;
 import com.s8.io.joos.JOOS_Type;
 
-@JOOS_Type(name = "mg-repository")
+@JOOS_Type(name = "MgRepositoryMetadata")
 public class MgRepositoryMetadata implements S8RepositoryMetadata {
 
 

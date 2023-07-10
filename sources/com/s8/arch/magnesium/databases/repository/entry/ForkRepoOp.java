@@ -100,7 +100,7 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 				repoMetadata.name = targetRepositoryName;
 				repoMetadata.branches = new HashMap<>();
 				
-				MgRepository targetRepository = new MgRepository(repoMetadata, targetRepositoryHandler.path);
+				MgRepository targetRepository = new MgRepository(repoMetadata, targetRepositoryHandler.folderPath);
 
 
 

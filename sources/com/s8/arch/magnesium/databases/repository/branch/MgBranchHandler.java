@@ -26,6 +26,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
 
 public class MgBranchHandler extends H3MgHandler<NdBranch> {
 
+	public final static String BRANCH_DATA_FILENAME = "branch-data.nd";
 
 	public MgBranchMetadata metadata;
 	
@@ -153,8 +154,12 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * 
 	 * @return path to repository branch sequence
 	 */
-	Path getPath() {
-		return repository.getPath().resolve(metadata.name);
+	Path getFolderPath() {
+		return repository.getFolderPath().resolve(metadata.name);
+	}
+	
+	Path getDataFilePath() {
+		return getFolderPath().resolve(BRANCH_DATA_FILENAME);
 	}
 
 

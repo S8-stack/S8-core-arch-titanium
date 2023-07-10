@@ -14,6 +14,10 @@ import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 
 public class MgRepository {
 	
+	
+	public final static String METADATA_FILENAME = "repo-meta.js";
+	
+	
 	/*
 	public static MgRepository create(SiliconEngine ng, MgRepoStore store, String address) {
 		Path path = store.composeRepositoryPath(address);
@@ -61,9 +65,11 @@ public class MgRepository {
 	}
 
 
-	public Path getPath() {
-		return null;
+	public Path getFolderPath() {
+		return path;
 	}
+	
+	
 	
 	
 

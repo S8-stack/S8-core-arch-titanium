@@ -9,7 +9,7 @@ import com.s8.io.joos.JOOS_Type;
  * @author pierreconvert
  *
  */
-@JOOS_Type(name = "mg-branch-info")
+@JOOS_Type(name = "MgBranchMetadata")
 public class MgBranchMetadata implements S8BranchMetadata {
 
 

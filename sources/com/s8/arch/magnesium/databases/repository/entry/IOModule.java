@@ -3,6 +3,7 @@ package com.s8.arch.magnesium.databases.repository.entry;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -40,7 +41,7 @@ public class IOModule implements H3MgIOModule<MgRepository> {
 	@Override
 	public MgRepository load() throws IOException, JOOS_ParsingException {
 
-		FileChannel channel = FileChannel.open(handler.getPath(), new OpenOption[]{ 
+		FileChannel channel = FileChannel.open(handler.getMetadataFilePath(), new OpenOption[]{ 
 				StandardOpenOption.READ
 		});
 
@@ -78,9 +79,10 @@ public class IOModule implements H3MgIOModule<MgRepository> {
 	@Override
 	public void save(MgRepository repo) throws IOException, JOOS_ComposingException {
 
-		FileChannel channel = FileChannel.open(handler.getPath(), new OpenOption[]{ 
-				StandardOpenOption.WRITE
-		});
+		
+		Files.createDirectories(handler.getFolderPath());
+		FileChannel channel = FileChannel.open(handler.getMetadataFilePath(), new OpenOption[]{ 
+				StandardOpenOption.WRITE, StandardOpenOption.CREATE });
 
 
 		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);

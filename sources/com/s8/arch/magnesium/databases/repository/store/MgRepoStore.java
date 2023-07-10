@@ -11,8 +11,6 @@ import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.object.NdObject;
-import com.s8.io.joos.JOOS_Field;
-import com.s8.io.joos.JOOS_Type;
 import com.s8.io.joos.types.JOOS_CompilingException;
 
 
@@ -23,12 +21,17 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  */
 public class MgRepoStore {
 	
+
+	public final static String METADATA_FILENAME = "store-meta.js";
+	
 	
 	public final RepoMgDatabase handler;
 	
 	public final NdCodebase codebase;
 	
-	private String rootPathname;
+	public final MgRepoStoreMetadata metadata;
+	
+	
 	
 	private Path rootPath;
 	
@@ -37,12 +40,13 @@ public class MgRepoStore {
 	private final Map<String, MgRepositoryHandler> repositoryHandlers = new HashMap<>();
 	
 	
-	public MgRepoStore(RepoMgDatabase handler, NdCodebase codebase, String rootPathname) {
+	public MgRepoStore(RepoMgDatabase handler, NdCodebase codebase, MgRepoStoreMetadata metadata) {
 		super();
 		this.handler = handler;
 		this.codebase = codebase;
 		
-		this.rootPathname = rootPathname;
+		this.metadata = metadata;
+		String rootPathname = metadata.rootPathname;
 		this.rootPath = Path.of(rootPathname);
 		this.repoPathComposer = new MgPathComposer(rootPath);
 	}
@@ -152,29 +156,7 @@ public class MgRepoStore {
 	
 
 	
-	@JOOS_Type(name = "repository")
-	public static class Serialized {
-		
-		@JOOS_Field(name = "rootPathname") 
-		public String rootPathname;
-		
-		
-		
-		public MgRepoStore deserialize(RepoMgDatabase handler, NdCodebase codebase) {
-			return new MgRepoStore(handler, codebase, rootPathname);
-		}
-	}
-
 	
-	
-	public Serialized serialize() {
-		Serialized serialized = new Serialized();
-		
-		// address
-		serialized.rootPathname = rootPathname;
-		
-		return serialized;
-	}
 
 
 

@@ -31,14 +31,14 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	
 	public final String address;
 	
-	public final Path path;
+	public final Path folderPath;
 
 	
 	public MgRepositoryHandler(SiliconEngine ng, MgRepoStore store, String address) throws JOOS_CompilingException {
 		super(ng);
 		this.store = store;
 		this.address = address;
-		this.path = store.composeRepositoryPath(address);
+		this.folderPath = store.composeRepositoryPath(address);
 		ioModule = new IOModule(this);
 	}
 
@@ -74,8 +74,12 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	}
 
 
-	public Path getPath() {
-		return path;
+	public Path getFolderPath() {
+		return folderPath;
+	}
+	
+	public Path getMetadataFilePath() {
+		return folderPath.resolve(MgRepository.METADATA_FILENAME);
 	}
 
 
