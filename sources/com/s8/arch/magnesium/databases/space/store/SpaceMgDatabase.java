@@ -40,8 +40,6 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	
 	public final IOModule ioModule;
 	
-	public final MgSpaceInitializer initializer;
-	
 	/**
 	 * 
 	 * @param ng
@@ -52,13 +50,11 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	 */
 	public SpaceMgDatabase(SiliconEngine ng, 
 			LiCodebase codebase, 
-			Path rootFolderPath, 
-			MgSpaceInitializer initializer) throws JOOS_CompilingException {
+			Path rootFolderPath) throws JOOS_CompilingException {
 		super(ng);
 		this.codebase = codebase;
 		this.rootFolderPath = rootFolderPath;
 		this.ioModule = new IOModule(this);
-		this.initializer = initializer;
 	}
 	
 
@@ -117,7 +113,7 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	 * @param onProceed
 	 * @param onFailed
 	 */
-	public void accessExposure(long t, S8User initiator, String spaceId, MgCallback<SpaceExposureS8AsyncOutput> onProceed, long options) {
+	public void accessSpace(long t, S8User initiator, String spaceId, MgCallback<SpaceExposureS8AsyncOutput> onProceed, long options) {
 		pushOpLast(new AccessSpaceOp(t, initiator, this, spaceId, onProceed, options));
 	}
 

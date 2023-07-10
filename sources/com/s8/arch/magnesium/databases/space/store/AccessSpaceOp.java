@@ -21,17 +21,21 @@ class AccessSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 
 
 	/**
-	 * 
+	 * space-handler
 	 */
 	public final SpaceMgDatabase spaceHandler;
 
+	
 
+	/**
+	 * space-id
+	 */
 	public final String spaceId;
 
 
 
 	/**
-	 * 
+	 * on-processed
 	 */
 	public final MgCallback<SpaceExposureS8AsyncOutput> onProcessed;
 
@@ -53,10 +57,12 @@ class AccessSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 		this.onProcessed = onProcessed;
 	}
 
+	
 	@Override
 	public SpaceMgDatabase getHandler() {
 		return spaceHandler;
 	}
+	
 
 	@Override
 	public ConsumeResourceMgAsyncTask<SpaceMgStore> createAsyncTask() {

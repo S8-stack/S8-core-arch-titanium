@@ -47,7 +47,7 @@ public class IOModule implements H3MgIOModule<LiBranch> {
 		if(isExisting) {
 
 			/* read from disk */
-			LinkedBytes head = LinkedBytesIO.read(handler.getFolderPath(), true);
+			LinkedBytes head = LinkedBytesIO.read(handler.getDataFilePath(), true);
 
 			/* build inflow */
 			ByteInflow inflow = new LinkedByteInflow(head);
@@ -92,7 +92,7 @@ public class IOModule implements H3MgIOModule<LiBranch> {
 		outbound.pushFrame(outflow, branch.pullDeltas());
 
 		/* read from disk */
-		LinkedBytesIO.write(outflow.getHead() ,handler.getDataFilePath(), true);
+		LinkedBytesIO.write(outflow.getHead(), handler.getDataFilePath(), true);
 	}
 
 }
