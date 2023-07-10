@@ -1,5 +1,6 @@
 package com.s8.arch.magnesium.databases.repository.entry;
 
+import com.s8.arch.fluor.metadatas.S8BranchMetadata;
 import com.s8.io.joos.JOOS_Field;
 import com.s8.io.joos.JOOS_Type;
 
@@ -9,7 +10,7 @@ import com.s8.io.joos.JOOS_Type;
  *
  */
 @JOOS_Type(name = "mg-branch-info")
-public class MgBranchMetadata {
+public class MgBranchMetadata implements S8BranchMetadata {
 
 
 	@JOOS_Field(name = "id")
@@ -55,6 +56,36 @@ public class MgBranchMetadata {
 		clone.forkedBranchVersion = forkedBranchVersion;
 		clone.owner = owner;
 		return clone;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getInfo() {
+		return info;
+	}
+
+	@Override
+	public long getHeadVersion() {
+		return headVersion;
+	}
+
+	@Override
+	public String getForkedBranchId() {
+		return forkedBranchId;
+	}
+
+	@Override
+	public long getForkedBranchVersion() {
+		return forkedBranchVersion;
+	}
+
+	@Override
+	public String getOwner() {
+		return owner;
 	}
 
 

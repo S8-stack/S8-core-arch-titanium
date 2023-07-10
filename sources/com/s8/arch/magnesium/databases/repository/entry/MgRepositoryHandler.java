@@ -8,6 +8,7 @@ import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.arch.fluor.outputs.RepositoryMetadataS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
@@ -85,11 +86,11 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	 */
 	public void forkRepo(long t, S8User initiator,
 			String originBranchId, long originBranchVersion, 
-			MgRepositoryHandler targetRepositoryHandler,
+			MgRepositoryHandler targetRepositoryHandler, String targetRepositoryName,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
 		pushOperation(new ForkRepoOp(t, initiator, this, 
 				originBranchId, originBranchVersion, 
-				targetRepositoryHandler, 
+				targetRepositoryHandler, targetRepositoryName,
 				onSucceed, options));
 	}
 	
@@ -141,5 +142,19 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	public void retrieveHeadVersion(long t, S8User initiator, String branchId, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
 		pushOperation(new RetrieveHeadVersion(t, initiator, this, branchId, onSucceed, options));
 	}
+	
+	
+
+	/**
+	 * 
+	 * @param pre
+	 * @param post
+	 * @return 
+	 */
+	public void getRepositoryMetadata(long t,  S8User initiator, 
+			MgCallback<RepositoryMetadataS8AsyncOutput> onRead, long options) {
+		pushOperation(new GetMetadataOp(t, initiator, this, onRead, options));
+	}
+	
 
 }

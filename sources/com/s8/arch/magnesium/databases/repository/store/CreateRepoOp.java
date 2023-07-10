@@ -32,6 +32,8 @@ class CreateRepoOp extends RequestDbMgOperation<MgRepoStore> {
 
 	public final RepoMgDatabase storeHandler;
 
+	public final String repositoryName;
+	
 	public final String repositoryAddress;
 	
 	public final String repositoryInfo;
@@ -57,6 +59,7 @@ class CreateRepoOp extends RequestDbMgOperation<MgRepoStore> {
 	 */
 	public CreateRepoOp(long timestamp, S8User initiator,
 			RepoMgDatabase handler, 
+			String repositoryName,
 			String repositoryAddress,
 			String repositoryInfo, 
 			String mainBranchName, 
@@ -66,6 +69,7 @@ class CreateRepoOp extends RequestDbMgOperation<MgRepoStore> {
 			long options) {
 		super(timestamp, initiator, options);
 		this.storeHandler = handler;
+		this.repositoryName = repositoryName;
 		this.repositoryAddress = repositoryAddress;
 		this.repositoryInfo = repositoryInfo;
 		this.mainBranchName = mainBranchName;
@@ -107,6 +111,7 @@ class CreateRepoOp extends RequestDbMgOperation<MgRepoStore> {
 					
 					/* <metadata> */
 					MgRepositoryMetadata metadata = new MgRepositoryMetadata();
+					metadata.name = repositoryName;
 					metadata.address = repositoryAddress;
 					metadata.info = repositoryInfo;
 					metadata.owner = initiator.getUsername();

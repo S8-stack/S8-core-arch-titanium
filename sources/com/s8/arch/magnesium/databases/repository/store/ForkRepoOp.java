@@ -39,6 +39,11 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepoStore> {
 	
 	
 
+	/**
+	 * 
+	 */
+	public final String targetRepositoryName;
+	
 	
 	/**
 	 * 
@@ -66,7 +71,7 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepoStore> {
 			RepoMgDatabase handler, 
 			String originRepositoryAddress,
 			String originBranchId, long originBranchVersion,
-			String targetRepositoryAddress,
+			String targetRepositoryName, String targetRepositoryAddress,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
 		super(timestamp, initiator, options);
@@ -77,6 +82,7 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepoStore> {
 		this.originBranchId = originBranchId;
 		this.originBranchVersion = originBranchVersion;
 		
+		this.targetRepositoryName = targetRepositoryName;
 		this.targetRepositoryAddress = targetRepositoryAddress;
 		
 		this.onSucceed = onSucceed;
@@ -112,7 +118,10 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepoStore> {
 					
 					MgRepositoryHandler targetRepoHandler = store.createRepositoryHandler(targetRepositoryAddress);
 					if(targetRepositoryAddress != null) {
-						originRepoHandler.forkRepo(timeStamp, initiator, originBranchId, originBranchVersion, targetRepoHandler, onSucceed, options);
+						originRepoHandler.forkRepo(timeStamp, initiator, 
+								originBranchId, originBranchVersion, 
+								targetRepoHandler, targetRepositoryName,
+								onSucceed, options);
 					}	
 					else {
 						BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();

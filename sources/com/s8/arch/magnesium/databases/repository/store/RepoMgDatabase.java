@@ -9,6 +9,7 @@ import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.fluor.outputs.RepoCreationS8AsyncOutput;
+import com.s8.arch.fluor.outputs.RepositoryMetadataS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
@@ -77,6 +78,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	 * @param onFailed
 	 */
 	public void createRepository(long t, S8User initiator,
+			String repositoryName,
 			String repositoryAddress,
 			String repositoryInfo, 
 			String mainBranchName,
@@ -85,7 +87,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
 			long options) {
 		pushOperation(new CreateRepoOp(t, initiator, this, 
-				repositoryAddress, repositoryInfo, 
+				repositoryName, repositoryAddress, repositoryInfo, 
 				mainBranchName, 
 				objects, initialCommitAuthor, 
 				onSucceed, options));
@@ -101,10 +103,13 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	public void forkRepository(long t, S8User initiator,
 			String originRepositoryAddress,
 			String originBranchId, long originBranchVersion,
-			String targetRepositoryAddress,
+			String targetRepositoryName, String targetRepositoryAddress,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new ForkRepoOp(t, initiator, this, originRepositoryAddress, originBranchId, originBranchVersion, targetRepositoryAddress, onSucceed, options));
+		pushOperation(new ForkRepoOp(t, initiator, this, 
+				originRepositoryAddress, originBranchId, originBranchVersion, 
+				targetRepositoryName, targetRepositoryAddress, 
+				onSucceed, options));
 	}
 	
 	
@@ -163,6 +168,18 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
 		pushOperation(new RetrieveBranchHeadVersion(t, initiator, this, repoAddress, branchName, onSucceed, options));
+	}
+	
+	
+	/**
+	 * 
+	 * @param pre
+	 * @param post
+	 * @return 
+	 */
+	public void getRepositoryMetadata(long t,  S8User initiator, String repoAddress, 
+			MgCallback<RepositoryMetadataS8AsyncOutput> onRead, long options) {
+		pushOperation(new GetRepositoryMetadataOp(t, initiator, this, repoAddress, onRead, options));
 	}
 	
 	

@@ -1,5 +1,7 @@
 package com.s8.arch.magnesium.databases.repository.entry;
 
+import java.util.HashMap;
+
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
@@ -29,11 +31,12 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 	
 	public final long originBranchVersion;
 
-
 	/**
 	 * target repo handler
 	 */
 	public final MgRepositoryHandler targetRepositoryHandler;
+	
+	public final String targetRepositoryName;
 
 
 	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
@@ -51,6 +54,7 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 			String originBranchId,
 			long originBranchVersion,
 			MgRepositoryHandler targetRepositoryHandler,
+			String targetRepositoryName,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
 		super(timestamp, initiator, options);
@@ -58,6 +62,7 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 		this.originBranchId = originBranchId;
 		this.originBranchVersion = originBranchVersion;
 		this.targetRepositoryHandler = targetRepositoryHandler;
+		this.targetRepositoryName = targetRepositoryName;
 		this.onSucceed = onSucceed;
 
 		this.store = repoHandler.store;
@@ -91,7 +96,11 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 			@Override
 			public boolean consumeResource(MgRepository repository) {
 
-				MgRepository targetRepository = new MgRepository(repository.metadata.deepClone(), targetRepositoryHandler.path);
+				MgRepositoryMetadata repoMetadata = repository.metadata.shallowClone();
+				repoMetadata.name = targetRepositoryName;
+				repoMetadata.branches = new HashMap<>();
+				
+				MgRepository targetRepository = new MgRepository(repoMetadata, targetRepositoryHandler.path);
 
 
 
@@ -106,6 +115,8 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 					targetBranchMetadata.headVersion = 0L;
 					targetBranchMetadata.forkedBranchId = originBranchId;
 					targetBranchMetadata.forkedBranchVersion = originBranchVersion;
+					
+					repoMetadata.branches.put(originBranchId, targetBranchMetadata);
 
 
 					MgBranchHandler targetBranchHandler = new MgBranchHandler(handler.ng, store, repository, targetBranchMetadata);
