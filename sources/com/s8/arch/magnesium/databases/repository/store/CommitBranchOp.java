@@ -2,6 +2,7 @@ package com.s8.arch.magnesium.databases.repository.store;
 
 import java.io.IOException;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
@@ -31,7 +32,8 @@ class CommitBranchOp extends RequestH3MgOperation<MgRepoStore> {
 
 	public final NdObject[] objects;
 
-
+	public final String comment;
+	
 	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
 
 	public final long options;
@@ -43,18 +45,20 @@ class CommitBranchOp extends RequestH3MgOperation<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CommitBranchOp(long timestamp,
+	public CommitBranchOp(long timestamp, S8User user,
 			RepoMgDatabase handler, 
 			String repositoryAddress,
 			String branchId, 
 			NdObject[] objects, 
+			String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, user);
 		this.storeHandler = handler;
 		this.repositoryAddress = repositoryAddress;
 		this.branchId = branchId;
 		this.objects = objects;
+		this.comment = comment;
 		this.onSucceed = onSucceed;
 		this.options = options;
 	}
@@ -85,10 +89,10 @@ class CommitBranchOp extends RequestH3MgOperation<MgRepoStore> {
 			@Override
 			public boolean consumeResource(MgRepoStore store) throws JOOS_CompilingException, IOException {
 
-				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress, false);
+				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress);
 
 				if(repoHandler != null) {
-					repoHandler.commit(timeStamp, branchId, objects, onSucceed, options);
+					repoHandler.commitBranch(timeStamp, initiator, branchId, objects, comment, onSucceed, options);
 					return true;
 				}
 				else {

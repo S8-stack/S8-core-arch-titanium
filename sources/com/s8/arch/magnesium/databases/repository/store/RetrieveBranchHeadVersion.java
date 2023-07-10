@@ -77,7 +77,7 @@ class RetrieveBranchHeadVersion extends RequestH3MgOperation<MgRepoStore> {
 
 			@Override
 			public boolean consumeResource(MgRepoStore store) throws JOOS_CompilingException, IOException {
-				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress, false);
+				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress);
 				if(repoHandler != null) {
 					repoHandler.retrieveHeadVersion(timeStamp, branchName, onDone, options);
 				}

@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
@@ -76,35 +77,45 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 		return path;
 	}
 
-	
 
 	/**
 	 * 
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void createBranch(long t, String branchId, MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CreateBranchOp(t, this, branchId, onSucceed, options));
+	public void forkRepo(long t, S8User initiator,
+			String originBranchId, long originBranchVersion, 
+			MgRepositoryHandler targetRepositoryHandler,
+			MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new ForkRepoOp(t, initiator, this, 
+				originBranchId, originBranchVersion, 
+				targetRepositoryHandler, 
+				onSucceed, options));
 	}
 	
-	/**
-	 * 
-	 * @param onSucceed
-	 * @param onFailed
-	 */
-	public void commit(long t, String branchId, NdObject[] objects, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CommitOp(t, this, branchId, objects, onSucceed, options));
-	}
-
 
 	/**
 	 * 
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void cloneHead(long t, String branchId, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CloneHeadOp(t, this, branchId, onSucceed, options));
+	public void forkBranch(long t, S8User initiator,
+			String originBranchId, long originBranchVersion, String targetBranchId,
+			MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new ForkBranchOp(t, initiator, this, originBranchId, originBranchVersion, targetBranchId, onSucceed, options));
 	}
+	
+	/**
+	 * 
+	 * @param onSucceed
+	 * @param onFailed
+	 */
+	public void commitBranch(long t, S8User initiator, 
+			String branchId, NdObject[] objects, String comment,
+			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new CommitBranchOp(t, initiator, this, branchId, objects, comment, onSucceed, options));
+	}
+
 
 
 
@@ -114,14 +125,16 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void cloneVersion(long t, String branchId, long version, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CloneVersionOp(t, this, branchId, version, onSucceed, options));
+	public void cloneBranch(long t, S8User initiator, 
+			String branchId, long version, 
+			MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new CloneBranchOp(t, initiator, this, branchId, version, onSucceed, options));
 	}
 
 
 	/**
 	 * 
-	 * @param version
+	 * @param headVersion
 	 * @param onSucceed
 	 * @param onFailed
 	 */

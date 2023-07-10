@@ -2,6 +2,7 @@ package com.s8.arch.magnesium.databases.repository.store;
 
 import java.io.IOException;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
@@ -16,14 +17,18 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-class CreateBranchOp extends RequestH3MgOperation<MgRepoStore> {
+class ForkBranchOp extends RequestH3MgOperation<MgRepoStore> {
 
 
 	public final RepoMgDatabase storeHandler;
 
 	public final String repositoryAddress;
 
-	public final String branchId;
+	public final String originBranchId;
+
+	public final long originBranchVersion;
+
+	public final String targetBranchId;
 
 	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
 
@@ -38,18 +43,24 @@ class CreateBranchOp extends RequestH3MgOperation<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CreateBranchOp(long timestamp, 
+	public ForkBranchOp(long timestamp, S8User initiator,
 			RepoMgDatabase handler, 
 			String repositoryAddress,
-			String branchId,
+			String originBranchId,
+			long originBranchVersion,
+			String targetBranchId,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initiator);
 
 		/* fields */
 		this.storeHandler = handler;
 		this.repositoryAddress = repositoryAddress;
-		this.branchId = branchId;
+		
+		this.originBranchId = originBranchId;
+		this.originBranchVersion = originBranchVersion;
+		this.targetBranchId = targetBranchId;
+		
 		this.onSucceed = onSucceed;
 		this.options = options;
 	}
@@ -79,9 +90,9 @@ class CreateBranchOp extends RequestH3MgOperation<MgRepoStore> {
 			@Override
 			public boolean consumeResource(MgRepoStore store) throws JOOS_CompilingException, IOException {
 
-				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress, false);
+				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress);
 				if(repoHandler != null) {
-					repoHandler.createBranch(timeStamp, branchId, onSucceed, options);
+					repoHandler.forkBranch(timeStamp, initiator, originBranchId, originBranchVersion, targetBranchId, onSucceed, options);
 				}
 				else {
 					BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();

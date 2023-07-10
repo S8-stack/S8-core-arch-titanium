@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.s8.arch.magnesium.databases.repository.entry.MgRepository;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
@@ -59,7 +58,7 @@ public class MgRepoStore {
 	 * @throws IOException 
 	 */
 	
-	MgRepositoryHandler getRepositoryHandler(String repositoryAddress, boolean isCreateEnabled) 
+	MgRepositoryHandler getRepositoryHandler(String repositoryAddress) 
 			throws JOOS_CompilingException, IOException {
 		MgRepositoryHandler repoHandler = repositoryHandlers.get(repositoryAddress);
 		if(repoHandler != null) {
@@ -67,19 +66,37 @@ public class MgRepoStore {
 		}
 		else {
 			Path dataPath = repoPathComposer.composePath(repositoryAddress);
-			boolean hasBeenCreated = dataPath.toFile().exists();
-			if(hasBeenCreated) {
+			boolean isExisting = dataPath.toFile().exists();
+			if(isExisting) {
 				repoHandler = new MgRepositoryHandler(handler.ng, this, repositoryAddress);
 				repositoryHandlers.put(repositoryAddress, repoHandler);
 				return repoHandler;
 			}
-			else if(isCreateEnabled){
-				
+			else {
+				return null;
+			}
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param repositoryAddress
+	 * @return
+	 * @throws JOOS_CompilingException
+	 * @throws IOException
+	 */
+	MgRepositoryHandler createRepositoryHandler(String repositoryAddress) 
+			throws JOOS_CompilingException, IOException {
+		MgRepositoryHandler repoHandler = repositoryHandlers.get(repositoryAddress);
+		if(repoHandler != null) {
+			return null;
+		}
+		else {
+			Path dataPath = repoPathComposer.composePath(repositoryAddress);
+			boolean hasAlreadyBeenCreated = dataPath.toFile().exists();
+			if(!hasAlreadyBeenCreated) {
 				repoHandler = new MgRepositoryHandler(handler.ng, this, repositoryAddress);
-				
-				MgRepository repository = new MgRepository(repositoryAddress, dataPath);
-				repoHandler.initializeResource(repository);
-				
 				repositoryHandlers.put(repositoryAddress, repoHandler);
 				return repoHandler;
 			}

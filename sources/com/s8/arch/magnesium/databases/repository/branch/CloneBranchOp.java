@@ -1,13 +1,17 @@
 package com.s8.arch.magnesium.databases.repository.branch;
 
+import java.io.IOException;
+
+import com.s8.arch.fluor.S8AsyncFlow;
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 import com.s8.arch.silicon.async.MthProfile;
+import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.NdObject;
 
 /**
@@ -15,7 +19,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CloneVersionOp extends RequestH3MgOperation<NdBranch> {
+class CloneBranchOp extends RequestH3MgOperation<NdBranch> {
 
 
 	public final MgBranchHandler branchHandler;
@@ -34,9 +38,9 @@ class CloneVersionOp extends RequestH3MgOperation<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneVersionOp(long timestamp, 
+	public CloneBranchOp(long timestamp, S8User initiator,
 			MgBranchHandler handler, long version, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		super(timestamp);
+		super(timestamp, initiator);
 		this.branchHandler = handler;
 		this.version = version;
 		this.onSucceed = onSucceed;
@@ -65,11 +69,24 @@ class CloneVersionOp extends RequestH3MgOperation<NdBranch> {
 			}
 
 			@Override
-			public boolean consumeResource(NdBranch branch) throws NdIOException {
+			public boolean consumeResource(NdBranch branch) throws IOException, S8ShellStructureException {
 				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
 
-				NdObject[] objects = branch.cloneVersion(version).exposure;
-				output.objects = objects;
+				/* standard cases */
+				if(version >= 0L) {
+					NdObject[] objects = branch.cloneVersion(version).exposure;
+					output.objects = objects;
+					output.isSuccessful = true;
+				}
+				/* special cases */
+				else if(version == S8AsyncFlow.HEAD_VERSION){
+					NdObject[] objects = branch.cloneHead().exposure;
+					output.objects = objects;
+					output.isSuccessful = true;
+				}
+				else {
+					output.isSuccessful = false;
+				}
 
 				onSucceed.call(output);
 				return false;

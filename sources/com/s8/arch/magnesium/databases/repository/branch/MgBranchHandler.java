@@ -4,19 +4,19 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.arch.fluor.S8User;
+import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
+import com.s8.arch.magnesium.databases.repository.entry.MgBranchMetadata;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepository;
 import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.object.NdObject;
-import com.s8.io.joos.JOOS_Field;
-import com.s8.io.joos.JOOS_Type;
 
 /**
  * 
@@ -27,51 +27,34 @@ import com.s8.io.joos.JOOS_Type;
 public class MgBranchHandler extends H3MgHandler<NdBranch> {
 
 
-	private String id;
-
-	private String name;
-
-	private long version;
+	public MgBranchMetadata metadata;
 	
 	
-	@JOOS_Type(name = "branch")
-	public static class Serialized {
-		
-		@JOOS_Field(name = "id")
-		public String id;
-
-
-		@JOOS_Field(name = "name")
-		public String name;
-
-		@JOOS_Field(name = "version")
-		public long version;
-		
-		
-		public MgBranchHandler deserialize(SiliconEngine ng, MgRepoStore store, MgRepository repository) {
-			MgBranchHandler handler = new MgBranchHandler(ng, store, repository);
-			handler.id = id;
-			handler.name = name;
-			handler.version = version;
-			return handler;
-		}
-		
-	}
+	
 
 	
 	
 	public String getIdentifier() {
-		return id;
+		return metadata.name;
 	}
 	
+	
 	public long getVersion() {
-		return version;
+		return metadata.headVersion;
 	}
+	
+
+	@Override
+	public String getName() {
+		return metadata.name;
+	}
+
 
 	
 	public final static String DEFAULT_BRANCH_NAME = "prime";
 
 	
+	/*
 	public static MgBranchHandler create(SiliconEngine ng, MgRepoStore store, MgRepository repository, String name) {
 
 		String id = DEFAULT_BRANCH_NAME;
@@ -88,6 +71,7 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 
 		return branchHandler;
 	}
+	*/
 	
 
 
@@ -98,10 +82,11 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 
 	private final H3MgIOModule<NdBranch> ioModule = new IOModule(this);
 
-	public MgBranchHandler(SiliconEngine ng, MgRepoStore store, MgRepository repository) {
+	public MgBranchHandler(SiliconEngine ng, MgRepoStore store, MgRepository repository, MgBranchMetadata metadata) {
 		super(ng);
 		this.store = store;
 		this.repository = repository;
+		this.metadata = metadata;
 	}
 
 
@@ -122,18 +107,9 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void commit(long t, NdObject[] objects, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CommitOp(t, this, objects, onSucceed, options));
-	}
-
-
-	/**
-	 * 
-	 * @param onSucceed
-	 * @param onFailed
-	 */
-	public void cloneHead(long t, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CloneHeadOp(t, this, onSucceed, options));
+	public void commitBranch(long t, S8User initiator, NdObject[] objects, String comment, 
+			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new CommitOp(t, initiator, this, objects, comment, onSucceed, options));
 	}
 
 
@@ -144,14 +120,27 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void cloneVersion(long t, long version, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CloneVersionOp(t, this, version, onSucceed, options));
+	public void cloneBranch(long t, S8User initiator, long version, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new CloneBranchOp(t, initiator, this, version, onSucceed, options));
+	}
+	
+	
+	/**
+	 * 
+	 * @param version
+	 * @param onSucceed
+	 * @param onFailed
+	 */
+	public void forkBranch(long t, S8User initiator, 
+			long version, MgBranchHandler targetBranchHandler, 
+			MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new ForkBranchOp(t, initiator, this, version, targetBranchHandler, onSucceed, options));
 	}
 
 
 	/**
 	 * 
-	 * @param version
+	 * @param headVersion
 	 * @param onSucceed
 	 * @param onFailed
 	 */
@@ -165,14 +154,9 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @return path to repository branch sequence
 	 */
 	Path getPath() {
-		return repository.getPath().resolve(id);
+		return repository.getPath().resolve(metadata.name);
 	}
 
-
-	@Override
-	public String getName() {
-		return name;
-	}
 
 
 	@Override
@@ -186,12 +170,4 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 		return new ArrayList<>();
 	}
 
-	
-	public Serialized serialize() {
-		Serialized serializable = new Serialized();
-		serializable.id = id;
-		serializable.name = name;
-		serializable.version = version;
-		return serializable;
-	}
 }

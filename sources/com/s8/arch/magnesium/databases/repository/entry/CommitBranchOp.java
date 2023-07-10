@@ -1,5 +1,6 @@
 package com.s8.arch.magnesium.databases.repository.entry;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
@@ -15,7 +16,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * @author pierreconvert
  *
  */
-class CommitOp extends RequestH3MgOperation<MgRepository> {
+class CommitBranchOp extends RequestH3MgOperation<MgRepository> {
 
 
 	public final MgRepositoryHandler reporHandler;
@@ -23,7 +24,8 @@ class CommitOp extends RequestH3MgOperation<MgRepository> {
 	public final String branchId;
 
 	public final NdObject[] objects;
-
+	
+	public final String comment;
 
 	public final MgCallback<BranchVersionS8AsyncOutput> onSucceed;
 
@@ -36,14 +38,16 @@ class CommitOp extends RequestH3MgOperation<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CommitOp(long timestamp,
-			MgRepositoryHandler reporHandler, String branchId, NdObject[] objects, 
+	public CommitBranchOp(long timestamp, S8User initiator,
+			MgRepositoryHandler reporHandler, String branchId, 
+			NdObject[] objects, String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initiator);
 		this.reporHandler = reporHandler;
 		this.branchId = branchId;
 		this.objects = objects;
+		this.comment = comment;
 		this.onSucceed = onSucceed;
 		this.options = options;
 	}
@@ -75,7 +79,7 @@ class CommitOp extends RequestH3MgOperation<MgRepository> {
 				MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
 				if(branchHandler != null) {
 					// commit on branch
-					branchHandler.commit(timeStamp, objects, onSucceed, options);
+					branchHandler.commitBranch(timeStamp, initiator, objects, comment, onSucceed, options);
 					return true;
 				}
 				else {

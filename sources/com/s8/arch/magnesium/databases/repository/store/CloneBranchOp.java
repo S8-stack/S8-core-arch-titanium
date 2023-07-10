@@ -2,6 +2,7 @@ package com.s8.arch.magnesium.databases.repository.store;
 
 import java.io.IOException;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
@@ -16,7 +17,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-class CloneBranchVersionOp extends RequestH3MgOperation<MgRepoStore> {
+class CloneBranchOp extends RequestH3MgOperation<MgRepoStore> {
 
 
 	public final RepoMgDatabase storeHandler;
@@ -39,14 +40,14 @@ class CloneBranchVersionOp extends RequestH3MgOperation<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneBranchVersionOp(long timestamp, 
+	public CloneBranchOp(long timestamp, S8User initiator,
 			RepoMgDatabase storeHandler, 
 			String repositoryAddress,
 			String branchName, 
 			long version, 
 			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initiator);
 		this.storeHandler = storeHandler;
 		this.repositoryAddress = repositoryAddress;
 		this.branchId = branchName;
@@ -77,10 +78,10 @@ class CloneBranchVersionOp extends RequestH3MgOperation<MgRepoStore> {
 
 			@Override
 			public boolean consumeResource(MgRepoStore store) throws JOOS_CompilingException, IOException {
-				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress, false);
+				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress);
 
 				if(repoHandler != null) {
-					repoHandler.cloneVersion(timeStamp, branchId, version, onSucceed, options);
+					repoHandler.cloneBranch(timeStamp, initiator, branchId, version, onSucceed, options);
 				}
 				else {
 					BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();

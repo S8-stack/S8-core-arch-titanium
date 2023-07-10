@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 
-import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.joos.JOOS_Lexicon;
 import com.s8.io.joos.parsing.JOOS_ParsingException;
@@ -33,7 +32,7 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 		this.handler = handler;
 		
 		if(lexicon == null) { 
-			lexicon = JOOS_Lexicon.from(SpaceMgStore.Serialized.class, MgBranchHandler.Serialized.class); 
+			lexicon = JOOS_Lexicon.from(SpaceMgStore.Serialized.class); 
 		}
 	}
 

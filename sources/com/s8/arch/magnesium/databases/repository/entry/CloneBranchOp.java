@@ -1,5 +1,8 @@
 package com.s8.arch.magnesium.databases.repository.entry;
 
+import java.io.IOException;
+
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
@@ -13,32 +16,36 @@ import com.s8.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class CloneHeadOp extends RequestH3MgOperation<MgRepository> {
-
-
+class CloneBranchOp extends RequestH3MgOperation<MgRepository> {
 
 
 	public final MgRepositoryHandler repoHandler;
 
 	public final String branchId;
 
+	public final long version;
+
 	public final MgCallback<BranchExposureS8AsyncOutput> onSucceed;
 
 	public final long options;
 
 
+
 	/**
 	 * 
 	 * @param storeHandler
+	 * @param version
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneHeadOp(long timestamp, MgRepositoryHandler repoHandler, String branchId, 
+	public CloneBranchOp(long timestamp, S8User initator,
+			MgRepositoryHandler repoHandler, String branchId, long version, 
 			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
 			long options) {
-		super(timestamp);
+		super(timestamp, initator);
 		this.repoHandler = repoHandler;
 		this.branchId = branchId;
+		this.version = version;
 		this.onSucceed = onSucceed;
 		this.options = options;
 	}
@@ -53,31 +60,30 @@ class CloneHeadOp extends RequestH3MgOperation<MgRepository> {
 	public ConsumeResourceMgAsyncTask<MgRepository> createAsyncTask() {
 		return new ConsumeResourceMgAsyncTask<MgRepository>(repoHandler) {
 
+			
 			@Override
 			public MthProfile profile() { 
 				return MthProfile.FX0; 
 			}
 
+			
 			@Override
 			public String describe() {
 				return "CLONE-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
 			}
 
+			
 			@Override
-			public boolean consumeResource(MgRepository repository) {
+			public boolean consumeResource(MgRepository repository) throws IOException {
 
 				MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
-				if(branchHandler != null) {
-					branchHandler.cloneHead(timeStamp, onSucceed, options);
-					return false;
+
+				if(branchHandler == null) { 
+					throw new IOException("No branch "+branchId+" on repo "+repository.getAddress()); 
 				}
-				else {
-					BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
-					output.isSuccessful = false;
-					output.isBranchDoesNotExist = true;
-					onSucceed.call(output);
-					return false;
-				}
+				branchHandler.cloneBranch(timeStamp, initiator, version, onSucceed, options);
+
+				return false;
 			}
 
 			@Override
@@ -85,10 +91,8 @@ class CloneHeadOp extends RequestH3MgOperation<MgRepository> {
 				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
 				output.reportException(exception);
 				onSucceed.call(output);
-			}
-
+			}			
 		};
-
 	}
 
 }

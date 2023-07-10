@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
@@ -75,11 +76,21 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void createRepository(long t, String repoAddress, 
+	public void createRepository(long t, S8User initiator,
+			String repositoryAddress,
+			String repositoryInfo, 
+			String mainBranchName,
+			NdObject[] objects,
+			String initialCommitAuthor,
 			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new CreateRepoOp(t, this, repoAddress, onSucceed, options));
+		pushOperation(new CreateRepoOp(t, initiator, this, 
+				repositoryAddress, repositoryInfo, 
+				mainBranchName, 
+				objects, initialCommitAuthor, 
+				onSucceed, options));
 	}
+	
 	
 	
 	/**
@@ -87,10 +98,30 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void createBranch(long t, String repoAddress, String branchId,
+	public void forkRepository(long t, S8User initiator,
+			String originRepositoryAddress,
+			String originBranchId, long originBranchVersion,
+			String targetRepositoryAddress,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new CreateBranchOp(t, this, repoAddress, branchId, onSucceed, options));
+		pushOperation(new ForkRepoOp(t, initiator, this, originRepositoryAddress, originBranchId, originBranchVersion, targetRepositoryAddress, onSucceed, options));
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param onSucceed
+	 * @param onFailed
+	 */
+	public void forkBranch(long t, S8User initiator, 
+			String repositoryAddress, 
+			String originBranchId, long originBranchVersion, String targetBranchId,
+			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
+			long options) {
+		pushOperation(new ForkBranchOp(t, initiator, this, 
+				repositoryAddress, originBranchId, originBranchVersion, targetBranchId, 
+				onSucceed, options));
 	}
 	
 	
@@ -99,23 +130,13 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void commitBranch(long t, String repoAddress, String branchName, Object[] objects, 
-			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
-			long options) {
-		pushOperation(new CommitBranchOp(t, this, repoAddress, branchName, (NdObject[]) objects, onSucceed, options));
+	public void commitBranch(long t, S8User initiator, String repoAddress, String branchName, 
+			Object[] objects, String comment,
+			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
+		pushOperation(new CommitBranchOp(t, initiator, this, repoAddress, branchName, (NdObject[]) objects,
+				comment, onSucceed, options));
 	}
 
-
-	/**
-	 * 
-	 * @param onSucceed
-	 * @param onFailed
-	 */
-	public void cloneBranchHead(long t, String repoAddress, String branchName, 
-			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
-			long options) {
-		pushOperation(new CloneBranchHeadOp(t, this, repoAddress, branchName, onSucceed, options));
-	}
 
 
 
@@ -125,16 +146,16 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void cloneBranchVersion(long t, String repoAddress, String branchName, long version, 
+	public void cloneBranch(long t, S8User initiator,  String repoAddress, String branchName, long version, 
 			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new CloneBranchVersionOp(t, this, repoAddress, branchName, version, onSucceed, options));
+		pushOperation(new CloneBranchOp(t, initiator, this, repoAddress, branchName, version, onSucceed, options));
 	}
 
 
 	/**
 	 * 
-	 * @param version
+	 * @param headVersion
 	 * @param onSucceed
 	 * @param onFailed
 	 */
