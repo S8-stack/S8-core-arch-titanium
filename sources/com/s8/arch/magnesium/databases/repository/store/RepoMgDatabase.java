@@ -31,7 +31,7 @@ import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
  * @author pc
  *
  */
-public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
+public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 
 	
 	public final NdCodebase codebase;
@@ -55,14 +55,14 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	}
 
 	@Override
-	public H3MgIOModule<MgRepoStore> getIOModule() {
+	public H3MgIOModule<RepoMgStore> getIOModule() {
 		return ioModule;
 	}
 	
 
 	@Override
 	public List<H3MgHandler<?>> getSubHandlers() {
-		MgRepoStore store = getResource();
+		RepoMgStore store = getResource();
 		if(store != null) { 
 			return store.crawl(); 
 		}
@@ -78,7 +78,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	
 	
 	public Path getMetadataPath() {
-		return rootFolderPath.resolve(MgRepoStore.METADATA_FILENAME);
+		return rootFolderPath.resolve(RepoMgStore.METADATA_FILENAME);
 	}
 
 
@@ -99,7 +99,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 			String initialCommitComment,
 			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new CreateRepoOp(t, initiator, this, 
+		pushOpLast(new CreateRepoOp(t, initiator, this, 
 				repositoryName, repositoryAddress, repositoryInfo, 
 				mainBranchName, 
 				objects, initialCommitComment, 
@@ -119,7 +119,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 			String targetRepositoryName, String targetRepositoryAddress,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new ForkRepoOp(t, initiator, this, 
+		pushOpLast(new ForkRepoOp(t, initiator, this, 
 				originRepositoryAddress, originBranchId, originBranchVersion, 
 				targetRepositoryName, targetRepositoryAddress, 
 				onSucceed, options));
@@ -137,7 +137,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 			String originBranchId, long originBranchVersion, String targetBranchId,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new ForkBranchOp(t, initiator, this, 
+		pushOpLast(new ForkBranchOp(t, initiator, this, 
 				repositoryAddress, originBranchId, originBranchVersion, targetBranchId, 
 				onSucceed, options));
 	}
@@ -151,7 +151,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	public void commitBranch(long t, S8User initiator, String repoAddress, String branchName, 
 			Object[] objects, String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CommitBranchOp(t, initiator, this, repoAddress, branchName, (NdObject[]) objects,
+		pushOpLast(new CommitBranchOp(t, initiator, this, repoAddress, branchName, (NdObject[]) objects,
 				comment, onSucceed, options));
 	}
 
@@ -167,7 +167,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	public void cloneBranch(long t, S8User initiator,  String repoAddress, String branchName, long version, 
 			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new CloneBranchOp(t, initiator, this, repoAddress, branchName, version, onSucceed, options));
+		pushOpLast(new CloneBranchOp(t, initiator, this, repoAddress, branchName, version, onSucceed, options));
 	}
 
 
@@ -180,7 +180,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	public void retrieveBranchHeadVersion(long t, S8User initiator, String repoAddress, String branchName, 
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {
-		pushOperation(new RetrieveBranchHeadVersion(t, initiator, this, repoAddress, branchName, onSucceed, options));
+		pushOpLast(new RetrieveBranchHeadVersion(t, initiator, this, repoAddress, branchName, onSucceed, options));
 	}
 	
 	
@@ -192,7 +192,7 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	 */
 	public void getRepositoryMetadata(long t,  S8User initiator, String repoAddress, 
 			MgCallback<RepositoryMetadataS8AsyncOutput> onRead, long options) {
-		pushOperation(new GetRepositoryMetadataOp(t, initiator, this, repoAddress, onRead, options));
+		pushOpLast(new GetRepositoryMetadataOp(t, initiator, this, repoAddress, onRead, options));
 	}
 	
 	
@@ -201,11 +201,11 @@ public class RepoMgDatabase extends H3MgHandler<MgRepoStore> {
 	/* <utilities> */
 	
 	public static void init(String rootFolderPathname) throws IOException, JOOS_CompilingException {
-		MgRepoStoreMetadata metadata = new MgRepoStoreMetadata();
+		RepoMgStoreMetadata metadata = new RepoMgStoreMetadata();
 		metadata.rootPathname = rootFolderPathname;
 		
-		JOOS_Lexicon lexicon = JOOS_Lexicon.from(MgRepoStoreMetadata.class);
-		FileChannel channel = FileChannel.open(Path.of(rootFolderPathname).resolve(MgRepoStore.METADATA_FILENAME), 
+		JOOS_Lexicon lexicon = JOOS_Lexicon.from(RepoMgStoreMetadata.class);
+		FileChannel channel = FileChannel.open(Path.of(rootFolderPathname).resolve(RepoMgStore.METADATA_FILENAME), 
 				new OpenOption[]{ StandardOpenOption.WRITE, StandardOpenOption.CREATE });
 		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);
 

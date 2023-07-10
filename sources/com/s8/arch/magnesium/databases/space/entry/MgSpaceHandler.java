@@ -14,25 +14,57 @@ import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 
+
+/**
+ * 
+ * @author pierreconvert
+ *
+ */
 public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 
 	
+	/**
+	 * 
+	 */
+	public final static String DATA_FILENAME = "branch-data.li";
+	
+	
+	/**
+	 * 
+	 */
 	private final SpaceMgStore store;
 	
+	
+	/**
+	 * 
+	 */
 	private final IOModule ioModule = new IOModule(this);
 	
 	
+	/**
+	 * 
+	 */
 	private final String id;
 	
-	private final Path dataPath;
+	/**
+	 * 
+	 */
+	private final Path folderPath;
 	
-	public boolean isNewlyCreated = false;
 	
-	public MgSpaceHandler(SiliconEngine ng, SpaceMgStore store, String id, Path dataPath) {
+	
+	/**
+	 * 
+	 * @param ng
+	 * @param store
+	 * @param id
+	 * @param folderPath
+	 */
+	public MgSpaceHandler(SiliconEngine ng, SpaceMgStore store, String id, Path folderPath) {
 		super(ng);
 		this.store = store;
 		this.id = id;
-		this.dataPath = dataPath;
+		this.folderPath = folderPath;
 	}
 
 	@Override
@@ -50,9 +82,19 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 		return new ArrayList<>(); // no subhandler
 	}
 
-	public Path getPath() {
-		return dataPath;
+	public Path getFolderPath() {
+		return folderPath;
 	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Path getDataFilePath() {
+		return folderPath.resolve(DATA_FILENAME);
+	}
+	
 
 	public SpaceMgStore getStore() {
 		return store;
@@ -75,8 +117,8 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void accessExposure(long t, S8User initiator, MgCallback<SpaceExposureS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new AccessExposureOp(t, initiator, this, onSucceed, options));
+	public void accessSpace(long t, S8User initiator, MgCallback<SpaceExposureS8AsyncOutput> onSucceed, long options) {
+		pushOpLast(new AccessSpaceOp(t, initiator, this, onSucceed, options));
 	}
 	
 	
@@ -87,7 +129,7 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	 * @param onFailed
 	 */
 	public void exposeObjects(long t, S8User initiator, Object[] objects, MgCallback<SpaceVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new ExposeObjectsOp(t, initiator, this, objects, onSucceed, options));
+		pushOpLast(new ExposeObjectsOp(t, initiator, this, objects, onSucceed, options));
 	}
 
 

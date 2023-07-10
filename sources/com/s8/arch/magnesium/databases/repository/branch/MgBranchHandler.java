@@ -11,7 +11,7 @@ import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.entry.MgBranchMetadata;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepository;
-import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
+import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
@@ -76,14 +76,14 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	
 
 
-	public final MgRepoStore store;
+	public final RepoMgStore store;
 
 	public final MgRepository repository;
 
 
 	private final H3MgIOModule<NdBranch> ioModule = new IOModule(this);
 
-	public MgBranchHandler(SiliconEngine ng, MgRepoStore store, MgRepository repository, MgBranchMetadata metadata) {
+	public MgBranchHandler(SiliconEngine ng, RepoMgStore store, MgRepository repository, MgBranchMetadata metadata) {
 		super(ng);
 		this.store = store;
 		this.repository = repository;
@@ -96,7 +96,7 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * 
 	 * @return
 	 */
-	public MgRepoStore getStore() {
+	public RepoMgStore getStore() {
 		return store;
 	}
 
@@ -110,7 +110,7 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 */
 	public void commitBranch(long t, S8User initiator, NdObject[] objects, String comment, 
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CommitBranchOp(t, initiator, this, objects, comment, onSucceed, options));
+		pushOpLast(new CommitBranchOp(t, initiator, this, objects, comment, onSucceed, options));
 	}
 
 
@@ -122,7 +122,7 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onFailed
 	 */
 	public void cloneBranch(long t, S8User initiator, long version, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CloneBranchOp(t, initiator, this, version, onSucceed, options));
+		pushOpLast(new CloneBranchOp(t, initiator, this, version, onSucceed, options));
 	}
 	
 	
@@ -135,7 +135,7 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	public void forkBranch(long t, S8User initiator, 
 			long version, MgBranchHandler targetBranchHandler, 
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new ForkBranchOp(t, initiator, this, version, targetBranchHandler, onSucceed, options));
+		pushOpLast(new ForkBranchOp(t, initiator, this, version, targetBranchHandler, onSucceed, options));
 	}
 
 
@@ -146,7 +146,7 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onFailed
 	 */
 	public void retrieveHeadVersion(long t, S8User initiator, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new RetrieveHeadVersion(t, initiator, this, onSucceed, options));
+		pushOpLast(new RetrieveHeadVersion(t, initiator, this, onSucceed, options));
 	}
 
 

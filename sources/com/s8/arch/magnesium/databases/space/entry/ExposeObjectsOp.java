@@ -89,7 +89,6 @@ class ExposeObjectsOp extends RequestDbMgOperation<LiBranch> {
 
 				onExposed.call(output);
 
-
 				if(Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {
 					handler.save();
 				}

@@ -17,7 +17,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-class ForkRepoOp extends RequestDbMgOperation<MgRepoStore> {
+class ForkRepoOp extends RequestDbMgOperation<RepoMgStore> {
 
 
 	/**
@@ -90,14 +90,14 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepoStore> {
 
 
 	@Override
-	public H3MgHandler<MgRepoStore> getHandler() {
+	public H3MgHandler<RepoMgStore> getHandler() {
 		return storeHandler;
 	}
 
 
 	@Override
-	public ConsumeResourceMgAsyncTask<MgRepoStore> createAsyncTask() {
-		return new ConsumeResourceMgAsyncTask<MgRepoStore>(storeHandler) {
+	public ConsumeResourceMgAsyncTask<RepoMgStore> createAsyncTask() {
+		return new ConsumeResourceMgAsyncTask<RepoMgStore>(storeHandler) {
 
 
 			@Override
@@ -111,7 +111,7 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepoStore> {
 			}
 
 			@Override
-			public boolean consumeResource(MgRepoStore store) throws JOOS_CompilingException, IOException {
+			public boolean consumeResource(RepoMgStore store) throws JOOS_CompilingException, IOException {
 
 				MgRepositoryHandler originRepoHandler = store.getRepositoryHandler(originRepositoryAddress);
 				if(originRepoHandler != null) {

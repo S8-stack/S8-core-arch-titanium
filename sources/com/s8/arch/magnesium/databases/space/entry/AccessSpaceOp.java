@@ -17,7 +17,7 @@ import com.s8.io.bytes.alpha.Bool64;
  * @author pierreconvert
  *
  */
-class AccessExposureOp extends RequestDbMgOperation<LiBranch> {
+class AccessSpaceOp extends RequestDbMgOperation<LiBranch> {
 
 
 
@@ -40,7 +40,7 @@ class AccessExposureOp extends RequestDbMgOperation<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public AccessExposureOp(long timestamp, S8User initiator, MgSpaceHandler spaceHandler, 
+	public AccessSpaceOp(long timestamp, S8User initiator, MgSpaceHandler spaceHandler, 
 			MgCallback<SpaceExposureS8AsyncOutput> onSucceed, 
 			long options) {
 		super(timestamp, initiator, options);

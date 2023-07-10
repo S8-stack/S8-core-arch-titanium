@@ -32,7 +32,7 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 		this.handler = handler;
 		
 		if(lexicon == null) { 
-			lexicon = JOOS_Lexicon.from(SpaceMgStore.Serialized.class); 
+			lexicon = JOOS_Lexicon.from(SpaceMgStoreMetadata.class); 
 		}
 	}
 
@@ -40,7 +40,7 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 	@Override
 	public SpaceMgStore load() throws IOException, JOOS_ParsingException {
 
-		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
+		FileChannel channel = FileChannel.open(handler.getMetadataFilePath(), new OpenOption[]{ 
 				StandardOpenOption.READ
 		});
 
@@ -50,11 +50,11 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 		
 		JOOS_BufferedFileReader reader = new JOOS_BufferedFileReader(channel, StandardCharsets.UTF_8, 64);
 		
-		SpaceMgStore.Serialized repo = (SpaceMgStore.Serialized) lexicon.parse(reader, true);
+		SpaceMgStoreMetadata metadata = (SpaceMgStoreMetadata) lexicon.parse(reader, true);
 
 		reader.close();
 
-		return repo.deserialize(handler, handler.codebase);
+		return new SpaceMgStore(handler, handler.codebase, metadata);
 	}
 	
 	
@@ -62,13 +62,13 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 	@Override
 	public void save(SpaceMgStore repo) throws IOException {
 
-		FileChannel channel = FileChannel.open(handler.getInfoPath(), new OpenOption[]{ 
+		FileChannel channel = FileChannel.open(handler.getMetadataFilePath(), new OpenOption[]{ 
 				StandardOpenOption.WRITE
 		});
 		
 		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);
 
-		lexicon.compose(writer, repo.serialize(), "   ", false);
+		lexicon.compose(writer, repo.metadata, "   ", false);
 
 		writer.close();
 	}

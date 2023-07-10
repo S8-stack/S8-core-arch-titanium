@@ -2,7 +2,6 @@ package com.s8.arch.magnesium.databases.space.store;
 
 import java.io.IOException;
 
-import com.s8.arch.fluor.S8AsyncFlow;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
@@ -10,14 +9,13 @@ import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.silicon.async.MthProfile;
-import com.s8.io.bytes.alpha.Bool64;
 
 /**
  * 
  * @author pierreconvert
  *
  */
-class AccessExposureOp extends RequestDbMgOperation<SpaceMgStore> {
+class AccessSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 
 
 
@@ -45,7 +43,7 @@ class AccessExposureOp extends RequestDbMgOperation<SpaceMgStore> {
 	 * @param onProcessed
 	 * @param onFailed
 	 */
-	public AccessExposureOp(long timestamp, S8User initiator, SpaceMgDatabase handler, 
+	public AccessSpaceOp(long timestamp, S8User initiator, SpaceMgDatabase handler, 
 			String repositoryAddress, 
 			MgCallback<SpaceExposureS8AsyncOutput> onProcessed, 
 			long options) {
@@ -79,33 +77,22 @@ class AccessExposureOp extends RequestDbMgOperation<SpaceMgStore> {
 			public boolean consumeResource(SpaceMgStore store) throws IOException {
 
 
-				boolean isCreateOptionEnabled = Bool64.has(options, S8AsyncFlow.CREATE_SPACE_IF_NOT_PRESENT);
-				MgSpaceHandler spaceHandler = store.resolveSpaceHandler(spaceId, isCreateOptionEnabled);
+				MgSpaceHandler spaceHandler = store.getSpaceHandler(spaceId);
 
 				if(spaceHandler != null) {
 					/* exit point 1 -> continue */
-					spaceHandler.accessExposure(timeStamp, initiator, onProcessed, options);
-
-					if(spaceHandler.isNewlyCreated) {
-						if(Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {
-							handler.save();
-						}
-						spaceHandler.isNewlyCreated = false; // clear flag
-						return true;
-					}
-					else {
-						return false;
-					}
+					spaceHandler.accessSpace(timeStamp, initiator, onProcessed, options);
 				}
 				else {
-
 					/* exit point 2 -> soft fail */
 					SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
 					output.isSuccessful = false;
 					output.isSpaceDoesNotExist = true;
 					onProcessed.call(output);
-					return false;
 				}
+				
+				/* no new space created */
+				return false;
 			}
 
 			@Override

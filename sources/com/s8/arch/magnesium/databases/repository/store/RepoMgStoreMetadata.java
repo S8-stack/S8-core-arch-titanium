@@ -6,7 +6,7 @@ import com.s8.io.joos.JOOS_Type;
 
 
 @JOOS_Type(name = "RepositoryStore")
-public class MgRepoStoreMetadata {
+public class RepoMgStoreMetadata {
 
 
 	@JOOS_Field(name = "rootPathname") 

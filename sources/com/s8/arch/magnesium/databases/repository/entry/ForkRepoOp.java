@@ -7,7 +7,7 @@ import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
-import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
+import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.silicon.async.MthProfile;
@@ -41,7 +41,7 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 
 	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
 
-	public final MgRepoStore store;
+	public final RepoMgStore store;
 
 	/**
 	 * 

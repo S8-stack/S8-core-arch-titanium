@@ -2,8 +2,8 @@ package com.s8.arch.magnesium.handlers.h3;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
-import java.util.Queue;
 
 import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
 import com.s8.arch.silicon.SiliconEngine;
@@ -63,7 +63,7 @@ public abstract class H3MgHandler<R> {
 	/**
 	 * 
 	 */
-	private Queue<H3MgOperation<R>> operations = new ArrayDeque<>();
+	private Deque<H3MgOperation<R>> operations = new ArrayDeque<>();
 
 
 
@@ -106,7 +106,11 @@ public abstract class H3MgHandler<R> {
 
 	/* launch rolling */
 	public void save() {
-		pushOperation(new SaveOp<>(this));
+		pushOpLast(new SaveOp<>(this));
+	}
+	
+	public void saveImmediately() {
+		pushOpFirst(new SaveOp<>(this));
 	}
 
 
@@ -115,7 +119,7 @@ public abstract class H3MgHandler<R> {
 	 * 
 	 */
 	public void unmount(long cutOffTimestamp, BooleanMgCallback onUnmounted) {
-		pushOperation(new UnmountOp<>(this, cutOffTimestamp, onUnmounted));
+		pushOpLast(new UnmountOp<>(this, cutOffTimestamp, onUnmounted));
 	}
 	
 	
@@ -133,18 +137,40 @@ public abstract class H3MgHandler<R> {
 
 
 
+
 	/**
 	 * 
 	 * @param engine
 	 * @param operation
 	 */
-	protected void pushOperation(H3MgOperation<R> operation) {
+	protected void pushOpFirst(H3MgOperation<R> operation) {
 
 		/* low contention synchronized section */
 		synchronized (lock) {
 
 			/* enqueue operation */
-			operations.add(operation);
+			operations.addFirst(operation);
+
+		}
+
+		/* launch rolling */
+		roll(false);
+
+	}
+	
+	
+	/**
+	 * 
+	 * @param engine
+	 * @param operation
+	 */
+	protected void pushOpLast(H3MgOperation<R> operation) {
+
+		/* low contention synchronized section */
+		synchronized (lock) {
+
+			/* enqueue operation */
+			operations.addLast(operation);
 
 		}
 

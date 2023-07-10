@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
-import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
+import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.joos.JOOS_Lexicon;
@@ -60,7 +60,7 @@ public class IOModule implements H3MgIOModule<MgRepository> {
 		 * @param store
 		 * @return
 		 */
-		MgRepoStore store = handler.store;
+		RepoMgStore store = handler.store;
 		SiliconEngine ng = handler.ng;
 
 		Path path = store.composeRepositoryPath(repoMetadata.address);

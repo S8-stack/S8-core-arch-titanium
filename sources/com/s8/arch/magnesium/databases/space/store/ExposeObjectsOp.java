@@ -2,7 +2,6 @@ package com.s8.arch.magnesium.databases.space.store;
 
 import java.io.IOException;
 
-import com.s8.arch.fluor.S8AsyncFlow;
 import com.s8.arch.fluor.S8User;
 import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
@@ -10,7 +9,6 @@ import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.silicon.async.MthProfile;
-import com.s8.io.bytes.alpha.Bool64;
 
 /**
  * 
@@ -77,23 +75,13 @@ class ExposeObjectsOp extends RequestDbMgOperation<SpaceMgStore> {
 
 			@Override
 			public boolean consumeResource(SpaceMgStore store) throws IOException {
-				
-				boolean isCreateOptionEnabled = Bool64.has(options, S8AsyncFlow.CREATE_SPACE_IF_NOT_PRESENT);
-				MgSpaceHandler spaceHandler = store.resolveSpaceHandler(spaceId, isCreateOptionEnabled);
+
+				MgSpaceHandler spaceHandler = store.getSpaceHandler(spaceId);
 				if(spaceHandler != null) {
 					spaceHandler.exposeObjects(timeStamp, initiator, objects, onSucceed, options);
 
-					if(spaceHandler.isNewlyCreated) {
-						if(Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {
-							handler.save();
-						}
-						spaceHandler.isNewlyCreated = false; // clear flag
-						return true;
-					}
-					else {
-						/* not change in the db itself, despite space will be modified */
-						return false;
-					}
+					/* not change in the db itself, despite space will be modified */
+					return false;
 				}
 				else {
 					SpaceVersionS8AsyncOutput output = new SpaceVersionS8AsyncOutput();
@@ -103,7 +91,7 @@ class ExposeObjectsOp extends RequestDbMgOperation<SpaceMgStore> {
 					return false;
 				}
 			}
-			
+
 
 			@Override
 			public void catchException(Exception exception) {

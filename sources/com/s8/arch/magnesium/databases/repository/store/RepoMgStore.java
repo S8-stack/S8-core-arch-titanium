@@ -19,7 +19,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-public class MgRepoStore {
+public class RepoMgStore {
 	
 
 	public final static String METADATA_FILENAME = "store-meta.js";
@@ -29,7 +29,7 @@ public class MgRepoStore {
 	
 	public final NdCodebase codebase;
 	
-	public final MgRepoStoreMetadata metadata;
+	public final RepoMgStoreMetadata metadata;
 	
 	
 	
@@ -40,7 +40,7 @@ public class MgRepoStore {
 	private final Map<String, MgRepositoryHandler> repositoryHandlers = new HashMap<>();
 	
 	
-	public MgRepoStore(RepoMgDatabase handler, NdCodebase codebase, MgRepoStoreMetadata metadata) {
+	public RepoMgStore(RepoMgDatabase handler, NdCodebase codebase, RepoMgStoreMetadata metadata) {
 		super();
 		this.handler = handler;
 		this.codebase = codebase;

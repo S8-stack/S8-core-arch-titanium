@@ -65,11 +65,11 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 	
 	
 	public void get(long t, String key, MgCallback<GetUserS8AsyncOutput> onRetrieved, long options) {
-		pushOperation(new GetOp(t, this, key, onRetrieved, options));
+		pushOpLast(new GetOp(t, this, key, onRetrieved, options));
 	}
 	
 	public void put(long t, BeObject object, MgCallback<PutUserS8AsyncOutput> onInserted, long options) {
-		pushOperation(new PutOp(t, this, object, onInserted, options));
+		pushOpLast(new PutOp(t, this, object, onInserted, options));
 	}
 	
 	
@@ -83,7 +83,7 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 	 * @param onFailed
 	 */
 	public <T> void select(long t, S8Filter<T> filter, MgCallback<ObjectsListS8AsyncOutput<T>> onSelected, long options) {
-		pushOperation(new BrowseOp<T>(t, this, filter, onSelected, options));
+		pushOpLast(new BrowseOp<T>(t, this, filter, onSelected, options));
 	}
 	
 }

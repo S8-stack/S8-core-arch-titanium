@@ -3,7 +3,7 @@ package com.s8.arch.magnesium.databases.repository.branch;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
+import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdInbound;
@@ -46,7 +46,7 @@ public class IOModule implements H3MgIOModule<NdBranch> {
 		ByteInflow inflow = new LinkedByteInflow(head);
 
 		/* build inbound session */
-		MgRepoStore store = handler.getStore();
+		RepoMgStore store = handler.getStore();
 		NdInbound inbound = new NdInbound(store.getCodebase());
 
 		/* build branch */
@@ -67,7 +67,7 @@ public class IOModule implements H3MgIOModule<NdBranch> {
 		LinkedByteOutflow outflow = new LinkedByteOutflow();
 
 		/* build outbound session */
-		MgRepoStore store = handler.getStore();
+		RepoMgStore store = handler.getStore();
 		NdOutbound outbound = new NdOutbound(store.getCodebase());
 
 		/* push branch */

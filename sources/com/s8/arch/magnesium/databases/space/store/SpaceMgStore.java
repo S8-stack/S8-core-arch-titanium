@@ -9,12 +9,8 @@ import java.util.Map;
 
 import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.io.bohr.lithium.branches.LiBranch;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.bohr.neodymium.object.NdObject;
-import com.s8.io.joos.JOOS_Field;
-import com.s8.io.joos.JOOS_Type;
 
 
 /**
@@ -29,7 +25,9 @@ public class SpaceMgStore {
 
 	public final LiCodebase codebase;
 
-	private String rootPathname;
+	public final SpaceMgStoreMetadata metadata;
+	
+	
 
 	private Path path;
 
@@ -38,81 +36,94 @@ public class SpaceMgStore {
 	public final Map<String, MgSpaceHandler> spaceHandlers = new HashMap<>();
 
 
-	public SpaceMgStore(SpaceMgDatabase handler, LiCodebase codebase, String rootPathname) {
+	public SpaceMgStore(SpaceMgDatabase handler, LiCodebase codebase, SpaceMgStoreMetadata metadata) {
 		super();
 		this.handler = handler;
 		this.codebase = codebase;
+		this.metadata = metadata;
 
-		this.rootPathname = rootPathname;
+		String rootPathname = metadata.rootFolderPathname;
 		this.path = Path.of(rootPathname);
 		this.pathComposer = new MgPathComposer(path);
 	}
 
 	
-
-
+	
+	
 	/**
 	 * 
 	 * @param spaceId
-	 * @param isCreateIfNotPresentEnabled
 	 * @return
 	 * @throws IOException
 	 */
-	MgSpaceHandler resolveSpaceHandler(String spaceId, boolean isCreateIfNotPresentEnabled) throws IOException {
+	MgSpaceHandler getSpaceHandler(String spaceId) throws IOException {
 		
 		MgSpaceHandler spaceHandler = spaceHandlers.get(spaceId);
+		
 		if(spaceHandler != null) {
 			return spaceHandler;
 		}
 		else {
-			Path dataPath = pathComposer.composePath(spaceId);
-			boolean isPresent = dataPath.toFile().exists();
+			Path dataFolderPathname = pathComposer.composePath(spaceId);
+			boolean isPresent = dataFolderPathname.toFile().exists();
 			if(isPresent) {
 				/* Already created -> just need to create the handler and tha will automatically load it */
 				MgSpaceHandler spaceHandler2 = new MgSpaceHandler(
 						handler.ng, 
 						this, 
 						spaceId, 
-						dataPath);
+						dataFolderPathname);
 
 				spaceHandlers.put(spaceId, spaceHandler2);
 				
-				/* already present, so not newly created */
-				spaceHandler2.isNewlyCreated = false;
-				
 				return spaceHandler2;
 			}
-			else if(!isPresent && isCreateIfNotPresentEnabled) {
+			else { 
+				/* cannot find an existing one and cannot create one */
+				return null;
+			}
+		}
+	}
+	
+	
 
-				/* create branch */
-				LiBranch branch = new LiBranch("m", getCodebase());
-				
-				/* expose default initializer value */
-				branch.expose(0, (LiObject) handler.initializer.createDefault());
-
-				/* create new handler */
+	/**
+	 * 
+	 * @param spaceId
+	 * @return
+	 * @throws IOException
+	 */
+	MgSpaceHandler createSpaceHandler(String spaceId) throws IOException {
+		
+		MgSpaceHandler spaceHandler = spaceHandlers.get(spaceId);
+		
+		if(spaceHandler != null) {
+			return null; /* -> conflict with already existing one */
+		}
+		else {
+			Path dataFolderPathname = pathComposer.composePath(spaceId);
+			boolean isPresent = dataFolderPathname.toFile().exists();
+			if(!isPresent) {
+				/* Already created -> just need to create the handler and tha will automatically load it */
 				MgSpaceHandler spaceHandler2 = new MgSpaceHandler(
 						handler.ng, 
 						this, 
 						spaceId, 
-						dataPath);
-
-				/* NOT already present, so not newly created */
-				spaceHandler2.isNewlyCreated = true;
-				
-				spaceHandler2.initializeResource(branch);
+						dataFolderPathname);
 
 				spaceHandlers.put(spaceId, spaceHandler2);
-
+				
 				return spaceHandler2;
 			}
 			else { 
-				/* cannot find an xisting one and cannot create one */
+				/* Already an existing one -> conflict -> null */
 				return null;
 			}
 		}
 	}
 
+
+	
 
 	/**
 	 * 
@@ -171,31 +182,6 @@ public class SpaceMgStore {
 
 
 
-
-
-	@JOOS_Type(name = "repository")
-	public static class Serialized {
-
-		@JOOS_Field(name = "rootPathname") 
-		public String rootPathname;
-
-
-
-		public SpaceMgStore deserialize(SpaceMgDatabase handler, LiCodebase codebase) {
-			return new SpaceMgStore(handler, codebase, rootPathname);
-		}
-	}
-
-
-
-	public Serialized serialize() {
-		Serialized serialized = new Serialized();
-
-		// address
-		serialized.rootPathname = rootPathname;
-
-		return serialized;
-	}
 
 
 

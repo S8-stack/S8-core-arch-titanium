@@ -10,7 +10,7 @@ import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
 import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.fluor.outputs.RepositoryMetadataS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
-import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
+import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
@@ -24,17 +24,20 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  */
 public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	
+	public final static String METADATA_FILENAME = "repo-meta.js";
+	
+	
 	
 	private final IOModule ioModule;
 	
-	public final MgRepoStore store;
+	public final RepoMgStore store;
 	
 	public final String address;
 	
 	public final Path folderPath;
 
 	
-	public MgRepositoryHandler(SiliconEngine ng, MgRepoStore store, String address) throws JOOS_CompilingException {
+	public MgRepositoryHandler(SiliconEngine ng, RepoMgStore store, String address) throws JOOS_CompilingException {
 		super(ng);
 		this.store = store;
 		this.address = address;
@@ -47,7 +50,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	 * 
 	 * @return
 	 */
-	public MgRepoStore getStore() {
+	public RepoMgStore getStore() {
 		return store;
 	}
 
@@ -78,8 +81,9 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 		return folderPath;
 	}
 	
+	
 	public Path getMetadataFilePath() {
-		return folderPath.resolve(MgRepository.METADATA_FILENAME);
+		return folderPath.resolve(METADATA_FILENAME);
 	}
 
 
@@ -92,7 +96,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 			String originBranchId, long originBranchVersion, 
 			MgRepositoryHandler targetRepositoryHandler, String targetRepositoryName,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new ForkRepoOp(t, initiator, this, 
+		pushOpLast(new ForkRepoOp(t, initiator, this, 
 				originBranchId, originBranchVersion, 
 				targetRepositoryHandler, targetRepositoryName,
 				onSucceed, options));
@@ -107,7 +111,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	public void forkBranch(long t, S8User initiator,
 			String originBranchId, long originBranchVersion, String targetBranchId,
 			MgCallback<BranchCreationS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new ForkBranchOp(t, initiator, this, originBranchId, originBranchVersion, targetBranchId, onSucceed, options));
+		pushOpLast(new ForkBranchOp(t, initiator, this, originBranchId, originBranchVersion, targetBranchId, onSucceed, options));
 	}
 	
 	/**
@@ -118,7 +122,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	public void commitBranch(long t, S8User initiator, 
 			String branchId, NdObject[] objects, String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CommitBranchOp(t, initiator, this, branchId, objects, comment, onSucceed, options));
+		pushOpLast(new CommitBranchOp(t, initiator, this, branchId, objects, comment, onSucceed, options));
 	}
 
 
@@ -133,7 +137,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	public void cloneBranch(long t, S8User initiator, 
 			String branchId, long version, 
 			MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new CloneBranchOp(t, initiator, this, branchId, version, onSucceed, options));
+		pushOpLast(new CloneBranchOp(t, initiator, this, branchId, version, onSucceed, options));
 	}
 
 
@@ -144,7 +148,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	 * @param onFailed
 	 */
 	public void retrieveHeadVersion(long t, S8User initiator, String branchId, MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOperation(new RetrieveHeadVersion(t, initiator, this, branchId, onSucceed, options));
+		pushOpLast(new RetrieveHeadVersion(t, initiator, this, branchId, onSucceed, options));
 	}
 	
 	
@@ -157,7 +161,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	 */
 	public void getRepositoryMetadata(long t,  S8User initiator, 
 			MgCallback<RepositoryMetadataS8AsyncOutput> onRead, long options) {
-		pushOperation(new GetMetadataOp(t, initiator, this, onRead, options));
+		pushOpLast(new GetMetadataOp(t, initiator, this, onRead, options));
 	}
 	
 

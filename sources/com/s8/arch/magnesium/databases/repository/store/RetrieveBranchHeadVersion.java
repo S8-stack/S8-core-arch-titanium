@@ -17,7 +17,7 @@ import com.s8.io.joos.types.JOOS_CompilingException;
  * @author pierreconvert
  *
  */
-class RetrieveBranchHeadVersion extends RequestDbMgOperation<MgRepoStore> {
+class RetrieveBranchHeadVersion extends RequestDbMgOperation<RepoMgStore> {
 
 
 
@@ -54,14 +54,14 @@ class RetrieveBranchHeadVersion extends RequestDbMgOperation<MgRepoStore> {
 
 
 	@Override
-	public H3MgHandler<MgRepoStore> getHandler() {
+	public H3MgHandler<RepoMgStore> getHandler() {
 		return storeHandler;
 	}
 
 
 	@Override
-	public ConsumeResourceMgAsyncTask<MgRepoStore> createAsyncTask() {
-		return new ConsumeResourceMgAsyncTask<MgRepoStore>(storeHandler) {
+	public ConsumeResourceMgAsyncTask<RepoMgStore> createAsyncTask() {
+		return new ConsumeResourceMgAsyncTask<RepoMgStore>(storeHandler) {
 
 
 			@Override
@@ -75,7 +75,7 @@ class RetrieveBranchHeadVersion extends RequestDbMgOperation<MgRepoStore> {
 			}
 
 			@Override
-			public boolean consumeResource(MgRepoStore store) throws JOOS_CompilingException, IOException {
+			public boolean consumeResource(RepoMgStore store) throws JOOS_CompilingException, IOException {
 				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress);
 				if(repoHandler != null) {
 					repoHandler.retrieveHeadVersion(timeStamp, initiator, branchName, onDone, options);

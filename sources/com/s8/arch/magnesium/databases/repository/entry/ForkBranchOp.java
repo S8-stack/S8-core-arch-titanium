@@ -5,7 +5,7 @@ import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
-import com.s8.arch.magnesium.databases.repository.store.MgRepoStore;
+import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.silicon.async.MthProfile;
@@ -29,7 +29,7 @@ class ForkBranchOp extends RequestDbMgOperation<MgRepository> {
 
 	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
 
-	public final MgRepoStore store;
+
 
 	/**
 	 * 
@@ -48,9 +48,6 @@ class ForkBranchOp extends RequestDbMgOperation<MgRepository> {
 		this.originBranchVersion = originBranchVersion;
 		this.targetBranchId = targetBranchId;
 		this.onSucceed = onSucceed;
-
-
-		this.store = repoHandler.store;
 	}
 
 
@@ -85,6 +82,7 @@ class ForkBranchOp extends RequestDbMgOperation<MgRepository> {
 						/* define a new (main) branch */
 						MgBranchMetadata targetBranchMetadata = new MgBranchMetadata();
 						targetBranchMetadata.name = targetBranchId;
+						targetBranchMetadata.owner = initiator.getUsername();
 						targetBranchMetadata.info = "FORK from "+originBranchId+"["+originBranchVersion+"]";
 						targetBranchMetadata.headVersion = 0L;
 						targetBranchMetadata.forkedBranchId = originBranchId;
@@ -93,6 +91,7 @@ class ForkBranchOp extends RequestDbMgOperation<MgRepository> {
 						/* add branch metadata to repo meta*/
 						repository.metadata.branches.put(targetBranchId, targetBranchMetadata);
 
+						RepoMgStore store = repoHandler.store;
 						MgBranchHandler targetBranchHandler = new MgBranchHandler(handler.ng, store, repository, targetBranchMetadata);
 						repository.branchHandlers.put(targetBranchId, targetBranchHandler);
 

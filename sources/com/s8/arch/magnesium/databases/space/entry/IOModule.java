@@ -42,12 +42,12 @@ public class IOModule implements H3MgIOModule<LiBranch> {
 
 		SpaceMgStore store = handler.getStore();
 
-		boolean isExisting = Files.exists(handler.getPath(), LinkOption.NOFOLLOW_LINKS);
+		boolean isExisting = Files.exists(handler.getDataFilePath(), LinkOption.NOFOLLOW_LINKS);
 
 		if(isExisting) {
 
 			/* read from disk */
-			LinkedBytes head = LinkedBytesIO.read(handler.getPath(), true);
+			LinkedBytes head = LinkedBytesIO.read(handler.getFolderPath(), true);
 
 			/* build inflow */
 			ByteInflow inflow = new LinkedByteInflow(head);
@@ -92,7 +92,7 @@ public class IOModule implements H3MgIOModule<LiBranch> {
 		outbound.pushFrame(outflow, branch.pullDeltas());
 
 		/* read from disk */
-		LinkedBytesIO.write(outflow.getHead() ,handler.getPath(), true);
+		LinkedBytesIO.write(outflow.getHead() ,handler.getDataFilePath(), true);
 	}
 
 }
