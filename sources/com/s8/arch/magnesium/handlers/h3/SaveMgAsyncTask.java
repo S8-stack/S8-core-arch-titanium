@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.handlers.h3;
 
-import com.s8.arch.silicon.async.AsyncTask;
+import com.s8.arch.silicon.async.SiAsyncTask;
 import com.s8.arch.silicon.async.MthProfile;
 
 /**
@@ -9,7 +9,7 @@ import com.s8.arch.silicon.async.MthProfile;
  *
  * @param <R>
  */
-public class SaveMgAsyncTask<R> implements AsyncTask {
+public class SaveMgAsyncTask<R> implements SiAsyncTask {
 
 
 	public final H3MgHandler<R> handler;

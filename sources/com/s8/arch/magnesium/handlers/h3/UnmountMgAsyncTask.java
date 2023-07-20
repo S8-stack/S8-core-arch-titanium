@@ -3,10 +3,10 @@ package com.s8.arch.magnesium.handlers.h3;
 import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
-import com.s8.arch.silicon.async.AsyncTask;
+import com.s8.arch.silicon.async.SiAsyncTask;
 import com.s8.arch.silicon.async.MthProfile;
 
-public class UnmountMgAsyncTask<R> implements AsyncTask {
+public class UnmountMgAsyncTask<R> implements SiAsyncTask {
 
 
 

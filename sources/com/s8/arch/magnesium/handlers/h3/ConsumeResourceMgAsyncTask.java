@@ -1,9 +1,9 @@
 package com.s8.arch.magnesium.handlers.h3;
 
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler.Status;
-import com.s8.arch.silicon.async.AsyncTask;
+import com.s8.arch.silicon.async.SiAsyncTask;
 
-public abstract class ConsumeResourceMgAsyncTask<R> implements AsyncTask {
+public abstract class ConsumeResourceMgAsyncTask<R> implements SiAsyncTask {
 
 
 	/**
