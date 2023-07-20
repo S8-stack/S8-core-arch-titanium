@@ -47,7 +47,7 @@ public abstract class ConsumeResourceMgAsyncTask<R> implements SiAsyncTask {
 
 
 		R resource = null;
-		Exception exception = null;
+		Exception handlerException = null;
 		boolean isResourceAvailable = false;
 
 		synchronized (handler.lock) {
@@ -56,7 +56,7 @@ public abstract class ConsumeResourceMgAsyncTask<R> implements SiAsyncTask {
 				resource = handler.resource;
 			}
 			else {
-				exception = handler.exception;
+				handlerException = handler.exception;
 			}
 		}
 
@@ -78,12 +78,12 @@ public abstract class ConsumeResourceMgAsyncTask<R> implements SiAsyncTask {
 				}
 				
 			}
-			catch(Exception e) {
+			catch(Exception exception) {
 				catchException(exception);
 			}
 		}
 		else {
-			catchException(exception);
+			catchException(handlerException);
 		}
 
 
