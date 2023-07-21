@@ -167,6 +167,7 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 
 			@Override
 			public void catchException(Exception exception) {
+				exception.printStackTrace();
 				RepoCreationS8AsyncOutput output = new RepoCreationS8AsyncOutput();
 				output.reportException(exception);
 				onSucceed.call(output);
