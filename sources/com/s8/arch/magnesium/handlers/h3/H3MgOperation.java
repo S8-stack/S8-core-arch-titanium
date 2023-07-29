@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.handlers.h3;
 
-import com.s8.arch.silicon.async.SiAsyncTask;
+import com.s8.arch.silicon.async.AsyncSiTask;
 
 /**
  * 
@@ -36,7 +36,7 @@ public abstract class H3MgOperation<R> {
 	 * 
 	 * @param resource
 	 */
-	public abstract SiAsyncTask createAsyncTask();
+	public abstract AsyncSiTask createAsyncTask();
 
 
 

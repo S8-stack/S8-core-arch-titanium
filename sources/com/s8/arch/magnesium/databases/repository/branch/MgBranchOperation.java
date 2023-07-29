@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.repository.branch;
 
 import com.s8.arch.magnesium.callbacks.ExceptionMgCallback;
-import com.s8.arch.silicon.async.SiAsyncTask;
+import com.s8.arch.silicon.async.AsyncSiTask;
 
 public abstract class MgBranchOperation {
 	
@@ -19,7 +19,7 @@ public abstract class MgBranchOperation {
 	}
 	
 	
-	public abstract SiAsyncTask createTask();
+	public abstract AsyncSiTask createTask();
 	
 
 	

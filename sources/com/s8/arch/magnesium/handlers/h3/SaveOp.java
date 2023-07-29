@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.handlers.h3;
 
-import com.s8.arch.silicon.async.SiAsyncTask;
+import com.s8.arch.silicon.async.AsyncSiTask;
 
 
 /**
@@ -21,7 +21,7 @@ public class SaveOp<R> extends SystemH3MgOperation<R> {
 	
 
 	@Override
-	public SiAsyncTask createAsyncTask() {
+	public AsyncSiTask createAsyncTask() {
 		return new SaveMgAsyncTask<R>(handler);
 	}
 

@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.handlers.h2;
 
-import com.s8.arch.silicon.async.SiAsyncTask;
+import com.s8.arch.silicon.async.AsyncSiTask;
 
 
 /**
@@ -8,7 +8,7 @@ import com.s8.arch.silicon.async.SiAsyncTask;
  * @author pierreconvert
  *
  */
-public abstract class H2Task<M> implements SiAsyncTask {
+public abstract class H2Task<M> implements AsyncSiTask {
 
 	
 	public final H2Handle<M> handle;
