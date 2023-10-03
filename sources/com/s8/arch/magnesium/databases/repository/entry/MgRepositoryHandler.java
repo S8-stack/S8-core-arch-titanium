@@ -4,17 +4,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
-import com.s8.arch.fluor.outputs.RepositoryMetadataS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.BranchCreationS8AsyncOutput;
+import com.s8.api.flow.outputs.BranchExposureS8AsyncOutput;
+import com.s8.api.flow.outputs.BranchVersionS8AsyncOutput;
+import com.s8.api.flow.outputs.RepositoryMetadataS8AsyncOutput;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.types.JOOS_CompilingException;
 
 /**
@@ -120,7 +120,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	 * @param onFailed
 	 */
 	public void commitBranch(long t, S8User initiator, 
-			String branchId, NdObject[] objects, String comment,
+			String branchId, RepoS8Object[] objects, String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
 		pushOpLast(new CommitBranchOp(t, initiator, this, branchId, objects, comment, onSucceed, options));
 	}

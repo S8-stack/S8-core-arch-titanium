@@ -1,16 +1,16 @@
 package com.s8.arch.magnesium.databases.space.entry;
 
-import com.s8.arch.fluor.S8AsyncFlow;
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.api.bytes.Bool64;
+import com.s8.api.flow.S8AsyncFlow;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.lithium.branches.LiBranch;
-import com.s8.io.bohr.lithium.object.LiObject;
-import com.s8.io.bytes.alpha.Bool64;
 
 /**
  * 
@@ -68,7 +68,7 @@ class AccessSpaceOp extends RequestDbMgOperation<LiBranch> {
 			public boolean consumeResource(LiBranch branch) {
 				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
 
-				LiObject[] objects = branch.getCurrentExposure();
+				SpaceS8Object[] objects = branch.getCurrentExposure();
 				output.isSuccessful = true;
 				output.objects = objects;
 

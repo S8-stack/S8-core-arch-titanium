@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.RepoCreationS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.RepoCreationS8AsyncOutput;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
@@ -19,7 +20,6 @@ import com.s8.arch.silicon.SiliconEngine;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.types.JOOS_CompilingException;
 
 /**
@@ -40,7 +40,7 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 	
 	public final String mainBranchName;
 	
-	public final NdObject[] objects;
+	public final RepoS8Object[] objects;
 	
 	public final String initialCommitComment;
 
@@ -63,7 +63,7 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 			String repositoryAddress,
 			String repositoryInfo, 
 			String mainBranchName, 
-			NdObject[] objects, 
+			RepoS8Object[] objects, 
 			String initialCommitComment,
 			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
 			long options) {

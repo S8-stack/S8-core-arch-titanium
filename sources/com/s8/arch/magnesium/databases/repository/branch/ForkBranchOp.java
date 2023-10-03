@@ -2,9 +2,10 @@ package com.s8.arch.magnesium.databases.repository.branch;
 
 import java.io.IOException;
 
-import com.s8.arch.fluor.S8AsyncFlow;
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
+import com.s8.api.flow.S8AsyncFlow;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.BranchCreationS8AsyncOutput;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -13,7 +14,6 @@ import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
-import com.s8.io.bohr.neodymium.object.NdObject;
 
 /**
  * 
@@ -74,7 +74,7 @@ class ForkBranchOp extends RequestDbMgOperation<NdBranch> {
 			public boolean consumeResource(NdBranch branch) throws IOException, S8ShellStructureException {
 
 				/* standard cases */
-				NdObject[] objects = null;
+				RepoS8Object[] objects = null;
 				if(version >= 0L) {
 					objects = branch.cloneVersion(version).exposure;
 				}

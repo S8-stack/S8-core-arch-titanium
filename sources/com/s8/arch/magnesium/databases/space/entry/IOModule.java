@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.exceptions.S8BuildException;
+import com.s8.api.exceptions.S8IOException;
 import com.s8.arch.magnesium.databases.space.store.SpaceMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 import com.s8.io.bohr.lithium.branches.LiInbound;
 import com.s8.io.bohr.lithium.branches.LiOutbound;
-import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.linked.LinkedByteInflow;
 import com.s8.io.bytes.linked.LinkedByteOutflow;
 import com.s8.io.bytes.linked.LinkedBytes;
@@ -79,7 +81,12 @@ public class IOModule implements H3MgIOModule<LiBranch> {
 	public void save(LiBranch branch) throws IOException {
 
 		/* commit changes */
-		branch.commit();
+		try {
+			branch.commit();
+		} catch (S8BuildException e) {
+			e.printStackTrace();
+			throw new S8IOException(e.getMessage());
+		}
 
 		/* build inflow */
 		LinkedByteOutflow outflow = new LinkedByteOutflow();

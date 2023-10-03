@@ -3,12 +3,12 @@ package com.s8.arch.magnesium.databases.repository.branch;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import com.s8.api.bytes.ByteInflow;
 import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdInbound;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
-import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.linked.LinkedByteInflow;
 import com.s8.io.bytes.linked.LinkedByteOutflow;
 import com.s8.io.bytes.linked.LinkedBytes;

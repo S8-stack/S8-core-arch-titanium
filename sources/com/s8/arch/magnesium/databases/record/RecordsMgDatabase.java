@@ -4,17 +4,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.fluor.S8Filter;
-import com.s8.arch.fluor.outputs.GetUserS8AsyncOutput;
-import com.s8.arch.fluor.outputs.ObjectsListS8AsyncOutput;
-import com.s8.arch.fluor.outputs.PutUserS8AsyncOutput;
+import com.s8.api.flow.S8Filter;
+import com.s8.api.flow.outputs.GetUserS8AsyncOutput;
+import com.s8.api.flow.outputs.ObjectsListS8AsyncOutput;
+import com.s8.api.flow.outputs.PutUserS8AsyncOutput;
+import com.s8.api.objects.table.TableS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.codebase.BeCodebase;
-import com.s8.io.bohr.beryllium.object.BeObject;
 
 
 /**
@@ -73,7 +73,7 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 		pushOpLast(new GetOp(t, this, key, onRetrieved, options));
 	}
 	
-	public void put(long t, BeObject object, MgCallback<PutUserS8AsyncOutput> onInserted, long options) {
+	public void put(long t, TableS8Object object, MgCallback<PutUserS8AsyncOutput> onInserted, long options) {
 		pushOpLast(new PutOp(t, this, object, onInserted, options));
 	}
 	

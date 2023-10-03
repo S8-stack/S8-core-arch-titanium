@@ -1,12 +1,12 @@
 package com.s8.arch.magnesium.demos.user;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.beryllium.object.BeObject;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.objects.table.TableS8Object;
 
 
 @S8ObjectType(name = "mg-user")
-public class MgUser extends BeObject {
+public class MgUser extends TableS8Object {
 
 	
 	@S8Field(name = "username")

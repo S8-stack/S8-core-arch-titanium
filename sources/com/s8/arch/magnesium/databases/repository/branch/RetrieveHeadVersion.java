@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.databases.repository.branch;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.BranchVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;

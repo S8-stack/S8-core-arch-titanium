@@ -2,9 +2,10 @@ package com.s8.arch.magnesium.databases.repository.branch;
 
 import java.io.IOException;
 
-import com.s8.arch.fluor.S8AsyncFlow;
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
+import com.s8.api.flow.S8AsyncFlow;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.BranchExposureS8AsyncOutput;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -12,7 +13,6 @@ import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.object.NdObject;
 
 /**
  * 
@@ -71,13 +71,13 @@ class CloneBranchOp extends RequestDbMgOperation<NdBranch> {
 
 				/* standard cases */
 				if(version >= 0L) {
-					NdObject[] objects = branch.cloneVersion(version).exposure;
+					RepoS8Object[] objects = branch.cloneVersion(version).exposure;
 					output.objects = objects;
 					output.isSuccessful = true;
 				}
 				/* special cases */
 				else if(version == S8AsyncFlow.HEAD_VERSION){
-					NdObject[] objects = branch.cloneHead().exposure;
+					RepoS8Object[] objects = branch.cloneHead().exposure;
 					output.objects = objects;
 					output.isSuccessful = true;
 				}

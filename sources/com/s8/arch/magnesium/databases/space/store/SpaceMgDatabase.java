@@ -9,15 +9,15 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
-import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.api.flow.outputs.SpaceVersionS8AsyncOutput;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
-import com.s8.io.bohr.lithium.object.LiObject;
 import com.s8.io.joos.JOOS_Lexicon;
 import com.s8.io.joos.types.JOOS_CompilingException;
 import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
@@ -99,7 +99,7 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	 * @param onProceed
 	 * @param onFailed
 	 */
-	public void createSpace(long t, S8User initiator, String spaceId, LiObject[] exposure,
+	public void createSpace(long t, S8User initiator, String spaceId, SpaceS8Object[] exposure,
 			MgCallback<SpaceExposureS8AsyncOutput> onProceed, long options) {
 		pushOpLast(new CreateSpaceOp(t, initiator, this, spaceId, exposure, onProceed, options));
 	}

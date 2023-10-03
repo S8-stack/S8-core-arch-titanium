@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.databases.repository.entry;
 
-import com.s8.arch.fluor.metadatas.S8BranchMetadata;
+import com.s8.api.flow.metadatas.S8BranchMetadata;
 import com.s8.io.joos.JOOS_Field;
 import com.s8.io.joos.JOOS_Type;
 

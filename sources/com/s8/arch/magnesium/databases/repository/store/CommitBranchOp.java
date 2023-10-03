@@ -2,15 +2,15 @@ package com.s8.arch.magnesium.databases.repository.store;
 
 import java.io.IOException;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.BranchVersionS8AsyncOutput;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.silicon.async.MthProfile;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.types.JOOS_CompilingException;
 
 
@@ -30,7 +30,7 @@ class CommitBranchOp extends RequestDbMgOperation<RepoMgStore> {
 
 	public final String branchId;
 
-	public final NdObject[] objects;
+	public final RepoS8Object[] objects;
 
 	public final String comment;
 	
@@ -47,7 +47,7 @@ class CommitBranchOp extends RequestDbMgOperation<RepoMgStore> {
 			RepoMgDatabase handler, 
 			String repositoryAddress,
 			String branchId, 
-			NdObject[] objects, 
+			RepoS8Object[] objects, 
 			String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
 			long options) {

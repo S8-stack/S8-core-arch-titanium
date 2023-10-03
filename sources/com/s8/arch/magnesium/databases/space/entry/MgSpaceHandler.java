@@ -4,9 +4,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
-import com.s8.arch.fluor.outputs.SpaceVersionS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.api.flow.outputs.SpaceVersionS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.space.store.SpaceMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;

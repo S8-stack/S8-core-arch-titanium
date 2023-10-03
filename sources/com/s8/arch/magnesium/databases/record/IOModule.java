@@ -2,11 +2,11 @@ package com.s8.arch.magnesium.databases.record;
 
 import java.io.IOException;
 
+import com.s8.api.bytes.ByteInflow;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
 import com.s8.io.bohr.beryllium.branch.BeInbound;
 import com.s8.io.bohr.beryllium.branch.BeOutbound;
-import com.s8.io.bytes.alpha.ByteInflow;
 import com.s8.io.bytes.linked.LinkedByteInflow;
 import com.s8.io.bytes.linked.LinkedByteOutflow;
 import com.s8.io.bytes.linked.LinkedBytes;

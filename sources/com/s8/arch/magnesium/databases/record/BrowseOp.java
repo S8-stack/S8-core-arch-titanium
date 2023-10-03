@@ -2,8 +2,8 @@ package com.s8.arch.magnesium.databases.record;
 
 import java.util.List;
 
-import com.s8.arch.fluor.S8Filter;
-import com.s8.arch.fluor.outputs.ObjectsListS8AsyncOutput;
+import com.s8.api.flow.S8Filter;
+import com.s8.api.flow.outputs.ObjectsListS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;

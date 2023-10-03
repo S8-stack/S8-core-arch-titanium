@@ -2,8 +2,8 @@ package com.s8.arch.magnesium.databases.space.store;
 
 import java.io.IOException;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;

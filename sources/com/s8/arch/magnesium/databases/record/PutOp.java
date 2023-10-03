@@ -1,15 +1,15 @@
 package com.s8.arch.magnesium.databases.record;
 
-import com.s8.arch.fluor.S8AsyncFlow;
-import com.s8.arch.fluor.outputs.PutUserS8AsyncOutput;
+import com.s8.api.bytes.Bool64;
+import com.s8.api.flow.S8AsyncFlow;
+import com.s8.api.flow.outputs.PutUserS8AsyncOutput;
+import com.s8.api.objects.table.TableS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.beryllium.branch.BeBranch;
-import com.s8.io.bohr.beryllium.object.BeObject;
-import com.s8.io.bytes.alpha.Bool64;
 
 
 /**
@@ -22,12 +22,12 @@ public class PutOp extends RequestDbMgOperation<BeBranch> {
 
 	public final RecordsMgDatabase dbHandler;
 
-	public final BeObject object;
+	public final TableS8Object object;
 
 	public final MgCallback<PutUserS8AsyncOutput> onInserted;
 
 
-	public PutOp(long timeStamp, RecordsMgDatabase dbHandler, BeObject object, 
+	public PutOp(long timeStamp, RecordsMgDatabase dbHandler, TableS8Object object, 
 			MgCallback<PutUserS8AsyncOutput> onInserted, 
 			long options) {
 		super(timeStamp, null, options);

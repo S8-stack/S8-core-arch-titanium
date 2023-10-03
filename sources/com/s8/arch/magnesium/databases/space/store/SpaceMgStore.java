@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
-import com.s8.io.bohr.neodymium.object.NdObject;
 
 
 /**
@@ -176,7 +176,7 @@ public class SpaceMgStore {
 
 	}
 
-	public void commit(String repositoryId, String branchId, NdObject[] objects) {
+	public void commit(String repositoryId, String branchId, RepoS8Object[] objects) {
 
 	}
 

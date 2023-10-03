@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.types.JOOS_CompilingException;
 
 
@@ -148,7 +148,7 @@ public class RepoMgStore {
 		
 	}
 
-	public void commit(String repositoryId, String branchId, NdObject[] objects) {
+	public void commit(String repositoryId, String branchId, RepoS8Object[] objects) {
 		
 	}
 	

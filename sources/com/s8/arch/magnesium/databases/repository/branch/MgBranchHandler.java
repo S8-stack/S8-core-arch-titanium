@@ -4,10 +4,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.BranchCreationS8AsyncOutput;
+import com.s8.api.flow.outputs.BranchExposureS8AsyncOutput;
+import com.s8.api.flow.outputs.BranchVersionS8AsyncOutput;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.repository.entry.MgBranchMetadata;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepository;
@@ -16,7 +17,6 @@ import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.object.NdObject;
 
 /**
  * 
@@ -108,7 +108,7 @@ public class MgBranchHandler extends H3MgHandler<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void commitBranch(long t, S8User initiator, NdObject[] objects, String comment, 
+	public void commitBranch(long t, S8User initiator, RepoS8Object[] objects, String comment, 
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
 		pushOpLast(new CommitBranchOp(t, initiator, this, objects, comment, onSucceed, options));
 	}

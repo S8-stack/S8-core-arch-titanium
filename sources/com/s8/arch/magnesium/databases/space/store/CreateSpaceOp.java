@@ -2,15 +2,15 @@ package com.s8.arch.magnesium.databases.space.store;
 
 import java.io.IOException;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
+import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.silicon.async.MthProfile;
 import com.s8.io.bohr.lithium.branches.LiBranch;
-import com.s8.io.bohr.lithium.object.LiObject;
 
 /**
  * 
@@ -36,7 +36,7 @@ class CreateSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 	/**
 	 * 
 	 */
-	public final LiObject[] exposure;
+	public final SpaceS8Object[] exposure;
 
 
 
@@ -55,7 +55,7 @@ class CreateSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 	 */
 	public CreateSpaceOp(long timestamp, S8User initiator, SpaceMgDatabase handler, 
 			String spaceId, 
-			LiObject[] exposure,
+			SpaceS8Object[] exposure,
 			MgCallback<SpaceExposureS8AsyncOutput> onProcessed, 
 			long options) {
 		super(timestamp, initiator, options);

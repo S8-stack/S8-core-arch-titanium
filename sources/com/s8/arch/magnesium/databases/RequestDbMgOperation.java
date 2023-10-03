@@ -1,6 +1,6 @@
 package com.s8.arch.magnesium.databases;
 
-import com.s8.arch.fluor.S8User;
+import com.s8.api.flow.S8User;
 import com.s8.arch.magnesium.handlers.h3.RequestH3MgOperation;
 
 public abstract class RequestDbMgOperation<R> extends RequestH3MgOperation<R> {

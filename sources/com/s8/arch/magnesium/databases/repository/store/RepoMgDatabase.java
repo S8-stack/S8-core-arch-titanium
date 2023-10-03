@@ -9,18 +9,18 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.arch.fluor.S8User;
-import com.s8.arch.fluor.outputs.BranchCreationS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchExposureS8AsyncOutput;
-import com.s8.arch.fluor.outputs.BranchVersionS8AsyncOutput;
-import com.s8.arch.fluor.outputs.RepoCreationS8AsyncOutput;
-import com.s8.arch.fluor.outputs.RepositoryMetadataS8AsyncOutput;
+import com.s8.api.flow.S8User;
+import com.s8.api.flow.outputs.BranchCreationS8AsyncOutput;
+import com.s8.api.flow.outputs.BranchExposureS8AsyncOutput;
+import com.s8.api.flow.outputs.BranchVersionS8AsyncOutput;
+import com.s8.api.flow.outputs.RepoCreationS8AsyncOutput;
+import com.s8.api.flow.outputs.RepositoryMetadataS8AsyncOutput;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.joos.JOOS_Lexicon;
 import com.s8.io.joos.types.JOOS_CompilingException;
 import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
@@ -95,7 +95,7 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 			String repositoryAddress,
 			String repositoryInfo, 
 			String mainBranchName,
-			NdObject[] objects,
+			RepoS8Object[] objects,
 			String initialCommitComment,
 			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
 			long options) {
@@ -151,7 +151,7 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	public void commitBranch(long t, S8User initiator, String repoAddress, String branchName, 
 			Object[] objects, String comment,
 			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOpLast(new CommitBranchOp(t, initiator, this, repoAddress, branchName, (NdObject[]) objects,
+		pushOpLast(new CommitBranchOp(t, initiator, this, repoAddress, branchName, (RepoS8Object[]) objects,
 				comment, onSucceed, options));
 	}
 

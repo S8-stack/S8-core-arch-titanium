@@ -36,7 +36,7 @@ module com.s8.arch.magnesium {
 	
 	
 	
-	
+	requires transitive com.s8.api;
 	
 	requires transitive com.s8.io.xml;
 	requires transitive com.s8.io.bytes;
@@ -46,6 +46,6 @@ module com.s8.arch.magnesium {
 	requires transitive com.s8.io.joos;
 	requires transitive com.s8.io.bohr.beryllium;
 	requires transitive com.s8.io.bohr.lithium;
-	requires transitive com.s8.arch.fluor;
+	
 	
 }

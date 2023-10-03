@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import com.s8.arch.fluor.metadatas.S8BranchMetadata;
-import com.s8.arch.fluor.metadatas.S8RepositoryMetadata;
+import com.s8.api.flow.metadatas.S8BranchMetadata;
+import com.s8.api.flow.metadatas.S8RepositoryMetadata;
 import com.s8.io.joos.JOOS_Field;
 import com.s8.io.joos.JOOS_Type;
 
