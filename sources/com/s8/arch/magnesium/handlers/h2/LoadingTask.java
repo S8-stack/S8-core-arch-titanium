@@ -3,8 +3,8 @@ package com.s8.arch.magnesium.handlers.h2;
 import java.io.IOException;
 
 import com.s8.arch.magnesium.handlers.h2.H2Handle.State;
-import com.s8.arch.silicon.SiException;
-import com.s8.arch.silicon.async.MthProfile;
+import com.s8.core.arch.silicon.SiException;
+import com.s8.core.arch.silicon.async.MthProfile;
 
 
 /**

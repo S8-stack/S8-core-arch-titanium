@@ -6,7 +6,7 @@ import java.util.Deque;
 import java.util.List;
 
 import com.s8.arch.magnesium.callbacks.BooleanMgCallback;
-import com.s8.arch.silicon.SiliconEngine;
+import com.s8.core.arch.silicon.SiliconEngine;
 
 /**
  * 

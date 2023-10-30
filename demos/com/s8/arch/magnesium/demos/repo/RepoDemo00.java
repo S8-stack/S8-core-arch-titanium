@@ -2,8 +2,8 @@ package com.s8.arch.magnesium.demos.repo;
 
 import java.io.IOException;
 
-import com.s8.io.joos.composing.JOOS_ComposingException;
-import com.s8.io.joos.types.JOOS_CompilingException;
+import com.s8.core.io.joos.composing.JOOS_ComposingException;
+import com.s8.core.io.joos.types.JOOS_CompilingException;
 
 public class RepoDemo00 {
 

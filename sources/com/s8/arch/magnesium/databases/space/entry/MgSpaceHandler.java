@@ -11,7 +11,7 @@ import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.databases.space.store.SpaceMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.arch.silicon.SiliconEngine;
+import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.lithium.branches.LiBranch;
 
 

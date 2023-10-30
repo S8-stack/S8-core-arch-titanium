@@ -6,8 +6,8 @@ import java.util.function.BiConsumer;
 
 import com.s8.api.flow.metadatas.S8BranchMetadata;
 import com.s8.api.flow.metadatas.S8RepositoryMetadata;
-import com.s8.io.joos.JOOS_Field;
-import com.s8.io.joos.JOOS_Type;
+import com.s8.core.io.joos.JOOS_Field;
+import com.s8.core.io.joos.JOOS_Type;
 
 @JOOS_Type(name = "MgRepositoryMetadata")
 public class MgRepositoryMetadata implements S8RepositoryMetadata {

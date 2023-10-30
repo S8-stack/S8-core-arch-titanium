@@ -15,7 +15,7 @@ import com.s8.arch.magnesium.databases.repository.entry.MgRepository;
 import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.arch.silicon.SiliconEngine;
+import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 
 /**

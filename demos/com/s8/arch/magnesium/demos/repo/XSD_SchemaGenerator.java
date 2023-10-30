@@ -8,8 +8,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import com.s8.arch.magnesium.store.config.ConfigWrapper;
-import com.s8.io.xml.codebase.XML_Codebase;
-import com.s8.io.xml.handler.type.XML_TypeCompilationException;
+import com.s8.core.io.xml.codebase.XML_Codebase;
+import com.s8.core.io.xml.handler.type.XML_TypeCompilationException;
 
 public class XSD_SchemaGenerator {
 

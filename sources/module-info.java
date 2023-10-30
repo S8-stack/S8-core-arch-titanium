@@ -5,7 +5,7 @@
  * @author pierreconvert
  *
  */
-module com.s8.arch.magnesium {
+module com.s8.core.arch.magnesium {
 	
 	
 
@@ -38,14 +38,14 @@ module com.s8.arch.magnesium {
 	
 	requires transitive com.s8.api;
 	
-	requires transitive com.s8.io.xml;
-	requires transitive com.s8.io.bytes;
-	requires transitive com.s8.io.bohr.neodymium;
+	requires transitive com.s8.core.io.xml;
+	requires transitive com.s8.core.io.bytes;
+	requires transitive com.s8.core.io.bohr.neodymium;
 	
-	requires transitive com.s8.arch.silicon;
-	requires transitive com.s8.io.joos;
-	requires transitive com.s8.io.bohr.beryllium;
-	requires transitive com.s8.io.bohr.lithium;
+	requires transitive com.s8.core.arch.silicon;
+	requires transitive com.s8.core.io.joos;
+	requires transitive com.s8.core.io.bohr.beryllium;
+	requires transitive com.s8.core.io.bohr.lithium;
 	
 	
 }

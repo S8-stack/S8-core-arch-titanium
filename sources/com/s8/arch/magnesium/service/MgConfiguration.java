@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.service;
 
-import com.s8.io.xml.annotations.XML_SetElement;
-import com.s8.io.xml.annotations.XML_Type;
+import com.s8.core.io.xml.annotations.XML_SetElement;
+import com.s8.core.io.xml.annotations.XML_Type;
 
 
 @XML_Type(name = "MagnesiumDbConfiguration")

@@ -6,11 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.s8.io.xml.annotations.XML_SetElement;
-import com.s8.io.xml.annotations.XML_Type;
-import com.s8.io.xml.codebase.XML_Codebase;
-import com.s8.io.xml.handler.type.XML_TypeCompilationException;
-import com.s8.io.xml.parser.XML_ParsingException;
+import com.s8.core.io.xml.annotations.XML_SetElement;
+import com.s8.core.io.xml.annotations.XML_Type;
+import com.s8.core.io.xml.codebase.XML_Codebase;
+import com.s8.core.io.xml.handler.type.XML_TypeCompilationException;
+import com.s8.core.io.xml.parser.XML_ParsingException;
 
 
 

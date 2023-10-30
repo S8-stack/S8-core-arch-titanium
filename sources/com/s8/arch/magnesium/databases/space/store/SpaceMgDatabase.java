@@ -16,11 +16,11 @@ import com.s8.api.objects.space.SpaceS8Object;
 import com.s8.arch.magnesium.callbacks.MgCallback;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.arch.silicon.SiliconEngine;
+import com.s8.core.arch.silicon.SiliconEngine;
+import com.s8.core.io.joos.JOOS_Lexicon;
+import com.s8.core.io.joos.types.JOOS_CompilingException;
+import com.s8.core.io.joos.utilities.JOOS_BufferedFileWriter;
 import com.s8.io.bohr.lithium.codebase.LiCodebase;
-import com.s8.io.joos.JOOS_Lexicon;
-import com.s8.io.joos.types.JOOS_CompilingException;
-import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
 
 
 /**

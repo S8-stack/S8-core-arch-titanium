@@ -6,8 +6,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.s8.arch.silicon.SiException;
-import com.s8.arch.silicon.SiliconEngine;
+import com.s8.core.arch.silicon.SiException;
+import com.s8.core.arch.silicon.SiliconEngine;
 
 
 

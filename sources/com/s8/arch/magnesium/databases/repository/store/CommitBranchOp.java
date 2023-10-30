@@ -10,8 +10,8 @@ import com.s8.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler;
-import com.s8.arch.silicon.async.MthProfile;
-import com.s8.io.joos.types.JOOS_CompilingException;
+import com.s8.core.arch.silicon.async.MthProfile;
+import com.s8.core.io.joos.types.JOOS_CompilingException;
 
 
 /**

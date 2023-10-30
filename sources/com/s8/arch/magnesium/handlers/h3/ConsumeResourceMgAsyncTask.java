@@ -1,7 +1,7 @@
 package com.s8.arch.magnesium.handlers.h3;
 
 import com.s8.arch.magnesium.handlers.h3.H3MgHandler.Status;
-import com.s8.arch.silicon.async.AsyncSiTask;
+import com.s8.core.arch.silicon.async.AsyncSiTask;
 
 public abstract class ConsumeResourceMgAsyncTask<R> implements AsyncSiTask {
 

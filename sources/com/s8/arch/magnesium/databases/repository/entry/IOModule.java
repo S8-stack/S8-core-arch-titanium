@@ -11,13 +11,13 @@ import java.nio.file.StandardOpenOption;
 import com.s8.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.arch.silicon.SiliconEngine;
-import com.s8.io.joos.JOOS_Lexicon;
-import com.s8.io.joos.composing.JOOS_ComposingException;
-import com.s8.io.joos.parsing.JOOS_ParsingException;
-import com.s8.io.joos.types.JOOS_CompilingException;
-import com.s8.io.joos.utilities.JOOS_BufferedFileReader;
-import com.s8.io.joos.utilities.JOOS_BufferedFileWriter;
+import com.s8.core.arch.silicon.SiliconEngine;
+import com.s8.core.io.joos.JOOS_Lexicon;
+import com.s8.core.io.joos.composing.JOOS_ComposingException;
+import com.s8.core.io.joos.parsing.JOOS_ParsingException;
+import com.s8.core.io.joos.types.JOOS_CompilingException;
+import com.s8.core.io.joos.utilities.JOOS_BufferedFileReader;
+import com.s8.core.io.joos.utilities.JOOS_BufferedFileWriter;
 
 public class IOModule implements H3MgIOModule<MgRepository> {
 
