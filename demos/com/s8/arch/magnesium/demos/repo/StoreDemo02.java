@@ -2,8 +2,8 @@ package com.s8.arch.magnesium.demos.repo;
 
 import java.io.IOException;
 
+import com.s8.core.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.core.io.xml.handler.type.XML_TypeCompilationException;
-import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 
 public class StoreDemo02 {
 

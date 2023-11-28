@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import com.s8.arch.magnesium.store.config.ConfigWrapper;
+import com.s8.core.arch.magnesium.store.config.ConfigWrapper;
 import com.s8.core.io.xml.codebase.XML_Codebase;
 import com.s8.core.io.xml.handler.type.XML_TypeCompilationException;
 

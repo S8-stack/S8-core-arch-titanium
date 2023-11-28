@@ -2,11 +2,11 @@ package com.s8.arch.magnesium.demos.user;
 
 import java.nio.file.Path;
 
-import com.s8.arch.magnesium.databases.record.RecordsMgDatabase;
+import com.s8.core.arch.magnesium.databases.record.RecordsMgDatabase;
 import com.s8.core.arch.silicon.SiliconConfiguration;
 import com.s8.core.arch.silicon.SiliconEngine;
-import com.s8.io.bohr.beryllium.codebase.BeCodebase;
-import com.s8.io.bohr.beryllium.exception.BeBuildException;
+import com.s8.core.bohr.beryllium.codebase.BeCodebase;
+import com.s8.core.bohr.beryllium.exception.BeBuildException;
 
 public class MgUserbaseDemo {
 

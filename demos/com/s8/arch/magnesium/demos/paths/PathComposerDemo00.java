@@ -2,7 +2,7 @@ package com.s8.arch.magnesium.demos.paths;
 
 import java.nio.file.Path;
 
-import com.s8.arch.magnesium.databases.repository.store.MgPathComposer;
+import com.s8.core.arch.magnesium.databases.repository.store.MgPathComposer;
 
 public class PathComposerDemo00 {
 
