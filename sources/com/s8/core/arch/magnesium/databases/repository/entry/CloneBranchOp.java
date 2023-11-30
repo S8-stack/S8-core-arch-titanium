@@ -3,8 +3,9 @@ package com.s8.core.arch.magnesium.databases.repository.entry;
 import java.io.IOException;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.BranchExposureS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.requests.CloneBranchS8Request;
+import com.s8.api.flow.repository.requests.CloneBranchS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -19,13 +20,17 @@ import com.s8.core.arch.silicon.async.MthProfile;
 class CloneBranchOp extends RequestDbMgOperation<MgRepository> {
 
 
+	/**
+	 * 
+	 */
 	public final MgRepositoryHandler repoHandler;
 
-	public final String branchId;
-
-	public final long version;
-
-	public final MgCallback<BranchExposureS8AsyncOutput> onSucceed;
+	
+	/**
+	 * 
+	 */
+	public final CloneBranchS8Request request;
+	
 
 
 
@@ -36,16 +41,14 @@ class CloneBranchOp extends RequestDbMgOperation<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneBranchOp(long timestamp, S8User initator,
-			MgRepositoryHandler repoHandler, String branchId, long version, 
-			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initator, options);
+	public CloneBranchOp(long timestamp, S8User initator, DbMgCallback callback, 
+			MgRepositoryHandler repoHandler, 
+			CloneBranchS8Request request) {
+		super(timestamp, initator, callback);
 		this.repoHandler = repoHandler;
-		this.branchId = branchId;
-		this.version = version;
-		this.onSucceed = onSucceed;
+		this.request = request;
 	}
+	
 
 	@Override
 	public H3MgHandler<MgRepository> getHandler() {
@@ -66,28 +69,32 @@ class CloneBranchOp extends RequestDbMgOperation<MgRepository> {
 			
 			@Override
 			public String describe() {
-				return "CLONE-HEAD on "+branchId+" branch of "+handler.getName()+ " repository";
+				return "CLONE-HEAD on "+request.branchId+" branch of "+handler.getName()+ " repository";
 			}
 
 			
 			@Override
 			public boolean consumeResource(MgRepository repository) throws IOException {
 
-				MgBranchHandler branchHandler = repository.branchHandlers.get(branchId);
+				MgBranchHandler branchHandler = repository.branchHandlers.get(request.branchId);
 
-				if(branchHandler == null) { 
-					throw new IOException("No branch "+branchId+" on repo "+repository.getAddress()); 
+				if(branchHandler != null) { 
+					branchHandler.cloneBranch(timeStamp, initiator, callback, request);
 				}
-				branchHandler.cloneBranch(timeStamp, initiator, version, onSucceed, options);
+				else {
+					/* throw new IOException("No branch "+branchId+" on repo "+repository.getAddress());  */
+					request.onResponse(Status.NO_SUCH_BRANCH, null);
+					callback.call();
+				}
+				
 
 				return false;
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
-				output.reportException(exception);
-				onSucceed.call(output);
+				request.onError(exception);
+				callback.call();
 			}			
 		};
 	}

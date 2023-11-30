@@ -4,12 +4,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.api.flow.S8Filter;
-import com.s8.api.flow.outputs.GetUserS8AsyncOutput;
-import com.s8.api.flow.outputs.ObjectsListS8AsyncOutput;
-import com.s8.api.flow.outputs.PutUserS8AsyncOutput;
-import com.s8.api.objects.table.TableS8Object;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.record.objects.RecordS8Object;
+import com.s8.api.flow.record.requests.GetRecordS8Request;
+import com.s8.api.flow.record.requests.PutRecordS8Request;
+import com.s8.api.flow.record.requests.SelectRecordsS8Request;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.core.arch.silicon.SiliconEngine;
@@ -69,12 +68,13 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 	}
 	
 	
-	public void get(long t, String key, MgCallback<GetUserS8AsyncOutput> onRetrieved, long options) {
-		pushOpLast(new GetOp(t, this, key, onRetrieved, options));
+	public void get(long t, DbMgCallback callback, GetRecordS8Request request) {
+		pushOpLast(new GetOp(t, callback, this, request));
 	}
 	
-	public void put(long t, TableS8Object object, MgCallback<PutUserS8AsyncOutput> onInserted, long options) {
-		pushOpLast(new PutOp(t, this, object, onInserted, options));
+	
+	public void put(long t, DbMgCallback callback, PutRecordS8Request request) {
+		pushOpLast(new PutOp(t, callback, this, request));
 	}
 	
 	
@@ -87,8 +87,8 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 	 * @param onSelected
 	 * @param onFailed
 	 */
-	public <T> void select(long t, S8Filter<T> filter, MgCallback<ObjectsListS8AsyncOutput<T>> onSelected, long options) {
-		pushOpLast(new BrowseOp<T>(t, this, filter, onSelected, options));
+	public <T extends RecordS8Object> void select(long t, DbMgCallback callback, SelectRecordsS8Request<T> request) {
+		pushOpLast(new BrowseOp<T>(t, callback, this, request));
 	}
 	
 	

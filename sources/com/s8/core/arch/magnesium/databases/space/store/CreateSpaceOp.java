@@ -3,9 +3,9 @@ package com.s8.core.arch.magnesium.databases.space.store;
 import java.io.IOException;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
-import com.s8.api.objects.space.SpaceS8Object;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.space.requests.CreateSpaceS8Request;
+import com.s8.api.flow.space.requests.CreateSpaceS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -31,19 +31,9 @@ class CreateSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 	/**
 	 * 
 	 */
-	public final String spaceId;
+	public final CreateSpaceS8Request request;
 	
-	/**
-	 * 
-	 */
-	public final SpaceS8Object[] exposure;
-
-
-
-	/**
-	 * 
-	 */
-	public final MgCallback<SpaceExposureS8AsyncOutput> onProcessed;
+	
 
 
 
@@ -53,17 +43,13 @@ class CreateSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 	 * @param onProcessed
 	 * @param onFailed
 	 */
-	public CreateSpaceOp(long timestamp, S8User initiator, SpaceMgDatabase handler, 
-			String spaceId, 
-			SpaceS8Object[] exposure,
-			MgCallback<SpaceExposureS8AsyncOutput> onProcessed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public CreateSpaceOp(long timestamp, S8User initiator, DbMgCallback callback,
+			SpaceMgDatabase handler, CreateSpaceS8Request request) {
+		super(timestamp, initiator, callback);
 		this.spaceHandler = handler;
-		this.spaceId = spaceId;
-		this.exposure = exposure;
-		this.onProcessed = onProcessed;
+		this.request = request;
 	}
+	
 	
 
 	@Override
@@ -90,41 +76,41 @@ class CreateSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 			public boolean consumeResource(SpaceMgStore store) throws IOException {
 
 
-				MgSpaceHandler spaceHandler = store.createSpaceHandler(spaceId);
+				MgSpaceHandler spaceHandler = store.createSpaceHandler(request.spaceId);
 
 				if(spaceHandler != null) {
 
-					LiBranch branch = new LiBranch(spaceId, store.getCodebase());
-					branch.expose(exposure);
+					LiBranch branch = new LiBranch(request.spaceId, store.getCodebase());
+					branch.expose(request.exposure);
 					
 					spaceHandler.initializeResource(branch);
 					
-					SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-					output.isSuccessful = true;
-					output.objects = exposure;
-					onProcessed.call(output);
+					request.onProcessed(Status.OK, 0x0L);
+					
+					/* before returning, notify next multi-db request can be launched */
+					callback.call();
+					
 					return true;
 				}
 				else {
 
 					/* exit point 2 -> soft fail */
-					SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-					output.isSuccessful = false;
-					output.isSpaceDoesNotExist = true;
-					onProcessed.call(output);
+					request.onProcessed(Status.SPACE_ID_CONFLICT, 0x0L);
+					
+					/* before returning, notify next multi-db request can be launched */
+					callback.call();
+					
 					return false;
+					
 				}
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-
-				exception.printStackTrace();
-
-				/* exit point 3 -> hard fail */
-				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-				output.reportException(exception);
-				onProcessed.call(output);
+				request.onFailed(exception);
+				
+				/* before returning, notify next multi-db request can be launched */
+				callback.call();
 			}
 		};
 	}

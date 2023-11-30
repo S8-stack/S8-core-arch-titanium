@@ -3,8 +3,9 @@ package com.s8.core.arch.magnesium.databases.repository.store;
 import java.io.IOException;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.BranchCreationS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.requests.ForkBranchS8Request;
+import com.s8.api.flow.repository.requests.ForkBranchS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -22,16 +23,7 @@ class ForkBranchOp extends RequestDbMgOperation<RepoMgStore> {
 
 	public final RepoMgDatabase storeHandler;
 
-	public final String repositoryAddress;
-
-	public final String originBranchId;
-
-	public final long originBranchVersion;
-
-	public final String targetBranchId;
-
-	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
-
+	public final ForkBranchS8Request request;
 
 
 
@@ -42,25 +34,13 @@ class ForkBranchOp extends RequestDbMgOperation<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public ForkBranchOp(long timestamp, S8User initiator,
-			RepoMgDatabase handler, 
-			String repositoryAddress,
-			String originBranchId,
-			long originBranchVersion,
-			String targetBranchId,
-			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public ForkBranchOp(long timestamp, S8User initiator, DbMgCallback callback, 
+			RepoMgDatabase handler, ForkBranchS8Request request) {
+		super(timestamp, initiator, callback);
 
 		/* fields */
 		this.storeHandler = handler;
-		this.repositoryAddress = repositoryAddress;
-		
-		this.originBranchId = originBranchId;
-		this.originBranchVersion = originBranchVersion;
-		this.targetBranchId = targetBranchId;
-		
-		this.onSucceed = onSucceed;
+		this.request = request;
 	}
 
 
@@ -87,25 +67,21 @@ class ForkBranchOp extends RequestDbMgOperation<RepoMgStore> {
 
 			@Override
 			public boolean consumeResource(RepoMgStore store) throws JOOS_CompilingException, IOException {
-
-				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress);
+				MgRepositoryHandler repoHandler = store.getRepositoryHandler(request.repositoryAddress);
 				if(repoHandler != null) {
-					repoHandler.forkBranch(timeStamp, initiator, originBranchId, originBranchVersion, targetBranchId, onSucceed, options);
+					repoHandler.forkBranch(timeStamp, initiator, callback, request);
 				}
 				else {
-					BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
-					output.isSuccessful = false;
-					output.isRepositoryDoesNotExist = true;
-					onSucceed.call(output);
+					request.onResponded(Status.REPOSITORY_DOES_NOT_EXIST, 0x0L);
+					callback.call();
 				}
 				return false;
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
-				output.reportException(exception);
-				onSucceed.call(output);
+				request.onFailed(exception);
+				callback.call();
 			}
 		};
 	}

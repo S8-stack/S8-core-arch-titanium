@@ -8,13 +8,17 @@ public abstract class RequestDbMgOperation<R> extends RequestH3MgOperation<R> {
 
 	public final S8User initiator;
 	
-	public final long options;
+	/**
+	 * callback
+	 */
+	public final DbMgCallback callback;
+	
 
 	
-	public RequestDbMgOperation(long timeStamp, S8User initiator, long options) {
+	public RequestDbMgOperation(long timeStamp, S8User initiator, DbMgCallback callback) {
 		super(timeStamp);
 		this.initiator = initiator;
-		this.options = options;
+		this.callback = callback;
 	}
 
 	

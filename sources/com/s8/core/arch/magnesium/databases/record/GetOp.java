@@ -1,9 +1,9 @@
 package com.s8.core.arch.magnesium.databases.record;
 
-import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.GetUserS8AsyncOutput;
-import com.s8.api.objects.table.TableS8Object;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.record.objects.RecordS8Object;
+import com.s8.api.flow.record.requests.GetRecordS8Request;
+import com.s8.api.flow.record.requests.GetRecordS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
@@ -15,19 +15,13 @@ public class GetOp extends RequestDbMgOperation<BeBranch> {
 
 	public final RecordsMgDatabase dbHandler;
 
-	public final String key;
-
-	public final MgCallback<GetUserS8AsyncOutput> onRetrieved;
+	public final GetRecordS8Request request;
 	
 	
-	public GetOp(long timeStamp, RecordsMgDatabase dbHandler, 
-			String key, 
-			MgCallback<GetUserS8AsyncOutput> onRetrieved, 
-			long options) {
-		super(timeStamp, null, options);
+	public GetOp(long timeStamp, DbMgCallback callback, RecordsMgDatabase dbHandler, GetRecordS8Request request) {
+		super(timeStamp, null, callback);
 		this.dbHandler = dbHandler;
-		this.key = key;
-		this.onRetrieved = onRetrieved;
+		this.request = request;
 	}
 
 
@@ -52,22 +46,17 @@ public class GetOp extends RequestDbMgOperation<BeBranch> {
 
 			@Override
 			public boolean consumeResource(BeBranch branch) throws BeIOException {
-				GetUserS8AsyncOutput output = new GetUserS8AsyncOutput();
-
-				TableS8Object object =  (TableS8Object) branch.get(key);
-				output.setUser((S8User) object);
-
-				onRetrieved.call(output);
+				RecordS8Object object =  (RecordS8Object) branch.get(request.id);
+				GetRecordS8Request.Status status = object != null ? Status.OK : Status.NOT_FOUND;
+				request.onSucceed(status , object);
+				callback.call();
 				return false;
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				exception.printStackTrace();
-				GetUserS8AsyncOutput output = new GetUserS8AsyncOutput();
-				output.reportException(exception);
-				onRetrieved.call(output);
-
+				request.onFailed(exception);
+				callback.call();
 			}
 		};
 	}

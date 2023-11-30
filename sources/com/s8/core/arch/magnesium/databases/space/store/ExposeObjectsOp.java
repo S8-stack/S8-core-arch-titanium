@@ -3,8 +3,9 @@ package com.s8.core.arch.magnesium.databases.space.store;
 import java.io.IOException;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.SpaceVersionS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.space.requests.ExposeSpaceS8Request;
+import com.s8.api.flow.space.requests.ExposeSpaceS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -23,16 +24,8 @@ class ExposeObjectsOp extends RequestDbMgOperation<SpaceMgStore> {
 	public final SpaceMgDatabase spaceHandler;
 
 
-	public final String spaceId;
-
-	public final Object[] objects;
-
-
-	/**
-	 * 
-	 */
-	public final MgCallback<SpaceVersionS8AsyncOutput> onSucceed;
-
+	public final ExposeSpaceS8Request request;
+	
 
 
 	/**
@@ -41,16 +34,11 @@ class ExposeObjectsOp extends RequestDbMgOperation<SpaceMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public ExposeObjectsOp(long timestamp, S8User initiator, SpaceMgDatabase spaceHandler, 
-			String spaceId,
-			Object[] objects,
-			MgCallback<SpaceVersionS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public ExposeObjectsOp(long timestamp, S8User initiator, DbMgCallback callback,
+			SpaceMgDatabase spaceHandler, ExposeSpaceS8Request request) {
+		super(timestamp, initiator, callback);
 		this.spaceHandler = spaceHandler;
-		this.spaceId = spaceId;
-		this.objects = objects;
-		this.onSucceed = onSucceed;
+		this.request = request;
 	}
 
 	@Override
@@ -76,18 +64,16 @@ class ExposeObjectsOp extends RequestDbMgOperation<SpaceMgStore> {
 			@Override
 			public boolean consumeResource(SpaceMgStore store) throws IOException {
 
-				MgSpaceHandler spaceHandler = store.getSpaceHandler(spaceId);
+				MgSpaceHandler spaceHandler = store.getSpaceHandler(request.spaceId);
 				if(spaceHandler != null) {
-					spaceHandler.exposeObjects(timeStamp, initiator, objects, onSucceed, options);
+					spaceHandler.exposeObjects(timeStamp, initiator, callback, request);
 
 					/* not change in the db itself, despite space will be modified */
 					return false;
 				}
 				else {
-					SpaceVersionS8AsyncOutput output = new SpaceVersionS8AsyncOutput();
-					output.isSuccessful = false;
-					output.isResourceUnavailable = true;
-					onSucceed.call(output);
+					request.onResponse(Status.NOT_FOUND, 0x0L);
+					callback.call();
 					return false;
 				}
 			}
@@ -95,17 +81,10 @@ class ExposeObjectsOp extends RequestDbMgOperation<SpaceMgStore> {
 
 			@Override
 			public void catchException(Exception exception) {
-				exception.printStackTrace();
-
-				SpaceVersionS8AsyncOutput output = new SpaceVersionS8AsyncOutput();
-				output.isSuccessful = false;
-				output.reportException(exception);
-				onSucceed.call(output);
-
+				request.onFailed(exception);
+				callback.call();
 			}
 		};
 	}
-
-
 
 }

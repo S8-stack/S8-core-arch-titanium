@@ -2,9 +2,9 @@ package com.s8.core.arch.magnesium.databases.record;
 
 import java.util.List;
 
-import com.s8.api.flow.S8Filter;
-import com.s8.api.flow.outputs.ObjectsListS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.record.objects.RecordS8Object;
+import com.s8.api.flow.record.requests.SelectRecordsS8Request;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
@@ -19,7 +19,7 @@ import com.s8.core.bohr.beryllium.exception.BeIOException;
  *
  * @param <T>
  */
-public class BrowseOp<T> extends RequestDbMgOperation<BeBranch> {
+public class BrowseOp<T extends RecordS8Object> extends RequestDbMgOperation<BeBranch> {
 
 
 
@@ -32,23 +32,15 @@ public class BrowseOp<T> extends RequestDbMgOperation<BeBranch> {
 	/**
 	 * 
 	 */
-	public final S8Filter<T> filter;
-
-
-	/**
-	 * on selected
-	 */
-	public final MgCallback<ObjectsListS8AsyncOutput<T>> onSelected;
+	public final SelectRecordsS8Request<T> request;
 
 
 
-	public BrowseOp(long timeStamp, RecordsMgDatabase dbHandler, 
-			S8Filter<T> filter,
-			MgCallback<ObjectsListS8AsyncOutput<T>> onSelected, long options) {
-		super(timeStamp, null, options);
+
+	public BrowseOp(long timeStamp, DbMgCallback callback, RecordsMgDatabase dbHandler, SelectRecordsS8Request<T> request) {
+		super(timeStamp, null, callback);
 		this.dbHandler = dbHandler;
-		this.filter = filter;
-		this.onSelected = onSelected;
+		this.request = request;
 	}
 
 
@@ -73,22 +65,16 @@ public class BrowseOp<T> extends RequestDbMgOperation<BeBranch> {
 
 			@Override
 			public boolean consumeResource(BeBranch branch) throws BeIOException {
-				ObjectsListS8AsyncOutput<T> output = new ObjectsListS8AsyncOutput<T>();
-
-				List<T> objects = branch.select(filter);
-				output.users = objects;
-				output.isSuccessful = true;
-
-				onSelected.call(output);
+				List<T> objects = branch.select(request.filter);
+				request.onResponse(objects);
+				callback.call();
 				return false; // no resources modified
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				exception.printStackTrace();
-				ObjectsListS8AsyncOutput<T> output = new ObjectsListS8AsyncOutput<T>();
-				output.reportException(exception);
-				onSelected.call(output);
+				request.onError(exception);
+				callback.call();
 			}
 		};
 	}

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.bohr.neodymium.codebase.NdCodebase;

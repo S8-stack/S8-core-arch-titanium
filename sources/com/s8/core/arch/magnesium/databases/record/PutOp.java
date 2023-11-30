@@ -1,10 +1,8 @@
 package com.s8.core.arch.magnesium.databases.record;
 
-import com.s8.api.bytes.Bool64;
-import com.s8.api.flow.S8AsyncFlow;
-import com.s8.api.flow.outputs.PutUserS8AsyncOutput;
-import com.s8.api.objects.table.TableS8Object;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.record.requests.PutRecordS8Request;
+import com.s8.api.flow.record.requests.PutRecordS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
@@ -22,18 +20,13 @@ public class PutOp extends RequestDbMgOperation<BeBranch> {
 
 	public final RecordsMgDatabase dbHandler;
 
-	public final TableS8Object object;
-
-	public final MgCallback<PutUserS8AsyncOutput> onInserted;
+	public final PutRecordS8Request request;
 
 
-	public PutOp(long timeStamp, RecordsMgDatabase dbHandler, TableS8Object object, 
-			MgCallback<PutUserS8AsyncOutput> onInserted, 
-			long options) {
-		super(timeStamp, null, options);
+	public PutOp(long timeStamp, DbMgCallback callback, RecordsMgDatabase dbHandler, PutRecordS8Request request) {
+		super(timeStamp, null, callback);
 		this.dbHandler = dbHandler;
-		this.object = object;
-		this.onInserted = onInserted;
+		this.request = request;
 	}
 
 
@@ -60,45 +53,45 @@ public class PutOp extends RequestDbMgOperation<BeBranch> {
 
 			@Override
 			public boolean consumeResource(BeBranch branch) throws Exception {
-				PutUserS8AsyncOutput output = new PutUserS8AsyncOutput();
+				
 				boolean hasBeenModified = false;
+				PutRecordS8Request.Status status = Status.OK;
 
-				String key = object.S8_key;
+				String key = request.record.S8_key;
 				
-				boolean isCheckingOverride = Bool64.has(options, S8AsyncFlow.SHOULD_NOT_OVERRIDE);
 				
-				if(!isCheckingOverride) {
-					branch.put(object);
+				if(request.isOverridingAllowed) {
+					branch.put(request.record);
+					status = Status.OK;
 					hasBeenModified = true;
-					output.isSuccessful = true;
 				}
-				else {
+				else { // no overriding
 					if(!branch.hasEntry(key)) {
-						branch.put(object);
+						branch.put(request.record);
+						status = Status.OK;
 						hasBeenModified = true;
-						output.isSuccessful = true;
 					}
 					else {
-						output.isSuccessful = false;
-						output.hasIdConflict = true;
+						status = Status.ID_CONFLICT;
+						hasBeenModified = false;
 					}
 				}
 
-				if(hasBeenModified && Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {
+				if(hasBeenModified && request.isImmediateHDWriteRequired) {
 					handler.save();
 				}
 				
 				/* run function */
-				onInserted.call(output);
+				request.onResponse(status);
+				callback.call();
 				
 				return hasBeenModified;
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				PutUserS8AsyncOutput output = new PutUserS8AsyncOutput();
-				output.reportException(exception);
-				onInserted.call(output);
+				request.onError(exception);
+				callback.call();
 			}
 		};
 	}

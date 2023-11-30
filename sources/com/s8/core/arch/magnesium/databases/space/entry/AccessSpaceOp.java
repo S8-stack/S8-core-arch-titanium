@@ -1,11 +1,10 @@
 package com.s8.core.arch.magnesium.databases.space.entry;
 
-import com.s8.api.bytes.Bool64;
-import com.s8.api.flow.S8AsyncFlow;
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
-import com.s8.api.objects.space.SpaceS8Object;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.space.objects.SpaceS8Object;
+import com.s8.api.flow.space.requests.AccessSpaceS8Request;
+import com.s8.api.flow.space.requests.AccessSpaceS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
@@ -30,7 +29,9 @@ class AccessSpaceOp extends RequestDbMgOperation<LiBranch> {
 	/**
 	 * 
 	 */
-	public final MgCallback<SpaceExposureS8AsyncOutput> onSucceed;
+	public final AccessSpaceS8Request request;
+	
+	
 
 
 
@@ -40,12 +41,11 @@ class AccessSpaceOp extends RequestDbMgOperation<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public AccessSpaceOp(long timestamp, S8User initiator, MgSpaceHandler spaceHandler, 
-			MgCallback<SpaceExposureS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public AccessSpaceOp(long timestamp, S8User initiator, DbMgCallback callback,
+			MgSpaceHandler spaceHandler, AccessSpaceS8Request request) {
+		super(timestamp, initiator, callback);
 		this.spaceHandler = spaceHandler;
-		this.onSucceed = onSucceed;
+		this.request = request;
 	}
 
 
@@ -66,19 +66,17 @@ class AccessSpaceOp extends RequestDbMgOperation<LiBranch> {
 
 			@Override
 			public boolean consumeResource(LiBranch branch) {
-				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-
 				SpaceS8Object[] objects = branch.getCurrentExposure();
-				output.isSuccessful = true;
-				output.objects = objects;
-
-				onSucceed.call(output);
-
+				
+				request.onAccessed(Status.OK, objects);
+				
 				boolean hasBeenModified = branch.getGraph().hasUnpublishedChanges();
 
-				if(hasBeenModified && Bool64.has(options, S8AsyncFlow.SAVE_IMMEDIATELY_AFTER)) {
+				if(hasBeenModified && request.writeChangesImmediatelyAfter) {
 					handler.save();
 				}
+				
+				callback.call();
 
 				return hasBeenModified;
 			}
@@ -86,10 +84,8 @@ class AccessSpaceOp extends RequestDbMgOperation<LiBranch> {
 
 			@Override
 			public void catchException(Exception exception) {
-				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-				output.isSuccessful = false;
-				output.reportException(exception);
-				onSucceed.call(output);
+				request.onFailed(exception);
+				callback.call();
 			}
 		};
 	}

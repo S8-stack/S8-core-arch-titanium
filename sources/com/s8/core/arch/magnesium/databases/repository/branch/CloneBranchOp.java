@@ -4,9 +4,10 @@ import java.io.IOException;
 
 import com.s8.api.flow.S8AsyncFlow;
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.BranchExposureS8AsyncOutput;
-import com.s8.api.objects.repo.RepoS8Object;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.objects.RepoS8Object;
+import com.s8.api.flow.repository.requests.CloneBranchS8Request;
+import com.s8.api.flow.repository.requests.CloneBranchS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
@@ -24,11 +25,7 @@ class CloneBranchOp extends RequestDbMgOperation<NdBranch> {
 
 	public final MgBranchHandler branchHandler;
 
-	public final long version;
-
-	public final MgCallback<BranchExposureS8AsyncOutput> onSucceed;
-
-
+	public final CloneBranchS8Request request;
 	/**
 	 * 
 	 * @param handler
@@ -36,12 +33,11 @@ class CloneBranchOp extends RequestDbMgOperation<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CloneBranchOp(long timestamp, S8User initiator,
-			MgBranchHandler handler, long version, MgCallback<BranchExposureS8AsyncOutput> onSucceed, long options) {
-		super(timestamp, initiator, options);
+	public CloneBranchOp(long timestamp, S8User initiator, DbMgCallback callback, 
+			MgBranchHandler handler, CloneBranchS8Request request) {
+		super(timestamp, initiator, callback);
 		this.branchHandler = handler;
-		this.version = version;
-		this.onSucceed = onSucceed;
+		this.request = request;
 	}
 
 
@@ -67,33 +63,31 @@ class CloneBranchOp extends RequestDbMgOperation<NdBranch> {
 
 			@Override
 			public boolean consumeResource(NdBranch branch) throws IOException, S8ShellStructureException {
-				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
 
 				/* standard cases */
+				long version = request.version;
 				if(version >= 0L) {
 					RepoS8Object[] objects = branch.cloneVersion(version).exposure;
-					output.objects = objects;
-					output.isSuccessful = true;
+					request.onResponse(Status.OK, objects);
 				}
 				/* special cases */
 				else if(version == S8AsyncFlow.HEAD_VERSION){
 					RepoS8Object[] objects = branch.cloneHead().exposure;
-					output.objects = objects;
-					output.isSuccessful = true;
+					request.onResponse(Status.OK, objects);
 				}
 				else {
-					output.isSuccessful = false;
+					request.onResponse(Status.INVALID_VERSION, null);
 				}
-
-				onSucceed.call(output);
+				
+				callback.call();
+				
 				return false;
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				BranchExposureS8AsyncOutput output = new BranchExposureS8AsyncOutput();
-				output.reportException(exception);
-				onSucceed.call(output);
+				request.onError(exception);
+				callback.call();
 			}			
 		};
 	}

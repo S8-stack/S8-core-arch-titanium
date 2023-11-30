@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.bohr.lithium.codebase.LiCodebase;
@@ -21,16 +21,33 @@ import com.s8.core.bohr.lithium.codebase.LiCodebase;
 public class SpaceMgStore {
 
 
+	/**
+	 * 
+	 */
 	public final SpaceMgDatabase handler;
 
+	
+	/**
+	 * 
+	 */
 	public final LiCodebase codebase;
 
+	
+	/**
+	 * 
+	 */
 	public final SpaceMgStoreMetadata metadata;
 	
 	
-
+	/**
+	 * 
+	 */
 	private Path path;
 
+	
+	/**
+	 * 
+	 */
 	public final MgPathComposer pathComposer;
 
 	public final Map<String, MgSpaceHandler> spaceHandlers = new HashMap<>();

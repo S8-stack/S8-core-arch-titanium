@@ -5,9 +5,9 @@ import java.nio.file.Path;
 import java.util.HashMap;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.RepoCreationS8AsyncOutput;
-import com.s8.api.objects.repo.RepoS8Object;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.requests.CreateRepositoryS8Request;
+import com.s8.api.flow.repository.requests.CreateRepositoryS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.core.arch.magnesium.databases.repository.entry.MgBranchMetadata;
@@ -32,21 +32,8 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 
 	public final RepoMgDatabase storeHandler;
 
-	public final String repositoryName;
+	public final CreateRepositoryS8Request request;
 	
-	public final String repositoryAddress;
-	
-	public final String repositoryInfo;
-	
-	public final String mainBranchName;
-	
-	public final RepoS8Object[] objects;
-	
-	public final String initialCommitComment;
-
-	public final S8User initiator;
-	
-	public final MgCallback<RepoCreationS8AsyncOutput> onSucceed;
 
 
 
@@ -57,26 +44,11 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CreateRepoOp(long timestamp, S8User initiator,
-			RepoMgDatabase handler, 
-			String repositoryName,
-			String repositoryAddress,
-			String repositoryInfo, 
-			String mainBranchName, 
-			RepoS8Object[] objects, 
-			String initialCommitComment,
-			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public CreateRepoOp(long timestamp, S8User initiator, DbMgCallback callback, 
+			RepoMgDatabase handler, CreateRepositoryS8Request request) {
+		super(timestamp, initiator, callback);
 		this.storeHandler = handler;
-		this.repositoryName = repositoryName;
-		this.repositoryAddress = repositoryAddress;
-		this.repositoryInfo = repositoryInfo;
-		this.mainBranchName = mainBranchName;
-		this.objects = objects;
-		this.initialCommitComment = initialCommitComment;
-		this.initiator = initiator;
-		this.onSucceed = onSucceed;
+		this.request = request;
 	}
 
 
@@ -105,28 +77,28 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 			public boolean consumeResource(RepoMgStore store) throws JOOS_CompilingException, IOException, S8ShellStructureException {
 
 
-				MgRepositoryHandler repoHandler = store.createRepositoryHandler(repositoryAddress);
+				MgRepositoryHandler repoHandler = store.createRepositoryHandler(request.repositoryAddress);
 
 				if(repoHandler != null) {
 					
 					/* <metadata> */
 					MgRepositoryMetadata metadata = new MgRepositoryMetadata();
-					metadata.name = repositoryName;
-					metadata.address = repositoryAddress;
-					metadata.info = repositoryInfo;
+					metadata.name = request.repositoryName;
+					metadata.address = request.repositoryAddress;
+					metadata.info = request.repositoryInfo;
 					metadata.owner = initiator.getUsername();
 					metadata.creationDate = timeStamp;
 					metadata.branches = new HashMap<>();
 					
 					/* define a new (main) branch */
 					MgBranchMetadata mainBranchMetadata = new MgBranchMetadata();
-					mainBranchMetadata.name = mainBranchName;
+					mainBranchMetadata.name = request.mainBranchName;
 					mainBranchMetadata.info = "Created as MAIN branch";
 					mainBranchMetadata.headVersion = 0L;
 					mainBranchMetadata.forkedBranchId = null;
 					mainBranchMetadata.forkedBranchVersion = 0L;
 					mainBranchMetadata.owner = initiator.getUsername();
-					metadata.branches.put(mainBranchName, mainBranchMetadata);
+					metadata.branches.put(request.mainBranchName, mainBranchMetadata);
 					
 					/* </metadata> */
 					
@@ -140,37 +112,30 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 					
 					/* <nd-branch> */
 					MgBranchHandler branchHandler = new MgBranchHandler(ng, store, repository, mainBranchMetadata);
-					NdBranch ndBranch = new NdBranch(store.getCodebase(), mainBranchName);
-					ndBranch.commit(objects, getTimestamp(), initiator.getUsername(), initialCommitComment);
+					NdBranch ndBranch = new NdBranch(store.getCodebase(), request.mainBranchName);
+					long version = ndBranch.commit(request.objects, getTimestamp(), initiator.getUsername(), request.initialCommitComment);
 					branchHandler.initializeResource(ndBranch);
 					/* </nd-branch> */
 					
-					repository.branchHandlers.put(mainBranchName, branchHandler);
+					repository.branchHandlers.put(request.mainBranchName, branchHandler);
 					repoHandler.initializeResource(repository);
 					
-					
-					RepoCreationS8AsyncOutput output = new RepoCreationS8AsyncOutput();
-					output.isSuccessful = true;
-					output.hasAddressConflict = false;
-					onSucceed.call(output);
+					request.onResponse(Status.OK, version);
+					callback.call();
 					return true;
 				}
 				else {
 					/* if repoHandler is null => implies collision for repository address */
-					RepoCreationS8AsyncOutput output = new RepoCreationS8AsyncOutput();
-					output.isSuccessful = false;
-					output.hasAddressConflict = true;
-					onSucceed.call(output);
+					request.onResponse(Status.IS_ADDRESS_CONFLICTING, 0x0L);
+					callback.call();
 					return false;
 				}
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				exception.printStackTrace();
-				RepoCreationS8AsyncOutput output = new RepoCreationS8AsyncOutput();
-				output.reportException(exception);
-				onSucceed.call(output);
+				request.onFailed(exception);
+				callback.call();
 			}
 		};
 	}

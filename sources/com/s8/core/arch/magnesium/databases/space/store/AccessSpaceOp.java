@@ -3,8 +3,9 @@ package com.s8.core.arch.magnesium.databases.space.store;
 import java.io.IOException;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.space.requests.AccessSpaceS8Request;
+import com.s8.api.flow.space.requests.AccessSpaceS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -30,16 +31,8 @@ class AccessSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 	/**
 	 * space-id
 	 */
-	public final String spaceId;
-
-
-
-	/**
-	 * on-processed
-	 */
-	public final MgCallback<SpaceExposureS8AsyncOutput> onProcessed;
-
-
+	public final AccessSpaceS8Request request;
+	
 
 	/**
 	 * 
@@ -47,14 +40,11 @@ class AccessSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 	 * @param onProcessed
 	 * @param onFailed
 	 */
-	public AccessSpaceOp(long timestamp, S8User initiator, SpaceMgDatabase handler, 
-			String repositoryAddress, 
-			MgCallback<SpaceExposureS8AsyncOutput> onProcessed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public AccessSpaceOp(long timestamp, S8User initiator, DbMgCallback callback,
+			SpaceMgDatabase handler, AccessSpaceS8Request request) {
+		super(timestamp, initiator, callback);
 		this.spaceHandler = handler;
-		this.spaceId = repositoryAddress;
-		this.onProcessed = onProcessed;
+		this.request = request;
 	}
 
 	
@@ -83,18 +73,16 @@ class AccessSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 			public boolean consumeResource(SpaceMgStore store) throws IOException {
 
 
-				MgSpaceHandler spaceHandler = store.getSpaceHandler(spaceId);
+				MgSpaceHandler spaceHandler = store.getSpaceHandler(request.spaceId);
 
 				if(spaceHandler != null) {
 					/* exit point 1 -> continue */
-					spaceHandler.accessSpace(timeStamp, initiator, onProcessed, options);
+					spaceHandler.accessSpace(timeStamp, initiator, callback, request);
 				}
 				else {
 					/* exit point 2 -> soft fail */
-					SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-					output.isSuccessful = false;
-					output.isSpaceDoesNotExist = true;
-					onProcessed.call(output);
+					request.onAccessed(Status.SPACE_DOES_NOT_EXIST, null);
+					callback.call();
 				}
 				
 				/* no new space created */
@@ -103,13 +91,8 @@ class AccessSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 
 			@Override
 			public void catchException(Exception exception) {
-
-				exception.printStackTrace();
-
-				/* exit point 3 -> hard fail */
-				SpaceExposureS8AsyncOutput output = new SpaceExposureS8AsyncOutput();
-				output.reportException(exception);
-				onProcessed.call(output);
+				request.onFailed(exception);
+				callback.call();
 			}
 		};
 	}

@@ -10,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.BranchCreationS8AsyncOutput;
-import com.s8.api.flow.outputs.BranchExposureS8AsyncOutput;
-import com.s8.api.flow.outputs.BranchVersionS8AsyncOutput;
-import com.s8.api.flow.outputs.RepoCreationS8AsyncOutput;
-import com.s8.api.flow.outputs.RepositoryMetadataS8AsyncOutput;
-import com.s8.api.objects.repo.RepoS8Object;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.requests.CloneBranchS8Request;
+import com.s8.api.flow.repository.requests.CommitBranchS8Request;
+import com.s8.api.flow.repository.requests.CreateRepositoryS8Request;
+import com.s8.api.flow.repository.requests.ForkBranchS8Request;
+import com.s8.api.flow.repository.requests.ForkRepositoryS8Request;
+import com.s8.api.flow.repository.requests.GetBranchMetadataS8Request;
+import com.s8.api.flow.repository.requests.GetRepositoryMetadataS8Request;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.core.arch.silicon.SiliconEngine;
@@ -90,20 +91,8 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void createRepository(long t, S8User initiator,
-			String repositoryName,
-			String repositoryAddress,
-			String repositoryInfo, 
-			String mainBranchName,
-			RepoS8Object[] objects,
-			String initialCommitComment,
-			MgCallback<RepoCreationS8AsyncOutput> onSucceed, 
-			long options) {
-		pushOpLast(new CreateRepoOp(t, initiator, this, 
-				repositoryName, repositoryAddress, repositoryInfo, 
-				mainBranchName, 
-				objects, initialCommitComment, 
-				onSucceed, options));
+	public void createRepository(long t, S8User initiator, DbMgCallback callback, CreateRepositoryS8Request request) {
+		pushOpLast(new CreateRepoOp(t, initiator, callback, this, request));
 	}
 	
 	
@@ -113,16 +102,8 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void forkRepository(long t, S8User initiator,
-			String originRepositoryAddress,
-			String originBranchId, long originBranchVersion,
-			String targetRepositoryName, String targetRepositoryAddress,
-			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
-			long options) {
-		pushOpLast(new ForkRepoOp(t, initiator, this, 
-				originRepositoryAddress, originBranchId, originBranchVersion, 
-				targetRepositoryName, targetRepositoryAddress, 
-				onSucceed, options));
+	public void forkRepository(long t, S8User initiator, DbMgCallback callback, ForkRepositoryS8Request request) {
+		pushOpLast(new ForkRepoOp(t, initiator, callback, this, request));
 	}
 	
 	
@@ -132,14 +113,8 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void forkBranch(long t, S8User initiator, 
-			String repositoryAddress, 
-			String originBranchId, long originBranchVersion, String targetBranchId,
-			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
-			long options) {
-		pushOpLast(new ForkBranchOp(t, initiator, this, 
-				repositoryAddress, originBranchId, originBranchVersion, targetBranchId, 
-				onSucceed, options));
+	public void forkBranch(long t, S8User initiator, DbMgCallback callback, ForkBranchS8Request request) {
+		pushOpLast(new ForkBranchOp(t, initiator, callback, this, request));
 	}
 	
 	
@@ -148,11 +123,8 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void commitBranch(long t, S8User initiator, String repoAddress, String branchName, 
-			Object[] objects, String comment,
-			MgCallback<BranchVersionS8AsyncOutput> onSucceed, long options) {
-		pushOpLast(new CommitBranchOp(t, initiator, this, repoAddress, branchName, (RepoS8Object[]) objects,
-				comment, onSucceed, options));
+	public void commitBranch(long t, S8User initiator, DbMgCallback callback, CommitBranchS8Request request) {
+		pushOpLast(new CommitBranchOp(t, initiator, callback, this, request));
 	}
 
 
@@ -164,25 +136,10 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void cloneBranch(long t, S8User initiator,  String repoAddress, String branchName, long version, 
-			MgCallback<BranchExposureS8AsyncOutput> onSucceed, 
-			long options) {
-		pushOpLast(new CloneBranchOp(t, initiator, this, repoAddress, branchName, version, onSucceed, options));
+	public void cloneBranch(long t, S8User initiator, DbMgCallback callback, CloneBranchS8Request request) {
+		pushOpLast(new CloneBranchOp(t, initiator, callback, this, request));
 	}
 
-
-	/**
-	 * 
-	 * @param headVersion
-	 * @param onSucceed
-	 * @param onFailed
-	 */
-	public void retrieveBranchHeadVersion(long t, S8User initiator, String repoAddress, String branchName, 
-			MgCallback<BranchVersionS8AsyncOutput> onSucceed, 
-			long options) {
-		pushOpLast(new RetrieveBranchHeadVersion(t, initiator, this, repoAddress, branchName, onSucceed, options));
-	}
-	
 	
 	/**
 	 * 
@@ -190,9 +147,21 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	 * @param post
 	 * @return 
 	 */
-	public void getRepositoryMetadata(long t,  S8User initiator, String repoAddress, 
-			MgCallback<RepositoryMetadataS8AsyncOutput> onRead, long options) {
-		pushOpLast(new GetRepositoryMetadataOp(t, initiator, this, repoAddress, onRead, options));
+	public void getRepositoryMetadata(long t,  S8User initiator, DbMgCallback callback, 
+			GetRepositoryMetadataS8Request request) {
+		pushOpLast(new GetRepositoryMetadataOp(t, initiator, callback, this, request));
+	}
+	
+
+	/**
+	 * 
+	 * @param pre
+	 * @param post
+	 * @return 
+	 */
+	public void getBranchMetadata(long t,  S8User initiator, DbMgCallback callback, 
+			GetBranchMetadataS8Request request) {
+		pushOpLast(new GetBranchMetadataOp(t, initiator, callback, this, request));
 	}
 	
 	

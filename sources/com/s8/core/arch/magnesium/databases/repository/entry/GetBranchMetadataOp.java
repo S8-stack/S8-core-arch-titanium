@@ -1,8 +1,9 @@
 package com.s8.core.arch.magnesium.databases.repository.entry;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.RepositoryMetadataS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.requests.GetBranchMetadataS8Request;
+import com.s8.api.flow.repository.requests.GetBranchMetadataS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
@@ -13,12 +14,12 @@ import com.s8.core.arch.silicon.async.MthProfile;
  * @author pierreconvert
  *
  */
-class GetMetadataOp extends RequestDbMgOperation<MgRepository> {
+class GetBranchMetadataOp extends RequestDbMgOperation<MgRepository> {
 
 
 	public final MgRepositoryHandler repoHandler;
-
-	public final MgCallback<RepositoryMetadataS8AsyncOutput> onSucceed;
+	
+	public final GetBranchMetadataS8Request request;
 
 
 
@@ -28,13 +29,11 @@ class GetMetadataOp extends RequestDbMgOperation<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public GetMetadataOp(long timestamp, S8User initiator,
-			MgRepositoryHandler repoHandler, 
-			MgCallback<RepositoryMetadataS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public GetBranchMetadataOp(long timestamp, S8User initiator, DbMgCallback callback, 
+			MgRepositoryHandler repoHandler, GetBranchMetadataS8Request request) {
+		super(timestamp, initiator, callback);
 		this.repoHandler = repoHandler;
-		this.onSucceed = onSucceed;
+		this.request = request;
 	}
 	
 
@@ -61,18 +60,21 @@ class GetMetadataOp extends RequestDbMgOperation<MgRepository> {
 
 			@Override
 			public boolean consumeResource(MgRepository repository) {
-				RepositoryMetadataS8AsyncOutput output = new RepositoryMetadataS8AsyncOutput();
-				output.isSuccessful = true;
-				output.metadata = repository.metadata;
- 				onSucceed.call(output);
+				MgBranchMetadata branchMetadata = repository.metadata.branches.get(request.branchId);
+				if(branchMetadata != null) {
+					request.onSucceed(Status.OK, branchMetadata);	
+				}
+				else {
+					request.onSucceed(Status.NO_SUCH_BRANCH, branchMetadata);
+				}
+				callback.call();
  				return false;
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				RepositoryMetadataS8AsyncOutput output = new RepositoryMetadataS8AsyncOutput();
-				output.reportException(exception);
-				onSucceed.call(output);
+				request.onFailed(exception);
+				callback.call();
 			}			
 		};
 	}

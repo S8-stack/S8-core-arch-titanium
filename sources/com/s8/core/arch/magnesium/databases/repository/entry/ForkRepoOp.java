@@ -3,8 +3,9 @@ package com.s8.core.arch.magnesium.databases.repository.entry;
 import java.util.HashMap;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.BranchCreationS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.requests.ForkRepositoryS8Request;
+import com.s8.api.flow.repository.requests.ForkRepositoryS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.core.arch.magnesium.databases.repository.store.RepoMgStore;
@@ -25,21 +26,11 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 	 * origin repo handler
 	 */
 	public final MgRepositoryHandler repoHandler;
-
-
-	public final String originBranchId;
 	
-	public final long originBranchVersion;
-
-	/**
-	 * target repo handler
-	 */
 	public final MgRepositoryHandler targetRepositoryHandler;
-	
-	public final String targetRepositoryName;
 
 
-	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
+	public final ForkRepositoryS8Request request;
 
 	public final RepoMgStore store;
 
@@ -49,23 +40,15 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public ForkRepoOp(long timestamp, S8User initiator,
+	public ForkRepoOp(long timestamp, S8User initiator, DbMgCallback callback, 
 			MgRepositoryHandler repoHandler, 
-			String originBranchId,
-			long originBranchVersion,
 			MgRepositoryHandler targetRepositoryHandler,
-			String targetRepositoryName,
-			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initiator, options);
-		this.repoHandler = repoHandler;
-		this.originBranchId = originBranchId;
-		this.originBranchVersion = originBranchVersion;
-		this.targetRepositoryHandler = targetRepositoryHandler;
-		this.targetRepositoryName = targetRepositoryName;
-		this.onSucceed = onSucceed;
-
+			ForkRepositoryS8Request request) {
+		super(timestamp, initiator, callback);
 		this.store = repoHandler.store;
+		this.repoHandler = repoHandler;
+		this.targetRepositoryHandler = targetRepositoryHandler;
+		this.request = request;
 	}
 
 
@@ -97,50 +80,47 @@ class ForkRepoOp extends RequestDbMgOperation<MgRepository> {
 			public boolean consumeResource(MgRepository repository) {
 
 				MgRepositoryMetadata repoMetadata = repository.metadata.shallowClone();
-				repoMetadata.name = targetRepositoryName;
+				repoMetadata.name = request.targetRepositoryName;
+				repoMetadata.info = request.targetRepositoryInfo;
 				repoMetadata.branches = new HashMap<>();
 				
 				MgRepository targetRepository = new MgRepository(repoMetadata, targetRepositoryHandler.folderPath);
 
 
 
-				MgBranchHandler originBranchHandler = repository.branchHandlers.get(originBranchId);
+				MgBranchHandler originBranchHandler = repository.branchHandlers.get(request.originBranchId);
 				if(originBranchHandler != null) {
-
 
 					/* define a new (main) branch */
 					MgBranchMetadata targetBranchMetadata = new MgBranchMetadata();
-					targetBranchMetadata.name = originBranchId;
-					targetBranchMetadata.info = "FORK from "+originBranchId+"["+originBranchVersion+"]";
+					targetBranchMetadata.name = request.originBranchId;
+					targetBranchMetadata.info = "FORK from "+request.originBranchId+"["+request.originBranchVersion+"]";
 					targetBranchMetadata.headVersion = 0L;
-					targetBranchMetadata.forkedBranchId = originBranchId;
-					targetBranchMetadata.forkedBranchVersion = originBranchVersion;
+					targetBranchMetadata.forkedBranchId = request.originBranchId;
+					targetBranchMetadata.forkedBranchVersion = request.originBranchVersion;
 					
-					repoMetadata.branches.put(originBranchId, targetBranchMetadata);
+					repoMetadata.branches.put(request.originBranchId, targetBranchMetadata);
 
 
 					MgBranchHandler targetBranchHandler = new MgBranchHandler(handler.ng, store, repository, targetBranchMetadata);
-					targetRepository.branchHandlers.put(originBranchId, targetBranchHandler);
+					targetRepository.branchHandlers.put(request.originBranchId, targetBranchHandler);
 
-					originBranchHandler.forkBranch(timeStamp, initiator, originBranchVersion, targetBranchHandler, onSucceed, options);
+					originBranchHandler.forkRepo(timeStamp, initiator, callback, targetBranchHandler, request);
 
 					return true;
 
 				}
 				else {
-					BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
-					output.isSuccessful = false;
-					output.hasIdConflict = true;
-					onSucceed.call(output);
+					request.onResponded(Status.NO_SUCH_ORIGIN_BRANCH, 0x0L);
+					callback.call();
 					return false;
 				}
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
-				output.reportException(exception);
-				onSucceed.call(output);
+				request.onFailed(exception);
+				callback.call();
 			}			
 		};
 

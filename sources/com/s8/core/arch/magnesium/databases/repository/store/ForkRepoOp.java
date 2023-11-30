@@ -3,8 +3,9 @@ package com.s8.core.arch.magnesium.databases.repository.store;
 import java.io.IOException;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.BranchCreationS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.requests.ForkRepositoryS8Request;
+import com.s8.api.flow.repository.requests.ForkRepositoryS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -29,34 +30,7 @@ class ForkRepoOp extends RequestDbMgOperation<RepoMgStore> {
 	/**
 	 * 
 	 */
-	public final String originRepositoryAddress;
-	
-	
-	public final String originBranchId;
-	
-	
-	public final long originBranchVersion;
-	
-	
-
-	/**
-	 * 
-	 */
-	public final String targetRepositoryName;
-	
-	
-	/**
-	 * 
-	 */
-	public final String targetRepositoryAddress;
-
-	
-
-	
-	/**
-	 * 
-	 */
-	public final MgCallback<BranchCreationS8AsyncOutput> onSucceed;
+	public final ForkRepositoryS8Request request;
 
 
 
@@ -67,25 +41,13 @@ class ForkRepoOp extends RequestDbMgOperation<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public ForkRepoOp(long timestamp, S8User initiator,
-			RepoMgDatabase handler, 
-			String originRepositoryAddress,
-			String originBranchId, long originBranchVersion,
-			String targetRepositoryName, String targetRepositoryAddress,
-			MgCallback<BranchCreationS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public ForkRepoOp(long timestamp, S8User initiator, DbMgCallback callback, RepoMgDatabase handler, 
+			ForkRepositoryS8Request request) {
+		super(timestamp, initiator, callback);
 
 		/* fields */
 		this.storeHandler = handler;
-		this.originRepositoryAddress = originRepositoryAddress;
-		this.originBranchId = originBranchId;
-		this.originBranchVersion = originBranchVersion;
-		
-		this.targetRepositoryName = targetRepositoryName;
-		this.targetRepositoryAddress = targetRepositoryAddress;
-		
-		this.onSucceed = onSucceed;
+		this.request = request;
 	}
 
 
@@ -113,37 +75,29 @@ class ForkRepoOp extends RequestDbMgOperation<RepoMgStore> {
 			@Override
 			public boolean consumeResource(RepoMgStore store) throws JOOS_CompilingException, IOException {
 
-				MgRepositoryHandler originRepoHandler = store.getRepositoryHandler(originRepositoryAddress);
+				MgRepositoryHandler originRepoHandler = store.getRepositoryHandler(request.originRepoAddress);
 				if(originRepoHandler != null) {
 					
-					MgRepositoryHandler targetRepoHandler = store.createRepositoryHandler(targetRepositoryAddress);
-					if(targetRepositoryAddress != null) {
-						originRepoHandler.forkRepo(timeStamp, initiator, 
-								originBranchId, originBranchVersion, 
-								targetRepoHandler, targetRepositoryName,
-								onSucceed, options);
+					MgRepositoryHandler targetRepoHandler = store.createRepositoryHandler(request.targetRepositoryAddress);
+					if(targetRepoHandler != null) {
+						originRepoHandler.forkRepo(timeStamp, initiator, callback, targetRepoHandler, request);
 					}	
 					else {
-						BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
-						output.isSuccessful = false;
-						output.isRepositoryDoesNotExist = true;
-						onSucceed.call(output);
+						request.onResponded(Status.TARGET_REPO_ADDRESS_CONFLICT, 0x0L);
+						callback.call();
 					}
 				}
 				else {
-					BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
-					output.isSuccessful = false;
-					output.isRepositoryDoesNotExist = true;
-					onSucceed.call(output);
+					request.onResponded(Status.ORIGIN_REPOSITORY_DOES_NOT_EXIST, 0x0L);
+					callback.call();
 				}
 				return false;
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				BranchCreationS8AsyncOutput output = new BranchCreationS8AsyncOutput();
-				output.reportException(exception);
-				onSucceed.call(output);
+				request.onFailed(exception);
+				callback.call();
 			}
 		};
 	}

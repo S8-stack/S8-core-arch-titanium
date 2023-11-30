@@ -3,8 +3,9 @@ package com.s8.core.arch.magnesium.databases.repository.store;
 import java.io.IOException;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.RepositoryMetadataS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.repository.requests.GetRepositoryMetadataS8Request;
+import com.s8.api.flow.repository.requests.GetRepositoryMetadataS8Request.Status;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
@@ -25,9 +26,8 @@ class GetRepositoryMetadataOp extends RequestDbMgOperation<RepoMgStore> {
 
 	public final RepoMgDatabase storeHandler;
 
-	public final String repositoryAddress;
-
-	public final MgCallback<RepositoryMetadataS8AsyncOutput> onDone;
+	public final GetRepositoryMetadataS8Request request;
+	
 
 
 
@@ -37,16 +37,13 @@ class GetRepositoryMetadataOp extends RequestDbMgOperation<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public GetRepositoryMetadataOp(long timestamp, S8User initiator,
-			RepoMgDatabase handler, 
-			String repositoryAddress,
-			MgCallback<RepositoryMetadataS8AsyncOutput> onSucceed, 
-			long options) {
-		super(timestamp, initiator, options);
+	public GetRepositoryMetadataOp(long timestamp, S8User initiator, DbMgCallback callback, 
+			RepoMgDatabase handler, GetRepositoryMetadataS8Request request) {
+		super(timestamp, initiator, callback);
 		this.storeHandler = handler;
-		this.repositoryAddress = repositoryAddress;
-		this.onDone = onSucceed;
+		this.request = request;
 	}
+	
 
 
 	@Override
@@ -67,29 +64,26 @@ class GetRepositoryMetadataOp extends RequestDbMgOperation<RepoMgStore> {
 
 			@Override
 			public String describe() {
-				return "GET-META on "+repositoryAddress+" branch of "+handler.getName()+ " repository";
+				return "GET-META on "+request.address+" branch of "+handler.getName()+ " repository";
 			}
 
 			@Override
 			public boolean consumeResource(RepoMgStore store) throws JOOS_CompilingException, IOException {
-				MgRepositoryHandler repoHandler = store.getRepositoryHandler(repositoryAddress);
+				MgRepositoryHandler repoHandler = store.getRepositoryHandler(request.address);
 				if(repoHandler != null) {
-					repoHandler.getRepositoryMetadata(timeStamp, initiator, onDone, options);
+					repoHandler.getRepositoryMetadata(timeStamp, initiator, callback, request);
 				}
 				else {
-					RepositoryMetadataS8AsyncOutput output = new RepositoryMetadataS8AsyncOutput();
-					output.isSuccessful = false;
-					output.isRepositoryDoesNotExist = true;
-					onDone.call(output);
+					request.onSucceed(Status.UNKNOWN_REPOSITORY, null);
+					callback.call();
 				}
 				return false;
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				RepositoryMetadataS8AsyncOutput output = new RepositoryMetadataS8AsyncOutput();
-				output.reportException(exception);
-				onDone.call(output);
+				request.onFailed(exception);
+				callback.call();
 			}			
 		};
 	}

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.api.flow.S8User;
-import com.s8.api.flow.outputs.SpaceExposureS8AsyncOutput;
-import com.s8.api.flow.outputs.SpaceVersionS8AsyncOutput;
-import com.s8.core.arch.magnesium.callbacks.MgCallback;
+import com.s8.api.flow.space.requests.AccessSpaceS8Request;
+import com.s8.api.flow.space.requests.ExposeSpaceS8Request;
+import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.space.store.SpaceMgStore;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
@@ -117,8 +117,8 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void accessSpace(long t, S8User initiator, MgCallback<SpaceExposureS8AsyncOutput> onSucceed, long options) {
-		pushOpLast(new AccessSpaceOp(t, initiator, this, onSucceed, options));
+	public void accessSpace(long t, S8User initiator, DbMgCallback callback, AccessSpaceS8Request request) {
+		pushOpLast(new AccessSpaceOp(t, initiator, callback, this, request));
 	}
 	
 	
@@ -128,8 +128,8 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void exposeObjects(long t, S8User initiator, Object[] objects, MgCallback<SpaceVersionS8AsyncOutput> onSucceed, long options) {
-		pushOpLast(new ExposeObjectsOp(t, initiator, this, objects, onSucceed, options));
+	public void exposeObjects(long t, S8User initiator, DbMgCallback callback, ExposeSpaceS8Request request) {
+		pushOpLast(new ExposeObjectsOp(t, initiator, callback, this, request));
 	}
 
 
