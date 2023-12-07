@@ -11,7 +11,7 @@ import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.bohr.neodymium.codebase.NdCodebase;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
+import com.s8.core.io.json.types.JSON_CompilingException;
 
 
 /**
@@ -58,12 +58,12 @@ public class RepoMgStore {
 	 * 
 	 * @param repositoryAddress
 	 * @return
-	 * @throws JOOS_CompilingException 
+	 * @throws JSON_CompilingException 
 	 * @throws IOException 
 	 */
 	
 	MgRepositoryHandler getRepositoryHandler(String repositoryAddress) 
-			throws JOOS_CompilingException, IOException {
+			throws JSON_CompilingException, IOException {
 		MgRepositoryHandler repoHandler = repositoryHandlers.get(repositoryAddress);
 		if(repoHandler != null) {
 			return repoHandler;
@@ -87,11 +87,11 @@ public class RepoMgStore {
 	 * 
 	 * @param repositoryAddress
 	 * @return
-	 * @throws JOOS_CompilingException
+	 * @throws JSON_CompilingException
 	 * @throws IOException
 	 */
 	MgRepositoryHandler createRepositoryHandler(String repositoryAddress) 
-			throws JOOS_CompilingException, IOException {
+			throws JSON_CompilingException, IOException {
 		MgRepositoryHandler repoHandler = repositoryHandlers.get(repositoryAddress);
 		if(repoHandler != null) {
 			return null;

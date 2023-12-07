@@ -20,7 +20,7 @@ import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.bohr.atom.S8ShellStructureException;
 import com.s8.core.bohr.neodymium.branch.NdBranch;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
+import com.s8.core.io.json.types.JSON_CompilingException;
 
 /**
  * 
@@ -74,7 +74,7 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 			}
 
 			@Override
-			public boolean consumeResource(RepoMgStore store) throws JOOS_CompilingException, IOException, S8ShellStructureException {
+			public boolean consumeResource(RepoMgStore store) throws JSON_CompilingException, IOException, S8ShellStructureException {
 
 
 				MgRepositoryHandler repoHandler = store.createRepositoryHandler(request.repositoryAddress);

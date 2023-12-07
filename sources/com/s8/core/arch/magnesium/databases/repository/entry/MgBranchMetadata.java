@@ -1,39 +1,39 @@
 package com.s8.core.arch.magnesium.databases.repository.entry;
 
 import com.s8.api.flow.repository.objects.S8BranchMetadata;
-import com.s8.core.io.joos.JOOS_Field;
-import com.s8.core.io.joos.JOOS_Type;
+import com.s8.core.io.json.JSON_Field;
+import com.s8.core.io.json.JSON_Type;
 
 /**
  * 
  * @author pierreconvert
  *
  */
-@JOOS_Type(name = "MgBranchMetadata")
+@JSON_Type(name = "MgBranchMetadata")
 public class MgBranchMetadata implements S8BranchMetadata {
 
 
-	@JOOS_Field(name = "id")
+	@JSON_Field(name = "id")
 	public String name;
 
 
-	@JOOS_Field(name = "info")
+	@JSON_Field(name = "info")
 	public String info;
 
 
-	@JOOS_Field(name = "headVersion")
+	@JSON_Field(name = "headVersion")
 	public long headVersion;
 
 
-	@JOOS_Field(name = "forkId")
+	@JSON_Field(name = "forkId")
 	public String forkedBranchId;
 
 
-	@JOOS_Field(name = "forkVersion")
+	@JSON_Field(name = "forkVersion")
 	public long forkedBranchVersion;
 
 
-	@JOOS_Field(name = "owner")
+	@JSON_Field(name = "owner")
 	public String owner;
 
 	/*

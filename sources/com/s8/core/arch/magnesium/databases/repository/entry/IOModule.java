@@ -12,34 +12,34 @@ import com.s8.core.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.core.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.core.arch.silicon.SiliconEngine;
-import com.s8.core.io.joos.JOOS_Lexicon;
-import com.s8.core.io.joos.composing.JOOS_ComposingException;
-import com.s8.core.io.joos.parsing.JOOS_ParsingException;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
-import com.s8.core.io.joos.utilities.JOOS_BufferedFileReader;
-import com.s8.core.io.joos.utilities.JOOS_BufferedFileWriter;
+import com.s8.core.io.json.JSON_Lexicon;
+import com.s8.core.io.json.composing.JSON_ComposingException;
+import com.s8.core.io.json.parsing.JSON_ParsingException;
+import com.s8.core.io.json.types.JSON_CompilingException;
+import com.s8.core.io.json.utilities.JOOS_BufferedFileReader;
+import com.s8.core.io.json.utilities.JOOS_BufferedFileWriter;
 
 public class IOModule implements H3MgIOModule<MgRepository> {
 
-	private static JOOS_Lexicon lexicon;
+	private static JSON_Lexicon lexicon;
 
 
 
 	public final MgRepositoryHandler handler;
 
 
-	public IOModule(MgRepositoryHandler handler) throws JOOS_CompilingException {
+	public IOModule(MgRepositoryHandler handler) throws JSON_CompilingException {
 		super();
 		this.handler = handler;
 
 		if(lexicon == null) { 
-			lexicon = JOOS_Lexicon.from(MgRepositoryMetadata.class); 
+			lexicon = JSON_Lexicon.from(MgRepositoryMetadata.class); 
 		}
 	}
 
 
 	@Override
-	public MgRepository load() throws IOException, JOOS_ParsingException {
+	public MgRepository load() throws IOException, JSON_ParsingException {
 
 		FileChannel channel = FileChannel.open(handler.getMetadataFilePath(), new OpenOption[]{ 
 				StandardOpenOption.READ
@@ -77,7 +77,7 @@ public class IOModule implements H3MgIOModule<MgRepository> {
 
 
 	@Override
-	public void save(MgRepository repo) throws IOException, JOOS_ComposingException {
+	public void save(MgRepository repo) throws IOException, JSON_ComposingException {
 
 		
 		Files.createDirectories(handler.getFolderPath());

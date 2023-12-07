@@ -6,30 +6,30 @@ import java.util.function.BiConsumer;
 
 import com.s8.api.flow.repository.objects.S8BranchMetadata;
 import com.s8.api.flow.repository.objects.S8RepositoryMetadata;
-import com.s8.core.io.joos.JOOS_Field;
-import com.s8.core.io.joos.JOOS_Type;
+import com.s8.core.io.json.JSON_Field;
+import com.s8.core.io.json.JSON_Type;
 
-@JOOS_Type(name = "MgRepositoryMetadata")
+@JSON_Type(name = "MgRepositoryMetadata")
 public class MgRepositoryMetadata implements S8RepositoryMetadata {
 
 
-	@JOOS_Field(name = "name") 
+	@JSON_Field(name = "name") 
 	public String name;
 	
-	@JOOS_Field(name = "address") 
+	@JSON_Field(name = "address") 
 	public String address;
 	
-	@JOOS_Field(name = "creationDate") 
+	@JSON_Field(name = "creationDate") 
 	public long creationDate;
 	
-	@JOOS_Field(name = "owner") 
+	@JSON_Field(name = "owner") 
 	public String owner;
 	
-	@JOOS_Field(name = "info") 
+	@JSON_Field(name = "info") 
 	public String info;
 
 
-	@JOOS_Field(name = "branches")
+	@JSON_Field(name = "branches")
 	public Map<String, MgBranchMetadata> branches;
 
 	

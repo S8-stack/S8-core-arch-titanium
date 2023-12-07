@@ -22,9 +22,9 @@ import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.bohr.neodymium.codebase.NdCodebase;
-import com.s8.core.io.joos.JOOS_Lexicon;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
-import com.s8.core.io.joos.utilities.JOOS_BufferedFileWriter;
+import com.s8.core.io.json.JSON_Lexicon;
+import com.s8.core.io.json.types.JSON_CompilingException;
+import com.s8.core.io.json.utilities.JOOS_BufferedFileWriter;
 
 
 /**
@@ -42,7 +42,7 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	private Path rootFolderPath;
 	
 	
-	public RepoMgDatabase(SiliconEngine ng, NdCodebase codebase, Path rootFolderPath) throws JOOS_CompilingException {
+	public RepoMgDatabase(SiliconEngine ng, NdCodebase codebase, Path rootFolderPath) throws JSON_CompilingException {
 		super(ng);
 		this.codebase = codebase;
 		this.rootFolderPath = rootFolderPath;
@@ -169,11 +169,11 @@ public class RepoMgDatabase extends H3MgHandler<RepoMgStore> {
 	
 	/* <utilities> */
 	
-	public static void init(String rootFolderPathname) throws IOException, JOOS_CompilingException {
+	public static void init(String rootFolderPathname) throws IOException, JSON_CompilingException {
 		RepoMgStoreMetadata metadata = new RepoMgStoreMetadata();
 		metadata.rootPathname = rootFolderPathname;
 		
-		JOOS_Lexicon lexicon = JOOS_Lexicon.from(RepoMgStoreMetadata.class);
+		JSON_Lexicon lexicon = JSON_Lexicon.from(RepoMgStoreMetadata.class);
 		FileChannel channel = FileChannel.open(Path.of(rootFolderPathname).resolve(RepoMgStore.METADATA_FILENAME), 
 				new OpenOption[]{ StandardOpenOption.WRITE, StandardOpenOption.CREATE });
 		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);

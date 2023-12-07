@@ -11,7 +11,7 @@ import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryHandler
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.silicon.async.MthProfile;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
+import com.s8.core.io.json.types.JSON_CompilingException;
 
 /**
  * 
@@ -73,7 +73,7 @@ class ForkRepoOp extends RequestDbMgOperation<RepoMgStore> {
 			}
 
 			@Override
-			public boolean consumeResource(RepoMgStore store) throws JOOS_CompilingException, IOException {
+			public boolean consumeResource(RepoMgStore store) throws JSON_CompilingException, IOException {
 
 				MgRepositoryHandler originRepoHandler = store.getRepositoryHandler(request.originRepoAddress);
 				if(originRepoHandler != null) {

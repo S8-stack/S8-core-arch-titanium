@@ -7,18 +7,18 @@ import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.core.io.joos.JOOS_Lexicon;
-import com.s8.core.io.joos.parsing.JOOS_ParsingException;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
-import com.s8.core.io.joos.utilities.JOOS_BufferedFileReader;
-import com.s8.core.io.joos.utilities.JOOS_BufferedFileWriter;
+import com.s8.core.io.json.JSON_Lexicon;
+import com.s8.core.io.json.parsing.JSON_ParsingException;
+import com.s8.core.io.json.types.JSON_CompilingException;
+import com.s8.core.io.json.utilities.JOOS_BufferedFileReader;
+import com.s8.core.io.json.utilities.JOOS_BufferedFileWriter;
 
 public class IOModule implements H3MgIOModule<SpaceMgStore> {
 
-	private static JOOS_Lexicon lexicon;
+	private static JSON_Lexicon lexicon;
 	
 	
-	public static JOOS_Lexicon JOOS_getLexicon() throws JOOS_CompilingException {
+	public static JSON_Lexicon JOOS_getLexicon() throws JSON_CompilingException {
 	
 		return lexicon;
 	}
@@ -27,18 +27,18 @@ public class IOModule implements H3MgIOModule<SpaceMgStore> {
 	public final SpaceMgDatabase handler;
 	
 	
-	public IOModule(SpaceMgDatabase handler) throws JOOS_CompilingException {
+	public IOModule(SpaceMgDatabase handler) throws JSON_CompilingException {
 		super();
 		this.handler = handler;
 		
 		if(lexicon == null) { 
-			lexicon = JOOS_Lexicon.from(SpaceMgStoreMetadata.class); 
+			lexicon = JSON_Lexicon.from(SpaceMgStoreMetadata.class); 
 		}
 	}
 
 
 	@Override
-	public SpaceMgStore load() throws IOException, JOOS_ParsingException {
+	public SpaceMgStore load() throws IOException, JSON_ParsingException {
 
 		FileChannel channel = FileChannel.open(handler.getMetadataFilePath(), new OpenOption[]{ 
 				StandardOpenOption.READ

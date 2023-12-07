@@ -1,18 +1,18 @@
 package com.s8.core.arch.magnesium.databases.repository.branch;
 
-import com.s8.core.io.joos.JOOS_Field;
-import com.s8.core.io.joos.JOOS_Type;
+import com.s8.core.io.json.JSON_Field;
+import com.s8.core.io.json.JSON_Type;
 
-@JOOS_Type(name = "mg-branch-commit-info")
+@JSON_Type(name = "mg-branch-commit-info")
 public class MgBranchCommitInfo {
 	
-	@JOOS_Field(name = "user")
+	@JSON_Field(name = "user")
 	public String userId;
 
-	@JOOS_Field(name = "date")
+	@JSON_Field(name = "date")
 	public long timestamp;
 
-	@JOOS_Field(name = "comment")
+	@JSON_Field(name = "comment")
 	public String comment;
 
 }

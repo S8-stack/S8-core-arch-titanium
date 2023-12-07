@@ -2,12 +2,12 @@ package com.s8.arch.magnesium.demos.repo;
 
 import java.io.IOException;
 
-import com.s8.core.io.joos.composing.JOOS_ComposingException;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
+import com.s8.core.io.json.composing.JSON_ComposingException;
+import com.s8.core.io.json.types.JSON_CompilingException;
 
 public class RepoDemo00 {
 
-	public static void main(String[] args) throws JOOS_CompilingException, IOException, JOOS_ComposingException {
+	public static void main(String[] args) throws JSON_CompilingException, IOException, JSON_ComposingException {
 
 		/*
 		

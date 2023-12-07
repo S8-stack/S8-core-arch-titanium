@@ -16,7 +16,7 @@ import com.s8.core.arch.magnesium.databases.repository.store.RepoMgStore;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.core.arch.silicon.SiliconEngine;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
+import com.s8.core.io.json.types.JSON_CompilingException;
 
 /**
  * 
@@ -38,7 +38,7 @@ public class MgRepositoryHandler extends H3MgHandler<MgRepository> {
 	public final Path folderPath;
 
 	
-	public MgRepositoryHandler(SiliconEngine ng, RepoMgStore store, String address) throws JOOS_CompilingException {
+	public MgRepositoryHandler(SiliconEngine ng, RepoMgStore store, String address) throws JSON_CompilingException {
 		super(ng);
 		this.store = store;
 		this.address = address;

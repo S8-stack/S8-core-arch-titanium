@@ -7,18 +7,18 @@ import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
-import com.s8.core.io.joos.JOOS_Lexicon;
-import com.s8.core.io.joos.parsing.JOOS_ParsingException;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
-import com.s8.core.io.joos.utilities.JOOS_BufferedFileReader;
-import com.s8.core.io.joos.utilities.JOOS_BufferedFileWriter;
+import com.s8.core.io.json.JSON_Lexicon;
+import com.s8.core.io.json.parsing.JSON_ParsingException;
+import com.s8.core.io.json.types.JSON_CompilingException;
+import com.s8.core.io.json.utilities.JOOS_BufferedFileReader;
+import com.s8.core.io.json.utilities.JOOS_BufferedFileWriter;
 
 public class IOModule implements H3MgIOModule<RepoMgStore> {
 
-	private static JOOS_Lexicon lexicon;
+	private static JSON_Lexicon lexicon;
 	
 	
-	public static JOOS_Lexicon JOOS_getLexicon() throws JOOS_CompilingException {
+	public static JSON_Lexicon JOOS_getLexicon() throws JSON_CompilingException {
 		
 		return lexicon;
 	}
@@ -29,20 +29,20 @@ public class IOModule implements H3MgIOModule<RepoMgStore> {
 	/**
 	 * 
 	 * @param handler
-	 * @throws JOOS_CompilingException
+	 * @throws JSON_CompilingException
 	 */
-	public IOModule(RepoMgDatabase handler) throws JOOS_CompilingException {
+	public IOModule(RepoMgDatabase handler) throws JSON_CompilingException {
 		super();
 		this.handler = handler;
 		
 		if(lexicon == null) { 
-			lexicon = JOOS_Lexicon.from(RepoMgStoreMetadata.class); 
+			lexicon = JSON_Lexicon.from(RepoMgStoreMetadata.class); 
 		}
 	}
 
 
 	@Override
-	public RepoMgStore load() throws IOException, JOOS_ParsingException {
+	public RepoMgStore load() throws IOException, JSON_ParsingException {
 
 		FileChannel channel = FileChannel.open(handler.getMetadataPath(), new OpenOption[]{ 
 				StandardOpenOption.READ

@@ -18,9 +18,9 @@ import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
 import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.bohr.lithium.codebase.LiCodebase;
-import com.s8.core.io.joos.JOOS_Lexicon;
-import com.s8.core.io.joos.types.JOOS_CompilingException;
-import com.s8.core.io.joos.utilities.JOOS_BufferedFileWriter;
+import com.s8.core.io.json.JSON_Lexicon;
+import com.s8.core.io.json.types.JSON_CompilingException;
+import com.s8.core.io.json.utilities.JOOS_BufferedFileWriter;
 
 
 /**
@@ -46,11 +46,11 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	 * @param codebase
 	 * @param storeInfoPathname
 	 * @param initializer
-	 * @throws JOOS_CompilingException
+	 * @throws JSON_CompilingException
 	 */
 	public SpaceMgDatabase(SiliconEngine ng, 
 			LiCodebase codebase, 
-			Path rootFolderPath) throws JOOS_CompilingException {
+			Path rootFolderPath) throws JSON_CompilingException {
 		super(ng);
 		this.codebase = codebase;
 		this.rootFolderPath = rootFolderPath;
@@ -131,7 +131,7 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 
 	
 	
-	public static void init(String rootFolderPathname) throws IOException, JOOS_CompilingException {
+	public static void init(String rootFolderPathname) throws IOException, JSON_CompilingException {
 		
 		SpaceMgStoreMetadata metadata = new SpaceMgStoreMetadata();
 		metadata.rootFolderPathname = rootFolderPathname;
@@ -141,7 +141,7 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 		
 		Files.createDirectories(rootFolderPath);
 		FileChannel channel = FileChannel.open(metadataFilePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
-		JOOS_Lexicon lexicon = JOOS_Lexicon.from(SpaceMgStoreMetadata.class);
+		JSON_Lexicon lexicon = JSON_Lexicon.from(SpaceMgStoreMetadata.class);
 		JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);
 		
 		lexicon.compose(writer, metadata, "   ", false);
