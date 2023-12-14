@@ -7,10 +7,10 @@ import java.util.List;
 import com.s8.api.flow.S8User;
 import com.s8.api.flow.space.requests.AccessSpaceS8Request;
 import com.s8.api.flow.space.requests.ExposeSpaceS8Request;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.space.store.SpaceMgStore;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.bohr.lithium.branches.LiBranch;
 
@@ -117,7 +117,7 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void accessSpace(long t, S8User initiator, DbMgCallback callback, AccessSpaceS8Request request) {
+	public void accessSpace(long t, S8User initiator, SiliconChainCallback callback, AccessSpaceS8Request request) {
 		pushOpLast(new AccessSpaceOp(t, initiator, callback, this, request));
 	}
 	
@@ -128,7 +128,7 @@ public class MgSpaceHandler extends H3MgHandler<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public void exposeObjects(long t, S8User initiator, DbMgCallback callback, ExposeSpaceS8Request request) {
+	public void exposeObjects(long t, S8User initiator, SiliconChainCallback callback, ExposeSpaceS8Request request) {
 		pushOpLast(new ExposeObjectsOp(t, initiator, callback, this, request));
 	}
 

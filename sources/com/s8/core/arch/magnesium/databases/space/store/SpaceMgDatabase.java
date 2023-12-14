@@ -13,9 +13,9 @@ import com.s8.api.flow.S8User;
 import com.s8.api.flow.space.requests.AccessSpaceS8Request;
 import com.s8.api.flow.space.requests.CreateSpaceS8Request;
 import com.s8.api.flow.space.requests.ExposeSpaceS8Request;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.bohr.lithium.codebase.LiCodebase;
 import com.s8.core.io.json.JSON_Lexicon;
@@ -99,7 +99,7 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	 * @param onProceed
 	 * @param onFailed
 	 */
-	public void createSpace(long t, S8User initiator, DbMgCallback callback, CreateSpaceS8Request request) {
+	public void createSpace(long t, S8User initiator, SiliconChainCallback callback, CreateSpaceS8Request request) {
 		pushOpLast(new CreateSpaceOp(t, initiator, callback, this, request));
 	}
 	
@@ -112,7 +112,7 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	 * @param onProceed
 	 * @param onFailed
 	 */
-	public void accessSpace(long t, S8User initiator, DbMgCallback callback, AccessSpaceS8Request request) {
+	public void accessSpace(long t, S8User initiator, SiliconChainCallback callback, AccessSpaceS8Request request) {
 		pushOpLast(new AccessSpaceOp(t, initiator, callback, this, request));
 	}
 
@@ -125,7 +125,7 @@ public class SpaceMgDatabase extends H3MgHandler<SpaceMgStore> {
 	 * @param onProceed
 	 * @param onFailed
 	 */
-	public void exposeObjects(long t, S8User initiator, DbMgCallback callback, ExposeSpaceS8Request request) {
+	public void exposeObjects(long t, S8User initiator, SiliconChainCallback callback, ExposeSpaceS8Request request) {
 		pushOpLast(new ExposeObjectsOp(t, initiator, callback, this, request));
 	}
 

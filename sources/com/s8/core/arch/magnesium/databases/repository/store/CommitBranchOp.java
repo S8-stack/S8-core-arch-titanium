@@ -5,11 +5,11 @@ import java.io.IOException;
 import com.s8.api.flow.S8User;
 import com.s8.api.flow.repository.requests.CommitBranchS8Request;
 import com.s8.api.flow.repository.requests.CommitBranchS8Request.Status;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.io.json.types.JSON_CompilingException;
 
@@ -35,7 +35,7 @@ class CommitBranchOp extends RequestDbMgOperation<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CommitBranchOp(long timestamp, S8User initiator, DbMgCallback callback, 
+	public CommitBranchOp(long timestamp, S8User initiator, SiliconChainCallback callback, 
 			RepoMgDatabase handler, CommitBranchS8Request request) {
 		super(timestamp, initiator, callback);
 		this.storeHandler = handler;

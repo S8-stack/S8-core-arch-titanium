@@ -8,9 +8,9 @@ import com.s8.api.flow.record.objects.RecordS8Object;
 import com.s8.api.flow.record.requests.GetRecordS8Request;
 import com.s8.api.flow.record.requests.PutRecordS8Request;
 import com.s8.api.flow.record.requests.SelectRecordsS8Request;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgIOModule;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.bohr.beryllium.branch.BeBranch;
 import com.s8.core.bohr.beryllium.codebase.BeCodebase;
@@ -68,12 +68,12 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 	}
 	
 	
-	public void get(long t, DbMgCallback callback, GetRecordS8Request request) {
+	public void get(long t, SiliconChainCallback callback, GetRecordS8Request request) {
 		pushOpLast(new GetOp(t, callback, this, request));
 	}
 	
 	
-	public void put(long t, DbMgCallback callback, PutRecordS8Request request) {
+	public void put(long t, SiliconChainCallback callback, PutRecordS8Request request) {
 		pushOpLast(new PutOp(t, callback, this, request));
 	}
 	
@@ -87,7 +87,7 @@ public class RecordsMgDatabase extends H3MgHandler<BeBranch> {
 	 * @param onSelected
 	 * @param onFailed
 	 */
-	public <T extends RecordS8Object> void select(long t, DbMgCallback callback, SelectRecordsS8Request<T> request) {
+	public <T extends RecordS8Object> void select(long t, SiliconChainCallback callback, SelectRecordsS8Request<T> request) {
 		pushOpLast(new BrowseOp<T>(t, callback, this, request));
 	}
 	

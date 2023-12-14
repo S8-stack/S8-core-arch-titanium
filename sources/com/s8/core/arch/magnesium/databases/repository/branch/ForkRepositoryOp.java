@@ -7,10 +7,10 @@ import com.s8.api.flow.S8User;
 import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.api.flow.repository.requests.ForkRepositoryS8Request;
 import com.s8.api.flow.repository.requests.ForkRepositoryS8Request.Status;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.bohr.atom.S8ShellStructureException;
 import com.s8.core.bohr.neodymium.branch.NdBranch;
@@ -38,7 +38,7 @@ class ForkRepositoryOp extends RequestDbMgOperation<NdBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public ForkRepositoryOp(long timestamp, S8User initiator, DbMgCallback callback, 
+	public ForkRepositoryOp(long timestamp, S8User initiator, SiliconChainCallback callback, 
 			MgBranchHandler originBranchHandler, 
 			MgBranchHandler targetBranchHandler,
 			ForkRepositoryS8Request request) {

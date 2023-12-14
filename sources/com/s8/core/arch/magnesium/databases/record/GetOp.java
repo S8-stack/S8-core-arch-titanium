@@ -3,10 +3,10 @@ package com.s8.core.arch.magnesium.databases.record;
 import com.s8.api.flow.record.objects.RecordS8Object;
 import com.s8.api.flow.record.requests.GetRecordS8Request;
 import com.s8.api.flow.record.requests.GetRecordS8Request.Status;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.bohr.beryllium.branch.BeBranch;
 import com.s8.core.bohr.beryllium.exception.BeIOException;
@@ -18,7 +18,7 @@ public class GetOp extends RequestDbMgOperation<BeBranch> {
 	public final GetRecordS8Request request;
 	
 	
-	public GetOp(long timeStamp, DbMgCallback callback, RecordsMgDatabase dbHandler, GetRecordS8Request request) {
+	public GetOp(long timeStamp, SiliconChainCallback callback, RecordsMgDatabase dbHandler, GetRecordS8Request request) {
 		super(timeStamp, null, callback);
 		this.dbHandler = dbHandler;
 		this.request = request;

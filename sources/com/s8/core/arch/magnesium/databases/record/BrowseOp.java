@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.s8.api.flow.record.objects.RecordS8Object;
 import com.s8.api.flow.record.requests.SelectRecordsS8Request;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.bohr.beryllium.branch.BeBranch;
 import com.s8.core.bohr.beryllium.exception.BeIOException;
@@ -37,7 +37,7 @@ public class BrowseOp<T extends RecordS8Object> extends RequestDbMgOperation<BeB
 
 
 
-	public BrowseOp(long timeStamp, DbMgCallback callback, RecordsMgDatabase dbHandler, SelectRecordsS8Request<T> request) {
+	public BrowseOp(long timeStamp, SiliconChainCallback callback, RecordsMgDatabase dbHandler, SelectRecordsS8Request<T> request) {
 		super(timeStamp, null, callback);
 		this.dbHandler = dbHandler;
 		this.request = request;

@@ -5,10 +5,10 @@ import java.io.IOException;
 import com.s8.api.flow.S8User;
 import com.s8.api.flow.space.requests.CreateSpaceS8Request;
 import com.s8.api.flow.space.requests.CreateSpaceS8Request.Status;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.space.entry.MgSpaceHandler;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.bohr.lithium.branches.LiBranch;
 
@@ -43,7 +43,7 @@ class CreateSpaceOp extends RequestDbMgOperation<SpaceMgStore> {
 	 * @param onProcessed
 	 * @param onFailed
 	 */
-	public CreateSpaceOp(long timestamp, S8User initiator, DbMgCallback callback,
+	public CreateSpaceOp(long timestamp, S8User initiator, SiliconChainCallback callback,
 			SpaceMgDatabase handler, CreateSpaceS8Request request) {
 		super(timestamp, initiator, callback);
 		this.spaceHandler = handler;

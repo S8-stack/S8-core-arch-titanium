@@ -7,7 +7,6 @@ import java.util.HashMap;
 import com.s8.api.flow.S8User;
 import com.s8.api.flow.repository.requests.CreateRepositoryS8Request;
 import com.s8.api.flow.repository.requests.CreateRepositoryS8Request.Status;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.databases.repository.branch.MgBranchHandler;
 import com.s8.core.arch.magnesium.databases.repository.entry.MgBranchMetadata;
@@ -16,6 +15,7 @@ import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryHandler
 import com.s8.core.arch.magnesium.databases.repository.entry.MgRepositoryMetadata;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.bohr.atom.S8ShellStructureException;
@@ -44,7 +44,7 @@ class CreateRepoOp extends RequestDbMgOperation<RepoMgStore> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public CreateRepoOp(long timestamp, S8User initiator, DbMgCallback callback, 
+	public CreateRepoOp(long timestamp, S8User initiator, SiliconChainCallback callback, 
 			RepoMgDatabase handler, CreateRepositoryS8Request request) {
 		super(timestamp, initiator, callback);
 		this.storeHandler = handler;

@@ -4,10 +4,10 @@ import com.s8.api.flow.S8User;
 import com.s8.api.flow.space.objects.SpaceS8Object;
 import com.s8.api.flow.space.requests.AccessSpaceS8Request;
 import com.s8.api.flow.space.requests.AccessSpaceS8Request.Status;
-import com.s8.core.arch.magnesium.databases.DbMgCallback;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
+import com.s8.core.arch.silicon.SiliconChainCallback;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.bohr.lithium.branches.LiBranch;
 
@@ -41,7 +41,7 @@ class AccessSpaceOp extends RequestDbMgOperation<LiBranch> {
 	 * @param onSucceed
 	 * @param onFailed
 	 */
-	public AccessSpaceOp(long timestamp, S8User initiator, DbMgCallback callback,
+	public AccessSpaceOp(long timestamp, S8User initiator, SiliconChainCallback callback,
 			MgSpaceHandler spaceHandler, AccessSpaceS8Request request) {
 		super(timestamp, initiator, callback);
 		this.spaceHandler = spaceHandler;
