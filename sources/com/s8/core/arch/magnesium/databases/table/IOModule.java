@@ -1,4 +1,4 @@
-package com.s8.core.arch.magnesium.databases.record;
+package com.s8.core.arch.magnesium.databases.table;
 
 import java.io.IOException;
 
@@ -21,14 +21,14 @@ import com.s8.core.io.bytes.linked.LinkedBytesIO;
 public class IOModule implements H3MgIOModule<BeBranch> {
 
 	
-	public final RecordsMgDatabase handler;
+	public final TableMgDatabase handler;
 	
 	
 	/**
 	 * 
 	 * @param handler
 	 */
-	public IOModule(RecordsMgDatabase handler) {
+	public IOModule(TableMgDatabase handler) {
 		super();
 		this.handler = handler;
 	}

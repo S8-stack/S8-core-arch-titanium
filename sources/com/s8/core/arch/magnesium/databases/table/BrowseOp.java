@@ -1,8 +1,9 @@
-package com.s8.core.arch.magnesium.databases.record;
+package com.s8.core.arch.magnesium.databases.table;
 
-import com.s8.api.flow.record.objects.RecordS8Object;
-import com.s8.api.flow.record.requests.GetRecordS8Request;
-import com.s8.api.flow.record.requests.GetRecordS8Request.Status;
+import java.util.List;
+
+import com.s8.api.flow.table.objects.RowS8Object;
+import com.s8.api.flow.table.requests.SelectRecordsS8Request;
 import com.s8.core.arch.magnesium.databases.RequestDbMgOperation;
 import com.s8.core.arch.magnesium.handlers.h3.ConsumeResourceMgAsyncTask;
 import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler;
@@ -11,14 +12,32 @@ import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.bohr.beryllium.branch.BeBranch;
 import com.s8.core.bohr.beryllium.exception.BeIOException;
 
-public class GetOp extends RequestDbMgOperation<BeBranch> {
 
-	public final RecordsMgDatabase dbHandler;
+/**
+ * 
+ * @author pierreconvert
+ *
+ * @param <T>
+ */
+public class BrowseOp<T extends RowS8Object> extends RequestDbMgOperation<BeBranch> {
 
-	public final GetRecordS8Request request;
-	
-	
-	public GetOp(long timeStamp, SiliconChainCallback callback, RecordsMgDatabase dbHandler, GetRecordS8Request request) {
+
+
+	/**
+	 * handler
+	 */
+	public final TableMgDatabase dbHandler;
+
+
+	/**
+	 * 
+	 */
+	public final SelectRecordsS8Request<T> request;
+
+
+
+
+	public BrowseOp(long timeStamp, SiliconChainCallback callback, TableMgDatabase dbHandler, SelectRecordsS8Request<T> request) {
 		super(timeStamp, null, callback);
 		this.dbHandler = dbHandler;
 		this.request = request;
@@ -46,16 +65,15 @@ public class GetOp extends RequestDbMgOperation<BeBranch> {
 
 			@Override
 			public boolean consumeResource(BeBranch branch) throws BeIOException {
-				RecordS8Object object =  (RecordS8Object) branch.get(request.id);
-				GetRecordS8Request.Status status = object != null ? Status.OK : Status.NOT_FOUND;
-				request.onSucceed(status , object);
+				List<T> objects = branch.select(request.filter);
+				request.onResponse(objects);
 				callback.call();
-				return false;
+				return false; // no resources modified
 			}
 
 			@Override
 			public void catchException(Exception exception) {
-				request.onFailed(exception);
+				request.onError(exception);
 				callback.call();
 			}
 		};
