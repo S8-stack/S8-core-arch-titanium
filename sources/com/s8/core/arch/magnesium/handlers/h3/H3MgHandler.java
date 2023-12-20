@@ -16,9 +16,6 @@ import com.s8.core.arch.silicon.SiliconEngine;
 public abstract class H3MgHandler<R> {
 
 
-	public enum Status {
-		UNMOUNTED, LOADED, FAILED;
-	}
 	
 
 	public abstract String getName();
@@ -32,7 +29,7 @@ public abstract class H3MgHandler<R> {
 	/**
 	 * Status of the handler
 	 */
-	volatile Status status = Status.UNMOUNTED;
+	volatile H3MgState state;
 
 
 	/**
@@ -43,7 +40,7 @@ public abstract class H3MgHandler<R> {
 	private volatile boolean isActive = false;
 
 
-	volatile boolean isSaved = false;
+	//volatile boolean isSaved = false;
 
 
 	/**
@@ -70,9 +67,10 @@ public abstract class H3MgHandler<R> {
 	public final SiliconEngine ng;
 
 
-	public H3MgHandler(SiliconEngine ng) {
+	public H3MgHandler(SiliconEngine ng, boolean isSaved) {
 		super();
 		this.ng = ng;
+		this.state = isSaved ? H3MgState.UNMOUNTED : H3MgState.CREATED;
 	}
 
 
@@ -90,8 +88,8 @@ public abstract class H3MgHandler<R> {
 					/* inactive for a certain time */
 					lastOpTimestamp < cutOffTimestamp &&
 
-					/* All changes must have been saved */
-					isSaved &&
+					/* status MUST be compatible with detaching */
+					state.isDetachable &&
 
 					/* Should not have activity at the moment */
 					!isActive && 
@@ -199,13 +197,12 @@ public abstract class H3MgHandler<R> {
 
 		/* low-contention probability synchronized section */
 		synchronized (lock) {
-			if(status == Status.UNMOUNTED) {
+			if(state == H3MgState.CREATED) {
 				this.resource = resource;
-				this.status = Status.LOADED;
-				this.isSaved = false;	
+				this.state = H3MgState.MODIFIED;
 			}
 			else {
-				throw new IOException("Handler state cannot be initialized");
+				throw new IOException("Handler state cannot be initialized: Illegal status change");
 			}
 		}
 	}
@@ -221,7 +218,7 @@ public abstract class H3MgHandler<R> {
 		synchronized (lock) {
 			this.resource = null;
 			this.exception = null;
-			this.status = Status.UNMOUNTED;
+			this.state = H3MgState.UNMOUNTED;
 		}
 	}
 
@@ -250,8 +247,8 @@ public abstract class H3MgHandler<R> {
 	 * 
 	 * @return
 	 */
-	public Status getStatus() {
-		return status;
+	public H3MgState getStatus() {
+		return state;
 	}
 
 
@@ -274,7 +271,11 @@ public abstract class H3MgHandler<R> {
 
 			if(isActive == isContinued) {
 
-				switch(status) {
+				switch(state) {
+				
+				case CREATED:
+					isActive = false; // close rolling
+					break;
 
 				case UNMOUNTED:
 					if(!operations.isEmpty()) { // has operations to perform
@@ -287,7 +288,10 @@ public abstract class H3MgHandler<R> {
 					}
 					break;
 
-				case LOADED:
+				/* resource is loaded */
+				case INITIALIZED:
+				case SAVED:
+				case MODIFIED:
 					/**
 					 * Get next operation to be performed
 					 */
@@ -341,12 +345,23 @@ public abstract class H3MgHandler<R> {
 	
 
 	boolean isSaved() {
-		synchronized (lock) { return isSaved; }
+		synchronized (lock) { return state == H3MgState.SAVED; }
 	}
 	
 	
-	void notifySuccessfullySaved() {
-		synchronized (lock) {  isSaved = true; }	
+	void notifySuccessfullySaved() throws IOException {
+		synchronized (lock) {
+			switch(state) {
+				case INITIALIZED: state = H3MgState.SAVED; break;
+				case SAVED: /* overrides */ break;
+				case MODIFIED: state = H3MgState.SAVED; break;
+				
+				case CREATED: 
+				case UNMOUNTED: 
+				case FAILED:
+					throw new IOException("Illegal state mdoification");
+			}
+		}
 	}
 	
 	
@@ -358,8 +373,7 @@ public abstract class H3MgHandler<R> {
 		/* low-contention probability synchronized section */
 		synchronized (lock) {
 			this.resource = resource;
-			status = Status.LOADED;
-			isSaved = true;
+			state = H3MgState.SAVED;
 		}
 	}
 	
@@ -372,8 +386,29 @@ public abstract class H3MgHandler<R> {
 		/* low-contention probability synchronized section */
 		synchronized (lock) {
 			exception = e;
-			status = Status.FAILED;
+			state = H3MgState.FAILED;
 		}		
+	}
+
+
+
+
+	/**
+	 * 
+	 */
+	void notifyModifiedResource() throws IOException {
+		synchronized (lock) {
+			switch(state) {
+				case INITIALIZED: /* do nothing */ break;
+				case SAVED: /* no longer saved*/ state = H3MgState.MODIFIED; break;
+				case MODIFIED: /* already modified -> do nothing */ break;
+				
+				case CREATED: 
+				case UNMOUNTED: 
+				case FAILED:
+					throw new IOException("Illegal state mdoification");
+			}
+		}
 	}
 
 	

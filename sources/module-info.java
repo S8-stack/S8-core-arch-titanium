@@ -20,15 +20,6 @@ module com.s8.core.arch.magnesium {
 
 	exports com.s8.core.arch.magnesium.databases;
 	
-	exports com.s8.core.arch.magnesium.databases.table;
-
-	exports com.s8.core.arch.magnesium.databases.space.entry;
-	exports com.s8.core.arch.magnesium.databases.space.store;
-	
-	exports com.s8.core.arch.magnesium.databases.repository.branch;
-	exports com.s8.core.arch.magnesium.databases.repository.entry;
-	exports com.s8.core.arch.magnesium.databases.repository.store;
-	
 
 	exports com.s8.core.arch.magnesium.service;
 	

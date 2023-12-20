@@ -1,6 +1,5 @@
 package com.s8.core.arch.magnesium.handlers.h3;
 
-import com.s8.core.arch.magnesium.handlers.h3.H3MgHandler.Status;
 import com.s8.core.arch.silicon.async.AsyncSiTask;
 
 public abstract class ConsumeResourceMgAsyncTask<R> implements AsyncSiTask {
@@ -51,7 +50,10 @@ public abstract class ConsumeResourceMgAsyncTask<R> implements AsyncSiTask {
 		boolean isResourceAvailable = false;
 
 		synchronized (handler.lock) {
-			isResourceAvailable = (handler.status == Status.LOADED);
+			
+			/* load resource status */
+			isResourceAvailable = handler.state.isResourceAvailable;
+			
 			if(isResourceAvailable) {
 				resource = handler.resource;
 			}
@@ -72,11 +74,8 @@ public abstract class ConsumeResourceMgAsyncTask<R> implements AsyncSiTask {
 					
 				/* check consequences of resource mod */
 				if(hasResourceBeenModified) {
-					synchronized (handler.lock) {
-						handler.isSaved = false;
-					}
+					handler.notifyModifiedResource();
 				}
-				
 			}
 			catch(Exception exception) {
 				catchException(exception);
