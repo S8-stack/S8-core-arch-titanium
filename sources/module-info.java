@@ -31,6 +31,10 @@ module com.s8.core.arch.magnesium {
 	
 	
 	
+	opens com.s8.core.arch.magnesium.demos.db.resource;
+	
+	
+	
 	
 	
 	

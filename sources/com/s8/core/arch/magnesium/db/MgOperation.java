@@ -10,12 +10,12 @@ public abstract class MgOperation<R> {
 
 	
 	
-	public final MgHandler<R> handler;
+	public final MgDbHandler<R> handler;
 	
 	
 
 	
-	public MgOperation(MgHandler<R> handler) {
+	public MgOperation(MgDbHandler<R> handler) {
 		super();
 		this.handler = handler;
 	}

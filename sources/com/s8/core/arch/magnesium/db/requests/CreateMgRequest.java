@@ -12,11 +12,16 @@ public abstract class CreateMgRequest<R> extends MgRequest<R> {
 	
 	public final boolean isOverridingEnabled;
 	
+	public final boolean isResourceSavedToDisk;
+	
 
-	public CreateMgRequest(long t, String key, R resource, boolean isOverridingEnabled) {
+	public CreateMgRequest(long t, String key, R resource, 
+			boolean isResourceSavedToDisk,
+			boolean isOverridingEnabled) {
 		super(t, key);
 		this.resource = resource;
 		this.isOverridingEnabled = isOverridingEnabled;
+		this.isResourceSavedToDisk = isResourceSavedToDisk;
 	}
 	
 	

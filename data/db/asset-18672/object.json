@@ -1,0 +1,15 @@
+const ROOT = MainStubObject({
+   owner: "whovere is ready for",
+   address: "hobbitland",
+   name: "this is my name",
+   branches : {
+      "main2" : {
+         owner: "Wouaou",
+         id: "sub0",
+         headVersion: 0,
+         info: "Created as MAIN branch"
+      }
+   },
+   info: "No info"
+});"No info"
+});

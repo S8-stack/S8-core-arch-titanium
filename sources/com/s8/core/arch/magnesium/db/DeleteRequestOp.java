@@ -18,7 +18,7 @@ class DeleteRequestOp<R> extends RequestOp<R> {
 
 	public final DeleteMgRequest<R> request;
 
-	public DeleteRequestOp(MgHandler<R> handler, DeleteMgRequest<R> request) {
+	public DeleteRequestOp(MgDbHandler<R> handler, DeleteMgRequest<R> request) {
 		super(handler);
 		this.request = request;
 	}

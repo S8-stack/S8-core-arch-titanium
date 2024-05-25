@@ -1,4 +1,4 @@
-package com.s8.arch.magnesium.demos.repo;
+package com.s8.core.arch.magnesium.demos.repo;
 
 import java.io.BufferedWriter;
 import java.io.File;

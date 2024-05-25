@@ -14,7 +14,7 @@ abstract class RequestOp<R> extends MgOperation<R> {
 
 
 
-	public RequestOp(MgHandler<R> handler) {
+	public RequestOp(MgDbHandler<R> handler) {
 		super(handler);
 	}
 	

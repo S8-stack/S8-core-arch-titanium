@@ -15,7 +15,7 @@ class SaveOp<R> extends MgOperation<R> {
 	 * 
 	 * @param handler
 	 */
-	public SaveOp(MgHandler<R> handler) {
+	public SaveOp(MgDbHandler<R> handler) {
 		super(handler);
 	}
 

@@ -18,7 +18,7 @@ class AccessRequestOp<R> extends RequestOp<R> {
 
 	public final AccessMgRequest<R> request;
 
-	public AccessRequestOp(MgHandler<R> handler, AccessMgRequest<R> request) {
+	public AccessRequestOp(MgDbHandler<R> handler, AccessMgRequest<R> request) {
 		super(handler);
 		this.request = request;
 	}

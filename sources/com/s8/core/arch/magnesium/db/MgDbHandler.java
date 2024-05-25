@@ -16,13 +16,13 @@ import com.s8.core.arch.silicon.SiliconEngine;
  * @author pierreconvert
  *
  */
-class MgHandler<R> {
+class MgDbHandler<R> {
 
 
 
 	public final SiliconEngine ng;
 
-	public final MgSwitcher<R> switcher;
+	public final MgDbSwitcher<R> switcher;
 	
 	public final String key;
 	
@@ -80,7 +80,7 @@ class MgHandler<R> {
 
 
 
-	public MgHandler(SiliconEngine ng, MgSwitcher<R> switcher, String key) {
+	public MgDbHandler(SiliconEngine ng, MgDbSwitcher<R> switcher, String key) {
 		super();
 		this.ng = ng;
 		this.switcher = switcher;

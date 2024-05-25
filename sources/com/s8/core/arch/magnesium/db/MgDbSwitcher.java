@@ -9,7 +9,7 @@ import com.s8.core.arch.magnesium.db.requests.MgRequest;
 import com.s8.core.arch.silicon.SiliconEngine;
 
 
-public class MgSwitcher<R> {
+public class MgDbSwitcher<R> {
 	
 	
 	private final SiliconEngine ng;
@@ -18,7 +18,7 @@ public class MgSwitcher<R> {
 	/**
 	 * 
 	 */
-	private final Map<String, MgHandler<R>> map = new ConcurrentHashMap<>();
+	private final Map<String, MgDbHandler<R>> map = new ConcurrentHashMap<>();
 	
 
 	private final Queue<MgRequest<R>> queue = new ConcurrentLinkedQueue<>();
@@ -31,7 +31,7 @@ public class MgSwitcher<R> {
 	private volatile String operatedKey = null;
 
 	
-	public MgSwitcher(SiliconEngine ng, MgPathComposer pathComposer, MgIOModule<R> ioModule) {
+	public MgDbSwitcher(SiliconEngine ng, MgPathComposer pathComposer, MgIOModule<R> ioModule) {
 		super();
 		this.ng = ng;
 		this.pathComposer = pathComposer;
@@ -57,7 +57,7 @@ public class MgSwitcher<R> {
 			String key = request.key;
 			
 			/* retrieve handler (creating it if necessary) */
-			MgHandler<R> handler = map.computeIfAbsent(key, k -> new MgHandler<>(ng, this, k));
+			MgDbHandler<R> handler = map.computeIfAbsent(key, k -> new MgDbHandler<>(ng, this, k));
 			
 			/* make it process request */
 			handler.processRequest(request);

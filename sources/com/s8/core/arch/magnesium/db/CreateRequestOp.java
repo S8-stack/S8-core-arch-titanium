@@ -18,7 +18,7 @@ class CreateRequestOp<R> extends RequestOp<R> {
 
 	public final CreateMgRequest<R> request;
 
-	public CreateRequestOp(MgHandler<R> handler, CreateMgRequest<R> request) {
+	public CreateRequestOp(MgDbHandler<R> handler, CreateMgRequest<R> request) {
 		super(handler);
 		this.request = request;
 	}
@@ -95,12 +95,17 @@ class CreateRequestOp<R> extends RequestOp<R> {
 				if(isAllowed) {
 					handler.resource = request.resource;
 					handler.resourceStatus = MgResourceStatus.OK;
-					handler.isSynced = true;			
+					handler.isSynced = false;			
 				}
 
 				request.onEntryCreated(true);
-
-				terminate();
+				
+				if(request.isResourceSavedToDisk) {
+					thenSave();
+				}
+				else {
+					terminate();					
+				}
 			}
 
 			@Override
@@ -115,6 +120,49 @@ class CreateRequestOp<R> extends RequestOp<R> {
 		});
 	}
 
+	
+	private void thenSave() {
+
+		handler.ng.pushAsyncTask(new AsyncSiTask() {
+
+			@Override
+			public void run() {
+
+				/**
+				 * run callback on resource
+				 */
+				try {
+					/* save resource */
+					if(!handler.isSynced) {
+
+						handler.io_saveResource();
+						handler.resourceStatus = MgResourceStatus.OK;
+						handler.isSynced = true;
+					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+
+					handler.resourceStatus = MgResourceStatus.FAILED_TO_SAVE;
+					handler.isSynced = true;
+				}
+
+				terminate();
+			}
+
+
+			@Override
+			public String describe() {
+				return "Saving resource for handler: "+handler.key;
+			}
+
+
+			@Override
+			public MthProfile profile() {
+				return MthProfile.IO_SSD;
+			}
+		});	
+	}
 
 
 	@Override
