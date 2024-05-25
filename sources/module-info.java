@@ -9,6 +9,10 @@ module com.s8.core.arch.magnesium {
 	
 	
 
+	exports com.s8.core.arch.magnesium.db;
+	exports com.s8.core.arch.magnesium.db.requests;
+	
+	
 	exports com.s8.core.arch.magnesium.handlers.h1;
 	exports com.s8.core.arch.magnesium.handlers.h2;
 	exports com.s8.core.arch.magnesium.handlers.h3;
