@@ -31,6 +31,10 @@ public class DbCreator {
 			}
 		};
 		
-		return new MgDbSwitcher<>(ng, composer, new IOModule());
+		IOModule module = new IOModule();
+		
+		return new MgDbSwitcher<>(ng, composer) {
+			public IOModule getIOModule() { return module; }
+		};
 	}
 }

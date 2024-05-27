@@ -22,13 +22,13 @@ public abstract class MgRequest<R> {
 	/**
 	 * 
 	 */
-	public final String key;
+	public final String mgKey;
 
 	
 	public MgRequest(long t, String key) {
 		super();
 		this.t = t;
-		this.key = key;
+		this.mgKey = key;
 	}
 	
 	public abstract Type getType();

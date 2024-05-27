@@ -25,7 +25,12 @@ public abstract class CreateMgRequest<R> extends MgRequest<R> {
 	}
 	
 	
-	public abstract void onPathGenerated(Path path);
+	
+	/**
+	 * 
+	 * @param resourceFolderPath the folder dedicated to this resource
+	 */
+	public abstract void onPathGenerated(Path resourceFolderPath);
 	
 	
 	

@@ -270,6 +270,11 @@ class MgDbHandler<R> {
 					operation.perform();
 
 				}
+				else {
+					
+					/* force active status (might have entered has not active) */
+					isActive = false;
+				}
 			}
 		}
 		/* </low-contention synchronized block> */
@@ -286,7 +291,7 @@ class MgDbHandler<R> {
 	 * @return
 	 */
 	boolean io_hasResource() {
-		return switcher.ioModule.hasResource(path);
+		return switcher.getIOModule().hasResource(path);
 	}
 	
 	/**
@@ -295,7 +300,7 @@ class MgDbHandler<R> {
 	 * @throws Exception
 	 */
 	boolean io_loadResource() throws MgIOException {
-		return (resource = switcher.ioModule.readResource(path)) != null;
+		return (resource = switcher.getIOModule().readResource(path)) != null;
 	}
 	
 	
@@ -305,7 +310,7 @@ class MgDbHandler<R> {
 	 * @throws Exception
 	 */
 	void io_saveResource() throws IOException {
-		switcher.ioModule.writeResource(path, resource);
+		switcher.getIOModule().writeResource(path, resource);
 	}
 	
 	
@@ -314,7 +319,7 @@ class MgDbHandler<R> {
 	 * @return
 	 */
 	boolean io_deleteResource() {
-		return switcher.ioModule.deleteResource(path);
+		return switcher.getIOModule().deleteResource(path);
 	}
 
 

@@ -91,7 +91,7 @@ class AccessRequestOp<R> extends RequestOp<R> {
 			@Override
 			public void run() {
 
-				boolean hasResourceBeenModified = request.onResourceAccessed(handler.resourceStatus, handler.resource);
+				boolean hasResourceBeenModified = request.onResourceAccessed(handler.path, handler.resourceStatus, handler.resource);
 
 				/* check consequences of resource mod */
 				if(hasResourceBeenModified) {

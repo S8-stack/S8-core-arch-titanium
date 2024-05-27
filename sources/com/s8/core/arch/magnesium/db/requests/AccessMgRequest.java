@@ -1,5 +1,7 @@
 package com.s8.core.arch.magnesium.db.requests;
 
+import java.nio.file.Path;
+
 import com.s8.core.arch.magnesium.db.MgResourceStatus;
 import com.s8.core.arch.silicon.async.MthProfile;
 
@@ -34,10 +36,14 @@ public abstract class AccessMgRequest<R> extends MgRequest<R> {
 
 	
 	
+
 	/**
 	 * 
+	 * @param resourceFolderPath the folder dedicated to this resource on disk
+	 * @param status
 	 * @param resource
+	 * @return
 	 */
-	public abstract boolean onResourceAccessed(MgResourceStatus status, R resource);
+	public abstract boolean onResourceAccessed(Path resourceFolderPath, MgResourceStatus status, R resource);
 
 }

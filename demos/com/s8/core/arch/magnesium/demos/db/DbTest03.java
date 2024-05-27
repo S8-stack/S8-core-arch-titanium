@@ -1,7 +1,9 @@
 package com.s8.core.arch.magnesium.demos.db;
 
-import com.s8.core.arch.magnesium.db.MgResourceStatus;
+import java.nio.file.Path;
+
 import com.s8.core.arch.magnesium.db.MgDbSwitcher;
+import com.s8.core.arch.magnesium.db.MgResourceStatus;
 import com.s8.core.arch.magnesium.db.requests.AccessMgRequest;
 import com.s8.core.arch.magnesium.demos.db.resource.MainStubObject;
 import com.s8.core.arch.silicon.SiliconConfiguration;
@@ -34,7 +36,7 @@ public class DbTest03 {
 			}
 
 			@Override
-			public boolean onResourceAccessed(MgResourceStatus status, MainStubObject resource) {
+			public boolean onResourceAccessed(Path path, MgResourceStatus status, MainStubObject resource) {
 				System.out.println(resource.address);
 				resource.address = "hobbitland";
 				return true;

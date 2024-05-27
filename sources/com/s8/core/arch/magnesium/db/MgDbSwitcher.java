@@ -9,7 +9,7 @@ import com.s8.core.arch.magnesium.db.requests.MgRequest;
 import com.s8.core.arch.silicon.SiliconEngine;
 
 
-public class MgDbSwitcher<R> {
+public abstract class MgDbSwitcher<R> {
 	
 	
 	private final SiliconEngine ng;
@@ -26,17 +26,21 @@ public class MgDbSwitcher<R> {
 	
 	final MgPathComposer pathComposer;
 	
-	final MgIOModule<R> ioModule;
-	
-	private volatile String operatedKey = null;
+	private volatile String frozenKey = null;
 
 	
-	public MgDbSwitcher(SiliconEngine ng, MgPathComposer pathComposer, MgIOModule<R> ioModule) {
+	public MgDbSwitcher(SiliconEngine ng, MgPathComposer pathComposer) {
 		super();
 		this.ng = ng;
 		this.pathComposer = pathComposer;
-		this.ioModule = ioModule;
 	}
+
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract MgIOModule<R> getIOModule();
 	
 	
 	
@@ -45,7 +49,7 @@ public class MgDbSwitcher<R> {
 		boolean hasBeenParked = false;
 		
 		synchronized (lock) {
-			if(operatedKey != null && operatedKey.equals(request.key)) {
+			if(frozenKey != null && frozenKey.equals(request.mgKey)) {
 				queue.add(request);
 				hasBeenParked = true;
 			}
@@ -54,7 +58,7 @@ public class MgDbSwitcher<R> {
 		if(!hasBeenParked) {
 		
 			/* retrieve key */
-			String key = request.key;
+			String key = request.mgKey;
 			
 			/* retrieve handler (creating it if necessary) */
 			MgDbHandler<R> handler = map.computeIfAbsent(key, k -> new MgDbHandler<>(ng, this, k));
@@ -73,7 +77,19 @@ public class MgDbSwitcher<R> {
 	}
 	
 	
+	public void freeze(String key) {
+		/* freeze key */
+		synchronized (lock) { frozenKey = key; }
+	}
 	
+	
+	public void unfreeze() {
+		synchronized (lock) { frozenKey = null; }
+	}
+	
+	public void save() {
+		map.forEach((key, handler) -> handler.save());
+	}
 	
 	/*
 	private volatile long nextWakeUp = 0;
