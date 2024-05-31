@@ -5,29 +5,29 @@
  * @author pierreconvert
  *
  */
-module com.s8.core.arch.magnesium {
+module com.s8.core.arch.titanium {
 	
 	
 
-	exports com.s8.core.arch.magnesium.db;
-	exports com.s8.core.arch.magnesium.db.requests;
+	exports com.s8.core.arch.titanium.db;
+	exports com.s8.core.arch.titanium.db.requests;
 	
 	
-	exports com.s8.core.arch.magnesium.handlers.h1;
-	exports com.s8.core.arch.magnesium.handlers.h2;
-	exports com.s8.core.arch.magnesium.handlers.h3;
+	exports com.s8.core.arch.titanium.handlers.h1;
+	exports com.s8.core.arch.titanium.handlers.h2;
+	exports com.s8.core.arch.titanium.handlers.h3;
 	
 	
-	exports com.s8.core.arch.magnesium.callbacks;
-	
-
-
-	exports com.s8.core.arch.magnesium.databases;
+	exports com.s8.core.arch.titanium.callbacks;
 	
 
-	exports com.s8.core.arch.magnesium.service;
+
+	exports com.s8.core.arch.titanium.databases;
 	
-	exports com.s8.core.arch.magnesium.core.paths;
+
+	exports com.s8.core.arch.titanium.service;
+	
+	exports com.s8.core.arch.titanium.core.paths;
 	
 	
 	

@@ -3,12 +3,12 @@ package com.s8.core.arch.magnesium.demos.db;
 import java.nio.file.Path;
 import java.util.HashMap;
 
-import com.s8.core.arch.magnesium.db.MgDbSwitcher;
-import com.s8.core.arch.magnesium.db.requests.CreateMgRequest;
 import com.s8.core.arch.magnesium.demos.db.resource.MainStubObject;
 import com.s8.core.arch.magnesium.demos.db.resource.SubStubObject;
 import com.s8.core.arch.silicon.SiliconConfiguration;
 import com.s8.core.arch.silicon.SiliconEngine;
+import com.s8.core.arch.titanium.db.MgDbSwitcher;
+import com.s8.core.arch.titanium.db.requests.CreateMgRequest;
 import com.s8.core.io.json.types.JSON_CompilingException;
 
 public class DbTest02 {

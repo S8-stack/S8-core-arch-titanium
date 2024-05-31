@@ -8,10 +8,10 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import com.s8.core.arch.magnesium.db.MgIOException;
-import com.s8.core.arch.magnesium.db.MgIOModule;
-import com.s8.core.arch.magnesium.db.MgResourceStatus;
 import com.s8.core.arch.magnesium.demos.db.resource.MainStubObject;
+import com.s8.core.arch.titanium.db.MgIOException;
+import com.s8.core.arch.titanium.db.MgIOModule;
+import com.s8.core.arch.titanium.db.MgResourceStatus;
 import com.s8.core.io.json.JSON_Lexicon;
 import com.s8.core.io.json.types.JSON_CompilingException;
 import com.s8.core.io.json.utilities.JOOS_BufferedFileReader;
