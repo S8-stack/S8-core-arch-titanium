@@ -2,8 +2,8 @@ package com.s8.core.arch.titanium.db;
 
 import com.s8.core.arch.silicon.async.AsyncSiTask;
 import com.s8.core.arch.silicon.async.MthProfile;
-import com.s8.core.arch.titanium.db.requests.CreateMgRequest;
-import com.s8.core.arch.titanium.db.requests.MgRequest;
+import com.s8.core.arch.titanium.db.requests.CreateTiRequest;
+import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 
 /**
@@ -16,9 +16,9 @@ import com.s8.core.arch.titanium.db.requests.MgRequest;
  */
 class CreateRequestOp<R> extends RequestOp<R> {
 
-	public final CreateMgRequest<R> request;
+	public final CreateTiRequest<R> request;
 
-	public CreateRequestOp(MgDbHandler<R> handler, CreateMgRequest<R> request) {
+	public CreateRequestOp(TiDbHandler<R> handler, CreateTiRequest<R> request) {
 		super(handler);
 		this.request = request;
 	}
@@ -94,7 +94,7 @@ class CreateRequestOp<R> extends RequestOp<R> {
 				
 				if(isAllowed) {
 					handler.resource = request.resource;
-					handler.resourceStatus = MgResourceStatus.OK;
+					handler.resourceStatus = TiResourceStatus.OK;
 					handler.isSynced = false;			
 				}
 
@@ -136,14 +136,14 @@ class CreateRequestOp<R> extends RequestOp<R> {
 					if(!handler.isSynced) {
 
 						handler.io_saveResource();
-						handler.resourceStatus = MgResourceStatus.OK;
+						handler.resourceStatus = TiResourceStatus.OK;
 						handler.isSynced = true;
 					}
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 
-					handler.resourceStatus = MgResourceStatus.FAILED_TO_SAVE;
+					handler.resourceStatus = TiResourceStatus.FAILED_TO_SAVE;
 					handler.isSynced = true;
 				}
 
@@ -166,7 +166,7 @@ class CreateRequestOp<R> extends RequestOp<R> {
 
 
 	@Override
-	public MgRequest<R> getRequest() {
+	public TiRequest<R> getRequest() {
 		return request;
 	}
 

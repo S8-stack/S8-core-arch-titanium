@@ -4,7 +4,7 @@ package com.s8.core.arch.titanium.db;
 /**
  * 
  */
-public class MgResourceStatus {
+public class TiResourceStatus {
 	
 	
 	
@@ -20,34 +20,34 @@ public class MgResourceStatus {
 	 * <li>Currently no deltas between cache and disk</li>
 	 * </ul>
 	 */
-	public final static MgResourceStatus OK = new MgResourceStatus(OK_CODE, "Resource is available");
+	public final static TiResourceStatus OK = new TiResourceStatus(OK_CODE, "Resource is available");
 
 	
 	
 	/**
 	 * The resource has been deleted unsafe to use
 	 */
-	public final static MgResourceStatus DELETED = new MgResourceStatus(0x17, "Resource has been deleted from the disk");
+	public final static TiResourceStatus DELETED = new TiResourceStatus(0x17, "Resource has been deleted from the disk");
 	
 	
 	/**
 	 * The resource has never been initialized (nothing on Disk)
 	 * No unsaved modification (nothing on Disk, no resource set to the handler
 	 */
-	public final static MgResourceStatus NO_RESOURCE_IN_DB = new MgResourceStatus(0x42, "No resource has been found in the db");
+	public final static TiResourceStatus NO_RESOURCE_IN_DB = new TiResourceStatus(0x42, "No resource has been found in the db");
 
 
 
 	/**
 	 * 
 	 */
-	public final static MgResourceStatus FAILED_TO_LOAD = new MgResourceStatus(0x52, "Resource has been found but loading has failed");
+	public final static TiResourceStatus FAILED_TO_LOAD = new TiResourceStatus(0x52, "Resource has been found but loading has failed");
 
 	
 	/**
 	 * 
 	 */
-	public final static MgResourceStatus FAILED_TO_SAVE = new MgResourceStatus(0x53, "Resource is live but failed to write back");
+	public final static TiResourceStatus FAILED_TO_SAVE = new TiResourceStatus(0x53, "Resource is live but failed to write back");
 
 	
 	
@@ -70,7 +70,7 @@ public class MgResourceStatus {
 	 * @param code
 	 * @param message
 	 */
-	public MgResourceStatus(int code, String message) {
+	public TiResourceStatus(int code, String message) {
 		this.code = code;
 		this.message = message;
 	}

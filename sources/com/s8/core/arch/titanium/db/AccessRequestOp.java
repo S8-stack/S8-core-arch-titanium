@@ -2,8 +2,8 @@ package com.s8.core.arch.titanium.db;
 
 import com.s8.core.arch.silicon.async.AsyncSiTask;
 import com.s8.core.arch.silicon.async.MthProfile;
-import com.s8.core.arch.titanium.db.requests.AccessMgRequest;
-import com.s8.core.arch.titanium.db.requests.MgRequest;
+import com.s8.core.arch.titanium.db.requests.AccessTiRequest;
+import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 
 /**
@@ -16,9 +16,9 @@ import com.s8.core.arch.titanium.db.requests.MgRequest;
  */
 class AccessRequestOp<R> extends RequestOp<R> {
 
-	public final AccessMgRequest<R> request;
+	public final AccessTiRequest<R> request;
 
-	public AccessRequestOp(MgDbHandler<R> handler, AccessMgRequest<R> request) {
+	public AccessRequestOp(TiDbHandler<R> handler, AccessTiRequest<R> request) {
 		super(handler);
 		this.request = request;
 	}
@@ -55,14 +55,14 @@ class AccessRequestOp<R> extends RequestOp<R> {
 					if(hasResource) {
 						
 						/* low-contention probability synchronized section */
-						handler.resourceStatus = MgResourceStatus.OK;
+						handler.resourceStatus = TiResourceStatus.OK;
 					}
 					else {
-						handler.resourceStatus = MgResourceStatus.NO_RESOURCE_IN_DB;
+						handler.resourceStatus = TiResourceStatus.NO_RESOURCE_IN_DB;
 						
 					}
 				} 
-				catch (MgIOException exception) {
+				catch (TiIOException exception) {
 					handler.resource = null;
 					handler.resourceStatus = exception.status;
 				}
@@ -135,14 +135,14 @@ class AccessRequestOp<R> extends RequestOp<R> {
 					if(!handler.isSynced) {
 
 						handler.io_saveResource();
-						handler.resourceStatus = MgResourceStatus.OK;
+						handler.resourceStatus = TiResourceStatus.OK;
 						handler.isSynced = true;
 					}
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 
-					handler.resourceStatus = MgResourceStatus.FAILED_TO_SAVE;
+					handler.resourceStatus = TiResourceStatus.FAILED_TO_SAVE;
 					handler.isSynced = true;
 				}
 
@@ -166,7 +166,7 @@ class AccessRequestOp<R> extends RequestOp<R> {
 
 
 	@Override
-	public MgRequest<R> getRequest() {
+	public TiRequest<R> getRequest() {
 		return request;
 	}
 

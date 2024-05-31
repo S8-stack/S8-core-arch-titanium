@@ -2,7 +2,7 @@ package com.s8.core.arch.titanium.db.requests;
 
 import java.nio.file.Path;
 
-public abstract class CreateMgRequest<R> extends MgRequest<R> {
+public abstract class CreateTiRequest<R> extends TiRequest<R> {
 
 	public @Override Type getType() { return Type.CREATE; }
 
@@ -15,7 +15,7 @@ public abstract class CreateMgRequest<R> extends MgRequest<R> {
 	public final boolean isResourceSavedToDisk;
 	
 
-	public CreateMgRequest(long t, String key, R resource, 
+	public CreateTiRequest(long t, String key, R resource, 
 			boolean isResourceSavedToDisk,
 			boolean isOverridingEnabled) {
 		super(t, key);

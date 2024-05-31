@@ -9,9 +9,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 import com.s8.core.arch.magnesium.demos.db.resource.MainStubObject;
-import com.s8.core.arch.titanium.db.MgIOException;
-import com.s8.core.arch.titanium.db.MgIOModule;
-import com.s8.core.arch.titanium.db.MgResourceStatus;
+import com.s8.core.arch.titanium.db.TiIOException;
+import com.s8.core.arch.titanium.db.TitaniumIOModule;
+import com.s8.core.arch.titanium.db.TiResourceStatus;
 import com.s8.core.io.json.JSON_Lexicon;
 import com.s8.core.io.json.types.JSON_CompilingException;
 import com.s8.core.io.json.utilities.JOOS_BufferedFileReader;
@@ -21,7 +21,7 @@ import com.s8.core.io.json.utilities.JOOS_BufferedFileWriter;
 /**
  * 
  */
-public class IOModule implements MgIOModule<MainStubObject> {
+public class IOModule implements TitaniumIOModule<MainStubObject> {
 
 
 	public final static String FILENAME = "object.json";
@@ -43,7 +43,7 @@ public class IOModule implements MgIOModule<MainStubObject> {
 
 
 	@Override
-	public MainStubObject readResource(Path path) throws MgIOException {
+	public MainStubObject readResource(Path path) throws TiIOException {
 		try {
 			FileChannel channel = FileChannel.open(path.resolve(FILENAME), new OpenOption[]{ 
 					StandardOpenOption.READ
@@ -64,7 +64,7 @@ public class IOModule implements MgIOModule<MainStubObject> {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new MgIOException(MgResourceStatus.FAILED_TO_LOAD);
+			throw new TiIOException(TiResourceStatus.FAILED_TO_LOAD);
 		}
 	}
 

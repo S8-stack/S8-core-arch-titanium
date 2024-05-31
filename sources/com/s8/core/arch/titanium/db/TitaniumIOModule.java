@@ -3,7 +3,7 @@ package com.s8.core.arch.titanium.db;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public interface MgIOModule<R> {
+public interface TitaniumIOModule<R> {
 
 	
 	
@@ -18,7 +18,7 @@ public interface MgIOModule<R> {
 	 * @return
 	 * @throws Exception
 	 */
-	public R readResource(Path path) throws MgIOException;
+	public R readResource(Path path) throws TiIOException;
 	
 	
 	/**

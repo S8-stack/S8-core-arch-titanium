@@ -6,16 +6,16 @@ package com.s8.core.arch.titanium.db;
  *
  * @param <R>
  */
-public abstract class MgOperation<R> {
+public abstract class TiOperation<R> {
 
 	
 	
-	public final MgDbHandler<R> handler;
+	public final TiDbHandler<R> handler;
 	
 	
 
 	
-	public MgOperation(MgDbHandler<R> handler) {
+	public TiOperation(TiDbHandler<R> handler) {
 		super();
 		this.handler = handler;
 	}

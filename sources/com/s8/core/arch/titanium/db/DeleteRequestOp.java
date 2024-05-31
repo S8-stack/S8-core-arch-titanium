@@ -2,8 +2,8 @@ package com.s8.core.arch.titanium.db;
 
 import com.s8.core.arch.silicon.async.AsyncSiTask;
 import com.s8.core.arch.silicon.async.MthProfile;
-import com.s8.core.arch.titanium.db.requests.DeleteMgRequest;
-import com.s8.core.arch.titanium.db.requests.MgRequest;
+import com.s8.core.arch.titanium.db.requests.DeleteTiRequest;
+import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 
 /**
@@ -16,9 +16,9 @@ import com.s8.core.arch.titanium.db.requests.MgRequest;
  */
 class DeleteRequestOp<R> extends RequestOp<R> {
 
-	public final DeleteMgRequest<R> request;
+	public final DeleteTiRequest<R> request;
 
-	public DeleteRequestOp(MgDbHandler<R> handler, DeleteMgRequest<R> request) {
+	public DeleteRequestOp(TiDbHandler<R> handler, DeleteTiRequest<R> request) {
 		super(handler);
 		this.request = request;
 	}
@@ -70,7 +70,7 @@ class DeleteRequestOp<R> extends RequestOp<R> {
 				handler.io_deleteResource();
 				
 				handler.resource = null;
-				handler.resourceStatus = MgResourceStatus.DELETED;
+				handler.resourceStatus = TiResourceStatus.DELETED;
 				handler.isSynced = true;
 
 				
@@ -94,7 +94,7 @@ class DeleteRequestOp<R> extends RequestOp<R> {
 
 
 	@Override
-	public MgRequest<R> getRequest() {
+	public TiRequest<R> getRequest() {
 		return request;
 	}
 

@@ -9,13 +9,13 @@ import com.s8.core.arch.silicon.async.MthProfile;
  *
  * @param <R>
  */
-class SaveOp<R> extends MgOperation<R> {
+class SaveOp<R> extends TiOperation<R> {
 
 	/**
 	 * 
 	 * @param handler
 	 */
-	public SaveOp(MgDbHandler<R> handler) {
+	public SaveOp(TiDbHandler<R> handler) {
 		super(handler);
 	}
 
@@ -36,14 +36,14 @@ class SaveOp<R> extends MgOperation<R> {
 					if(!handler.isSynced) {
 						
 						handler.io_saveResource();
-						handler.resourceStatus = MgResourceStatus.OK;
+						handler.resourceStatus = TiResourceStatus.OK;
 						handler.isSynced = true;
 					}
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 					
-					handler.resourceStatus = MgResourceStatus.FAILED_TO_SAVE;
+					handler.resourceStatus = TiResourceStatus.FAILED_TO_SAVE;
 					handler.isSynced = true;
 				}
 				

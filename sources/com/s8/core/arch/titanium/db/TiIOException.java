@@ -2,17 +2,17 @@ package com.s8.core.arch.titanium.db;
 
 import java.io.IOException;
 
-public class MgIOException extends IOException {
+public class TiIOException extends IOException {
 
 	
 	
 	private static final long serialVersionUID = 1859966423603716386L;
 	
 	
-	public final MgResourceStatus status;
+	public final TiResourceStatus status;
 	
 
-	public MgIOException(MgResourceStatus status) {
+	public TiIOException(TiResourceStatus status) {
 		super();
 		this.status = status;
 	}

@@ -6,7 +6,7 @@ import java.nio.file.Path;
 /**
  * 
  */
-public interface MgPathComposer {
+public interface TiPathComposer {
 
 	
 	/**

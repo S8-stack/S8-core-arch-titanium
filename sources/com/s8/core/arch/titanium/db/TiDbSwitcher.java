@@ -6,10 +6,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.s8.core.arch.silicon.SiliconEngine;
-import com.s8.core.arch.titanium.db.requests.MgRequest;
+import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 
-public abstract class MgDbSwitcher<R> {
+public abstract class TiDbSwitcher<R> {
 	
 	
 	private final SiliconEngine ng;
@@ -18,18 +18,18 @@ public abstract class MgDbSwitcher<R> {
 	/**
 	 * 
 	 */
-	private final Map<String, MgDbHandler<R>> map = new ConcurrentHashMap<>();
+	private final Map<String, TiDbHandler<R>> map = new ConcurrentHashMap<>();
 	
 
-	private final Queue<MgRequest<R>> queue = new ConcurrentLinkedQueue<>();
+	private final Queue<TiRequest<R>> queue = new ConcurrentLinkedQueue<>();
 	
 	
-	final MgPathComposer pathComposer;
+	final TiPathComposer pathComposer;
 	
 	private volatile String frozenKey = null;
 
 	
-	public MgDbSwitcher(SiliconEngine ng, MgPathComposer pathComposer) {
+	public TiDbSwitcher(SiliconEngine ng, TiPathComposer pathComposer) {
 		super();
 		this.ng = ng;
 		this.pathComposer = pathComposer;
@@ -40,11 +40,11 @@ public abstract class MgDbSwitcher<R> {
 	 * 
 	 * @return
 	 */
-	public abstract MgIOModule<R> getIOModule();
+	public abstract TitaniumIOModule<R> getIOModule();
 	
 	
 	
-	public void processRequest(MgRequest<R> request) {
+	public void processRequest(TiRequest<R> request) {
 		
 		boolean hasBeenParked = false;
 		
@@ -61,7 +61,7 @@ public abstract class MgDbSwitcher<R> {
 			String key = request.mgKey;
 			
 			/* retrieve handler (creating it if necessary) */
-			MgDbHandler<R> handler = map.computeIfAbsent(key, k -> new MgDbHandler<>(ng, this, k));
+			TiDbHandler<R> handler = map.computeIfAbsent(key, k -> new TiDbHandler<>(ng, this, k));
 			
 			/* make it process request */
 			handler.processRequest(request);

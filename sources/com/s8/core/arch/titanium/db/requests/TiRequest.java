@@ -1,6 +1,6 @@
 package com.s8.core.arch.titanium.db.requests;
 
-public abstract class MgRequest<R> {
+public abstract class TiRequest<R> {
 	
 	
 	public enum Type {
@@ -25,7 +25,7 @@ public abstract class MgRequest<R> {
 	public final String mgKey;
 
 	
-	public MgRequest(long t, String key) {
+	public TiRequest(long t, String key) {
 		super();
 		this.t = t;
 		this.mgKey = key;

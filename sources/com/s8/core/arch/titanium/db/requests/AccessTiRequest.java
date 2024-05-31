@@ -3,9 +3,9 @@ package com.s8.core.arch.titanium.db.requests;
 import java.nio.file.Path;
 
 import com.s8.core.arch.silicon.async.MthProfile;
-import com.s8.core.arch.titanium.db.MgResourceStatus;
+import com.s8.core.arch.titanium.db.TiResourceStatus;
 
-public abstract class AccessMgRequest<R> extends MgRequest<R> {
+public abstract class AccessTiRequest<R> extends TiRequest<R> {
 	
 	
 	public @Override Type getType() { return Type.ACCESS; }
@@ -15,7 +15,7 @@ public abstract class AccessMgRequest<R> extends MgRequest<R> {
 	
 	
 
-	public AccessMgRequest(long t, String key, boolean isImmediateSyncRequired) {
+	public AccessTiRequest(long t, String key, boolean isImmediateSyncRequired) {
 		super(t, key);
 		this.isImmediateSyncRequired = isImmediateSyncRequired;
 	}
@@ -44,6 +44,6 @@ public abstract class AccessMgRequest<R> extends MgRequest<R> {
 	 * @param resource
 	 * @return
 	 */
-	public abstract boolean onResourceAccessed(Path resourceFolderPath, MgResourceStatus status, R resource);
+	public abstract boolean onResourceAccessed(Path resourceFolderPath, TiResourceStatus status, R resource);
 
 }

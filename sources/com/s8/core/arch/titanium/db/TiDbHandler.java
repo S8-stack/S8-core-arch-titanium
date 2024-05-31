@@ -6,23 +6,23 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import com.s8.core.arch.silicon.SiliconEngine;
-import com.s8.core.arch.titanium.db.requests.AccessMgRequest;
-import com.s8.core.arch.titanium.db.requests.CreateMgRequest;
-import com.s8.core.arch.titanium.db.requests.DeleteMgRequest;
-import com.s8.core.arch.titanium.db.requests.MgRequest;
+import com.s8.core.arch.titanium.db.requests.AccessTiRequest;
+import com.s8.core.arch.titanium.db.requests.CreateTiRequest;
+import com.s8.core.arch.titanium.db.requests.DeleteTiRequest;
+import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 /**
  * 
  * @author pierreconvert
  *
  */
-class MgDbHandler<R> {
+class TiDbHandler<R> {
 
 
 
 	public final SiliconEngine ng;
 
-	public final MgDbSwitcher<R> switcher;
+	public final TiDbSwitcher<R> switcher;
 	
 	public final String key;
 	
@@ -39,7 +39,7 @@ class MgDbHandler<R> {
 	 * Status of the handler
 	 * (null : undetermined)
 	 */
-	volatile MgResourceStatus resourceStatus = null;
+	volatile TiResourceStatus resourceStatus = null;
 
 
 	/**
@@ -74,13 +74,13 @@ class MgDbHandler<R> {
 	/**
 	 * 
 	 */
-	private Deque<MgOperation<R>> operations = new ArrayDeque<>();
+	private Deque<TiOperation<R>> operations = new ArrayDeque<>();
 
 
 
 
 
-	public MgDbHandler(SiliconEngine ng, MgDbSwitcher<R> switcher, String key) {
+	public TiDbHandler(SiliconEngine ng, TiDbSwitcher<R> switcher, String key) {
 		super();
 		this.ng = ng;
 		this.switcher = switcher;
@@ -149,7 +149,7 @@ class MgDbHandler<R> {
 	 * @param engine
 	 * @param operation
 	 */
-	void pushOpFirst(MgOperation<R> operation) {
+	void pushOpFirst(TiOperation<R> operation) {
 
 		/* low contention synchronized section */
 		synchronized (lock) {
@@ -170,7 +170,7 @@ class MgDbHandler<R> {
 	 * @param engine
 	 * @param operation
 	 */
-	void pushOpLast(MgOperation<R> operation) {
+	void pushOpLast(TiOperation<R> operation) {
 
 		/* low contention synchronized section */
 		synchronized (lock) {
@@ -202,19 +202,19 @@ class MgDbHandler<R> {
 
 
 
-	public void processRequest(MgRequest<R> request) {
+	public void processRequest(TiRequest<R> request) {
 		switch(request.getType()) {
 
 		case CREATE : 
-			pushOpLast(new CreateRequestOp<>(this, (CreateMgRequest<R>) request));
+			pushOpLast(new CreateRequestOp<>(this, (CreateTiRequest<R>) request));
 			break;
 
 		case ACCESS : 
-			pushOpLast(new AccessRequestOp<>(this, (AccessMgRequest<R>) request));
+			pushOpLast(new AccessRequestOp<>(this, (AccessTiRequest<R>) request));
 			break;
 
 		case DELETE : 
-			pushOpLast(new DeleteRequestOp<>(this, (DeleteMgRequest<R>) request));
+			pushOpLast(new DeleteRequestOp<>(this, (DeleteTiRequest<R>) request));
 			break;
 
 		}
@@ -255,7 +255,7 @@ class MgDbHandler<R> {
 				/* force active status (might have entered has not active) */
 				isActive = true;
 
-				MgOperation<R> operation = operations.poll();
+				TiOperation<R> operation = operations.poll();
 
 				if(operation != null) {
 
@@ -299,7 +299,7 @@ class MgDbHandler<R> {
 	 * @return
 	 * @throws Exception
 	 */
-	boolean io_loadResource() throws MgIOException {
+	boolean io_loadResource() throws TiIOException {
 		return (resource = switcher.getIOModule().readResource(path)) != null;
 	}
 	

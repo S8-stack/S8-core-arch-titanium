@@ -6,9 +6,9 @@ import com.s8.core.arch.magnesium.demos.db.resource.MainStubObject;
 import com.s8.core.arch.silicon.SiliconConfiguration;
 import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.arch.silicon.async.MthProfile;
-import com.s8.core.arch.titanium.db.MgDbSwitcher;
-import com.s8.core.arch.titanium.db.MgResourceStatus;
-import com.s8.core.arch.titanium.db.requests.AccessMgRequest;
+import com.s8.core.arch.titanium.db.TiDbSwitcher;
+import com.s8.core.arch.titanium.db.TiResourceStatus;
+import com.s8.core.arch.titanium.db.requests.AccessTiRequest;
 import com.s8.core.io.json.types.JSON_CompilingException;
 
 public class DbTest03 {
@@ -21,9 +21,9 @@ public class DbTest03 {
 		ng.start();
 		
 		
-		MgDbSwitcher<MainStubObject> db = DbCreator.createDb(ng);
+		TiDbSwitcher<MainStubObject> db = DbCreator.createDb(ng);
 		
-		db.processRequest(new AccessMgRequest<MainStubObject>(0, "asset-18672", true) {
+		db.processRequest(new AccessTiRequest<MainStubObject>(0, "asset-18672", true) {
 
 			@Override
 			public MthProfile profile() {
@@ -36,7 +36,7 @@ public class DbTest03 {
 			}
 
 			@Override
-			public boolean onResourceAccessed(Path path, MgResourceStatus status, MainStubObject resource) {
+			public boolean onResourceAccessed(Path path, TiResourceStatus status, MainStubObject resource) {
 				System.out.println(resource.address);
 				resource.address = "hobbitland";
 				return true;

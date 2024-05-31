@@ -1,6 +1,6 @@
 package com.s8.core.arch.titanium.db;
 
-import com.s8.core.arch.titanium.db.requests.MgRequest;
+import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 /**
  * 
@@ -10,11 +10,11 @@ import com.s8.core.arch.titanium.db.requests.MgRequest;
  * 
  * @param <R>
  */
-abstract class RequestOp<R> extends MgOperation<R> {
+abstract class RequestOp<R> extends TiOperation<R> {
 
 
 
-	public RequestOp(MgDbHandler<R> handler) {
+	public RequestOp(TiDbHandler<R> handler) {
 		super(handler);
 	}
 	
@@ -23,7 +23,7 @@ abstract class RequestOp<R> extends MgOperation<R> {
 	 * 
 	 * @return
 	 */
-	public abstract MgRequest<R> getRequest();
+	public abstract TiRequest<R> getRequest();
 	
 	
 	@Override

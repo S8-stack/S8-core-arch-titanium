@@ -1,12 +1,12 @@
 package com.s8.core.arch.titanium.db.requests;
 
-public abstract class DeleteMgRequest<R> extends MgRequest<R> {
+public abstract class DeleteTiRequest<R> extends TiRequest<R> {
 
 	public @Override Type getType() { return Type.DELETE; }
 
 	
 
-	public DeleteMgRequest(long t, String key) {
+	public DeleteTiRequest(long t, String key) {
 		super(t, key);
 	}
 	

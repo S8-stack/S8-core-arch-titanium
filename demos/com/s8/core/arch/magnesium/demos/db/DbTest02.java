@@ -7,8 +7,8 @@ import com.s8.core.arch.magnesium.demos.db.resource.MainStubObject;
 import com.s8.core.arch.magnesium.demos.db.resource.SubStubObject;
 import com.s8.core.arch.silicon.SiliconConfiguration;
 import com.s8.core.arch.silicon.SiliconEngine;
-import com.s8.core.arch.titanium.db.MgDbSwitcher;
-import com.s8.core.arch.titanium.db.requests.CreateMgRequest;
+import com.s8.core.arch.titanium.db.TiDbSwitcher;
+import com.s8.core.arch.titanium.db.requests.CreateTiRequest;
 import com.s8.core.io.json.types.JSON_CompilingException;
 
 public class DbTest02 {
@@ -21,7 +21,7 @@ public class DbTest02 {
 		ng.start();
 		
 		
-		MgDbSwitcher<MainStubObject> db = DbCreator.createDb(ng);
+		TiDbSwitcher<MainStubObject> db = DbCreator.createDb(ng);
 		
 		
 		/* <metadata> */
@@ -41,7 +41,7 @@ public class DbTest02 {
 		metadata.branches.put("main2", mainBranchMetadata);
 		
 		
-		db.processRequest(new CreateMgRequest<MainStubObject>(0, "asset-18672", metadata, true, false) {
+		db.processRequest(new CreateTiRequest<MainStubObject>(0, "asset-18672", metadata, true, false) {
 
 			@Override
 			public void onPathGenerated(Path path) {
