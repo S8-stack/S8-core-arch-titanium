@@ -5,7 +5,7 @@ import com.s8.core.io.xml.annotations.XML_Type;
 
 
 @XML_Type(name = "MagnesiumDbConfiguration")
-public class MgConfiguration {
+public class TiConfiguration {
 	
 	
 	
