@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.s8.core.arch.silicon.SiliconEngine;
+import com.s8.core.arch.titanium.db.io.TitaniumIOModule;
 import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 

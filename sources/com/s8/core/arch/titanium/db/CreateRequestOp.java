@@ -3,6 +3,7 @@ package com.s8.core.arch.titanium.db;
 import com.s8.core.arch.silicon.async.AsyncSiTask;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.arch.titanium.db.requests.CreateTiRequest;
+import com.s8.core.arch.titanium.db.requests.CreateTiRequest.ReturnedStatus;
 import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 
@@ -27,20 +28,21 @@ class CreateRequestOp<R> extends RequestOp<R> {
 
 	@Override
 	public void perform() {
-
-		/**
-		 * Override is not enabled and resource is available
-		 */
-		if(!request.isOverridingEnabled && (handler.isResourceAvailable())) {
-			thenProceed(false);
+		/* resource loading have already been tried */
+		if(handler.resourceStatus != TiResourceStatus.UNDEFINED) {
+			
+			/* override is enable, OR resource is not longer usable: defacto allowing override */
+			if(request.isOverridingEnabled || handler.resourceStatus != TiResourceStatus.OK) {
+				thenProceed();
+			}
+			
+			/* cannot proceed since cannot override */
+			else {
+				request.onProcessed(ReturnedStatus.CONFLICT_ON_KEY);
+				terminate();
+			}
 		}
-		else if(request.isOverridingEnabled ||
-				/* resource has been tested for loading and failed */
-				(handler.resourceStatus != null && !handler.resourceStatus.isAvailable())) {
-			thenProceed(true);
-		}
-
-		else {
+		else { /* undefined status */
 			/* check first */
 			thenCheck();
 		}
@@ -62,15 +64,23 @@ class CreateRequestOp<R> extends RequestOp<R> {
 				/* retrieve resource */
 				boolean hasResource = handler.io_hasResource();
 
-				boolean isAllowed = request.isOverridingEnabled || 
-						(!request.isOverridingEnabled && !hasResource);
-				
-				if(isAllowed) {
-					handler.io_deleteResource();
-				}
 
-				// continuation
-				thenProceed(isAllowed);
+				/* can proceed */
+				if(request.isOverridingEnabled || 
+						(!request.isOverridingEnabled && !hasResource)) {
+
+					if(hasResource) {
+						handler.io_deleteResource();
+					}
+
+					// continuation
+					thenProceed();
+
+				}
+				else {
+					request.onProcessed(ReturnedStatus.CONFLICT_ON_KEY);
+					terminate();
+				}
 			}
 
 			@Override
@@ -83,23 +93,27 @@ class CreateRequestOp<R> extends RequestOp<R> {
 
 
 
-	private void thenProceed(boolean isAllowed) {
+	private void thenProceed() {
 		handler.ng.pushAsyncTask(new AsyncSiTask() {
 
 
 			@Override
 			public void run() {
-
-				request.onPathGenerated(handler.path);
 				
-				if(isAllowed) {
-					handler.resource = request.resource;
-					handler.resourceStatus = TiResourceStatus.OK;
-					handler.isSynced = false;			
+				/* can proceed */
+				if(handler.io_hasResource()) {
+					handler.io_deleteResource();
 				}
-
-				request.onEntryCreated(true);
 				
+				request.onPathGenerated(handler.path);
+
+
+				handler.resource = request.resource;
+				handler.resourceStatus = TiResourceStatus.OK;
+				handler.isSynced = false;			
+
+				request.onProcessed(ReturnedStatus.SUCCESSFULLY_CREATED);
+
 				if(request.isResourceSavedToDisk) {
 					thenSave();
 				}
@@ -120,7 +134,7 @@ class CreateRequestOp<R> extends RequestOp<R> {
 		});
 	}
 
-	
+
 	private void thenSave() {
 
 		handler.ng.pushAsyncTask(new AsyncSiTask() {

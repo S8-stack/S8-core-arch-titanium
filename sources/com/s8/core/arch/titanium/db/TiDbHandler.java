@@ -1,11 +1,14 @@
 package com.s8.core.arch.titanium.db;
 
 import java.io.IOException;
+import java.nio.file.FileSystemException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import com.s8.core.arch.silicon.SiliconEngine;
+
 import com.s8.core.arch.titanium.db.requests.AccessTiRequest;
 import com.s8.core.arch.titanium.db.requests.CreateTiRequest;
 import com.s8.core.arch.titanium.db.requests.DeleteTiRequest;
@@ -23,9 +26,9 @@ class TiDbHandler<R> {
 	public final SiliconEngine ng;
 
 	public final TiDbSwitcher<R> switcher;
-	
+
 	public final String key;
-	
+
 	public final Path path;
 
 
@@ -39,7 +42,7 @@ class TiDbHandler<R> {
 	 * Status of the handler
 	 * (null : undetermined)
 	 */
-	volatile TiResourceStatus resourceStatus = null;
+	volatile TiResourceStatus resourceStatus = TiResourceStatus.UNDEFINED;
 
 
 	/**
@@ -86,8 +89,6 @@ class TiDbHandler<R> {
 		this.switcher = switcher;
 		this.key = key;
 		this.path = switcher.pathComposer.composePath(key);
-		
-		this.resourceStatus = null;
 	}
 
 
@@ -97,7 +98,7 @@ class TiDbHandler<R> {
 	 * @return
 	 */
 	public boolean isResourceAvailable() {
-		return resourceStatus != null && resourceStatus.isAvailable();
+		return resourceStatus != null && resourceStatus == TiResourceStatus.OK;
 	}
 
 
@@ -271,7 +272,7 @@ class TiDbHandler<R> {
 
 				}
 				else {
-					
+
 					/* force active status (might have entered has not active) */
 					isActive = false;
 				}
@@ -283,8 +284,72 @@ class TiDbHandler<R> {
 
 
 
+	/* <unit-operations> */
+
+	/**
+	 * TO be used in op
+	 * @throws NoResourceTiException
+	 * @throws ReadFailedTiException
+	 */
+	void u_loadResource() {
+		if(resourceStatus != TiResourceStatus.OK) {
+			try {
+				io_readResource();
+				resourceStatus = TiResourceStatus.OK;
+				isSynced = true;	
+			}
+			catch (NoSuchFileException e) {
+				resource = null;
+				resourceStatus = TiResourceStatus.NO_RESOURCE;
+				isSynced = true;
+			}
+			catch (FileSystemException e) {
+				resource = null;
+				resourceStatus = TiResourceStatus.NO_RESOURCE;
+				isSynced = true;
+			} 
+			catch (IOException e) {
+				resource = null;
+				resourceStatus = TiResourceStatus.FAILED_TO_LOAD;
+				isSynced = true;
+			}	
+		}
+	}
+
+
+
+
+	void u_saveResource() {
+		/* save resource */
+		if(!isSynced) {
+			/**
+			 * run callback on resource
+			 */
+			try {
+				io_saveResource();
+				resourceStatus = TiResourceStatus.OK;
+				isSynced = true;
+
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				resourceStatus = TiResourceStatus.FAILED_TO_SAVE;
+				isSynced = true;
+			}
+		}
+	}
+
+
+
+	/* </unit-operations> */
+
+
+
+
+
+
 	/* <I/O operations> */
-	
+
 
 	/**
 	 * Fast check of resource existence
@@ -293,17 +358,18 @@ class TiDbHandler<R> {
 	boolean io_hasResource() {
 		return switcher.getIOModule().hasResource(path);
 	}
-	
+
+
 	/**
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @throws NoResourceTiException
+	 * @throws ReadFailedTiException
 	 */
-	boolean io_loadResource() throws TiIOException {
-		return (resource = switcher.getIOModule().readResource(path)) != null;
+	void io_readResource() throws IOException {
+		resource = switcher.getIOModule().readResource(path);
 	}
-	
-	
+
+
 	/**
 	 * 
 	 * @param resource
@@ -312,8 +378,8 @@ class TiDbHandler<R> {
 	void io_saveResource() throws IOException {
 		switcher.getIOModule().writeResource(path, resource);
 	}
-	
-	
+
+
 	/**
 	 * Fast deletion of resource existence (save disk space)
 	 * @return
@@ -321,7 +387,6 @@ class TiDbHandler<R> {
 	boolean io_deleteResource() {
 		return switcher.getIOModule().deleteResource(path);
 	}
-
 
 	/* </I/O operations> */
 

@@ -3,9 +3,38 @@ package com.s8.core.arch.titanium.db.requests;
 import java.nio.file.Path;
 
 import com.s8.core.arch.silicon.async.MthProfile;
-import com.s8.core.arch.titanium.db.TiResourceStatus;
 
 public abstract class AccessTiRequest<R> extends TiRequest<R> {
+	
+	
+	public enum ReturnedStatus {
+		
+		
+		/**
+		 * Successfully accessed
+		 */
+		SUCCESSFULLY_ACCESSED,
+		
+		/**
+		 * The resource has been deleted unsafe to use
+		 */
+		DELETED,
+		
+		
+		/**
+		 * The resource has never been initialized (nothing on Disk)
+		 * No unsaved modification (nothing on Disk, no resource set to the handler
+		 */
+		NO_RESOURCE_FOR_KEY,
+
+		
+		/**
+		 * I/O exception was raised when attempting to load from disk
+		 */
+		FAILED_TO_LOAD;
+
+		
+	}
 	
 	
 	public @Override Type getType() { return Type.ACCESS; }
@@ -44,6 +73,6 @@ public abstract class AccessTiRequest<R> extends TiRequest<R> {
 	 * @param resource
 	 * @return
 	 */
-	public abstract boolean onResourceAccessed(Path resourceFolderPath, TiResourceStatus status, R resource);
+	public abstract boolean onProcessed(Path resourceFolderPath, ReturnedStatus status, R resource);
 
 }

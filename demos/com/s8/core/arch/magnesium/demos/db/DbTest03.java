@@ -7,7 +7,6 @@ import com.s8.core.arch.silicon.SiliconConfiguration;
 import com.s8.core.arch.silicon.SiliconEngine;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.arch.titanium.db.TiDbSwitcher;
-import com.s8.core.arch.titanium.db.TiResourceStatus;
 import com.s8.core.arch.titanium.db.requests.AccessTiRequest;
 import com.s8.core.io.json.types.JSON_CompilingException;
 
@@ -36,7 +35,7 @@ public class DbTest03 {
 			}
 
 			@Override
-			public boolean onResourceAccessed(Path path, TiResourceStatus status, MainStubObject resource) {
+			public boolean onProcessed(Path path, ReturnedStatus status, MainStubObject resource) {
 				System.out.println(resource.address);
 				resource.address = "hobbitland";
 				return true;

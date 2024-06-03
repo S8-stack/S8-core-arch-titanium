@@ -1,4 +1,4 @@
-package com.s8.core.arch.titanium.db;
+package com.s8.core.arch.titanium.db.io;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,7 +18,7 @@ public interface TitaniumIOModule<R> {
 	 * @return
 	 * @throws Exception
 	 */
-	public R readResource(Path path) throws TiIOException;
+	public R readResource(Path path) throws IOException ;
 	
 	
 	/**

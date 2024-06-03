@@ -49,8 +49,8 @@ public class DbTest02 {
 			}
 
 			@Override
-			public void onEntryCreated(boolean isSucessful) {
-				System.out.print("on-created: "+isSucessful);
+			public void onProcessed(ReturnedStatus status) {
+				System.out.print("on-created: "+status);
 			}
 		});
 		

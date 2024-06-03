@@ -10,6 +10,7 @@ module com.s8.core.arch.titanium {
 	
 
 	exports com.s8.core.arch.titanium.db;
+	exports com.s8.core.arch.titanium.db.io;
 	exports com.s8.core.arch.titanium.db.requests;
 	
 	
