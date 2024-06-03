@@ -3,7 +3,7 @@ package com.s8.core.arch.titanium.db;
 import com.s8.core.arch.silicon.async.AsyncSiTask;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.arch.titanium.db.requests.DeleteTiRequest;
-import com.s8.core.arch.titanium.db.requests.DeleteTiRequest.ReturnedStatus;
+import com.s8.core.arch.titanium.db.requests.DeleteTiRequest.ResponseStatus;
 import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 
@@ -75,7 +75,7 @@ class DeleteRequestOp<R> extends RequestOp<R> {
 				handler.isSynced = true;
 
 				
-				request.onProcessed(ReturnedStatus.SUCCESSFULLY_DELETED);
+				request.onProcessed(ResponseStatus.SUCCESSFULLY_DELETED);
 				
 				terminate();
 			}

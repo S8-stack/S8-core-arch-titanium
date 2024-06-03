@@ -7,7 +7,7 @@ import com.s8.core.arch.silicon.async.MthProfile;
 public abstract class AccessTiRequest<R> extends TiRequest<R> {
 	
 	
-	public enum ReturnedStatus {
+	public enum ResponseStatus {
 		
 		
 		/**
@@ -73,6 +73,6 @@ public abstract class AccessTiRequest<R> extends TiRequest<R> {
 	 * @param resource
 	 * @return
 	 */
-	public abstract boolean onProcessed(Path resourceFolderPath, ReturnedStatus status, R resource);
+	public abstract boolean onProcessed(Path resourceFolderPath, ResponseStatus status, R resource);
 
 }

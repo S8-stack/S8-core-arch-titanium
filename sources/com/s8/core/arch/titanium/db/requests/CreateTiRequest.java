@@ -5,7 +5,7 @@ import java.nio.file.Path;
 public abstract class CreateTiRequest<R> extends TiRequest<R> {
 
 
-	public enum ReturnedStatus {
+	public enum ResponseStatus {
 
 		/**
 		 *  Successfully written 
@@ -60,7 +60,7 @@ public abstract class CreateTiRequest<R> extends TiRequest<R> {
 	 * 
 	 * @param status
 	 */
-	public abstract void onProcessed(ReturnedStatus status);
+	public abstract void onProcessed(ResponseStatus status);
 
 
 

@@ -49,7 +49,7 @@ public class DbTest02 {
 			}
 
 			@Override
-			public void onProcessed(ReturnedStatus status) {
+			public void onProcessed(ResponseStatus status) {
 				System.out.print("on-created: "+status);
 			}
 		});

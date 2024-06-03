@@ -3,7 +3,7 @@ package com.s8.core.arch.titanium.db.requests;
 public abstract class DeleteTiRequest<R> extends TiRequest<R> {
 	
 	
-	public enum ReturnedStatus {
+	public enum ResponseStatus {
 
 		/**
 		 *  Successfully written 
@@ -32,7 +32,7 @@ public abstract class DeleteTiRequest<R> extends TiRequest<R> {
 	
 	
 	
-	public abstract void onProcessed(ReturnedStatus status);
+	public abstract void onProcessed(ResponseStatus status);
 	
 	
 

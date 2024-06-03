@@ -35,7 +35,7 @@ public class DbTest03 {
 			}
 
 			@Override
-			public boolean onProcessed(Path path, ReturnedStatus status, MainStubObject resource) {
+			public boolean onProcessed(Path path, ResponseStatus status, MainStubObject resource) {
 				System.out.println(resource.address);
 				resource.address = "hobbitland";
 				return true;

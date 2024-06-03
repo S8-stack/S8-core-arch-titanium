@@ -3,7 +3,7 @@ package com.s8.core.arch.titanium.db;
 import com.s8.core.arch.silicon.async.AsyncSiTask;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.arch.titanium.db.requests.AccessTiRequest;
-import com.s8.core.arch.titanium.db.requests.AccessTiRequest.ReturnedStatus;
+import com.s8.core.arch.titanium.db.requests.AccessTiRequest.ResponseStatus;
 import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 
@@ -64,14 +64,14 @@ class AccessRequestOp<R> extends RequestOp<R> {
 	}
 
 
-	private AccessTiRequest.ReturnedStatus translate(){
+	private AccessTiRequest.ResponseStatus translate(){
 		switch(handler.resourceStatus) {
-		case OK : return ReturnedStatus.SUCCESSFULLY_ACCESSED;
-		case UNDEFINED : return ReturnedStatus.NO_RESOURCE_FOR_KEY;
-		case DELETED : return ReturnedStatus.NO_RESOURCE_FOR_KEY;
+		case OK : return ResponseStatus.SUCCESSFULLY_ACCESSED;
+		case UNDEFINED : return ResponseStatus.NO_RESOURCE_FOR_KEY;
+		case DELETED : return ResponseStatus.NO_RESOURCE_FOR_KEY;
 		case FAILED_TO_LOAD : 
 		default:
-			return ReturnedStatus.FAILED_TO_LOAD;
+			return ResponseStatus.FAILED_TO_LOAD;
 		}
 	}
 

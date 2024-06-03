@@ -3,7 +3,7 @@ package com.s8.core.arch.titanium.db;
 import com.s8.core.arch.silicon.async.AsyncSiTask;
 import com.s8.core.arch.silicon.async.MthProfile;
 import com.s8.core.arch.titanium.db.requests.CreateTiRequest;
-import com.s8.core.arch.titanium.db.requests.CreateTiRequest.ReturnedStatus;
+import com.s8.core.arch.titanium.db.requests.CreateTiRequest.ResponseStatus;
 import com.s8.core.arch.titanium.db.requests.TiRequest;
 
 
@@ -38,7 +38,7 @@ class CreateRequestOp<R> extends RequestOp<R> {
 			
 			/* cannot proceed since cannot override */
 			else {
-				request.onProcessed(ReturnedStatus.CONFLICT_ON_KEY);
+				request.onProcessed(ResponseStatus.CONFLICT_ON_KEY);
 				terminate();
 			}
 		}
@@ -78,7 +78,7 @@ class CreateRequestOp<R> extends RequestOp<R> {
 
 				}
 				else {
-					request.onProcessed(ReturnedStatus.CONFLICT_ON_KEY);
+					request.onProcessed(ResponseStatus.CONFLICT_ON_KEY);
 					terminate();
 				}
 			}
@@ -112,7 +112,7 @@ class CreateRequestOp<R> extends RequestOp<R> {
 				handler.resourceStatus = TiResourceStatus.OK;
 				handler.isSynced = false;			
 
-				request.onProcessed(ReturnedStatus.SUCCESSFULLY_CREATED);
+				request.onProcessed(ResponseStatus.SUCCESSFULLY_CREATED);
 
 				if(request.isResourceSavedToDisk) {
 					thenSave();
