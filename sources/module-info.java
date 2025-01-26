@@ -47,9 +47,6 @@ module com.s8.core.arch.titanium {
 	requires transitive com.s8.core.arch.silicon;
 	requires transitive com.s8.core.io.json;
 
-	requires transitive com.s8.core.bohr.neodymium;
-	requires transitive com.s8.core.bohr.beryllium;
-	requires transitive com.s8.core.bohr.lithium;
 	
 	
 }
